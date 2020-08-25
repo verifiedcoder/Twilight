@@ -1,0 +1,603 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpKI>
+  <HelpKINode Title="AddAutofacInMemoryMessaging method" Url="html/M-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.AddAutofacInMemoryMessaging.htm" />
+  <HelpKINode Title="Aggregate class">
+    <HelpKINode Title="Aggregate Class" Url="html/T-Twilight.ES.Aggregate.htm" />
+    <HelpKINode Title="Aggregate Members" Url="html/AllMembers.T-Twilight.ES.Aggregate.htm" />
+    <HelpKINode Title="about Aggregate class" Url="html/T-Twilight.ES.Aggregate.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.ES.Aggregate.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.ES.Aggregate.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.ES.Aggregate.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Aggregate.AggregateId property" Url="html/P-Twilight.ES.Aggregate.AggregateId.htm" />
+  <HelpKINode Title="AggregateId property">
+    <HelpKINode Title="AggregateId Property " Url="html/P-Twilight.ES.Aggregate.AggregateId.htm" />
+    <HelpKINode Title="AggregateId Property " Url="html/P-Twilight.ES.Contracts.IAggregate.AggregateId.htm" />
+  </HelpKINode>
+  <HelpKINode Title="AutofacInMemoryMessageSender class">
+    <HelpKINode Title="AutofacInMemoryMessageSender Class" Url="html/T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.htm" />
+    <HelpKINode Title="AutofacInMemoryMessageSender Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.htm" />
+    <HelpKINode Title="about AutofacInMemoryMessageSender class" Url="html/T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.htm" />
+  </HelpKINode>
+  <HelpKINode Title="AutofacInMemoryMessageSender.AutofacInMemoryMessageSender constructor" Url="html/M-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.-ctor.htm" />
+  <HelpKINode Title="AutofacInMemoryMessagingRegistrationExtensions class">
+    <HelpKINode Title="AutofacInMemoryMessagingRegistrationExtensions Class" Url="html/T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.htm" />
+    <HelpKINode Title="AutofacInMemoryMessagingRegistrationExtensions Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.htm" />
+    <HelpKINode Title="about AutofacInMemoryMessagingRegistrationExtensions class" Url="html/T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.htm" />
+  </HelpKINode>
+  <HelpKINode Title="AutofacInMemoryMessagingRegistrationExtensions.AddAutofacInMemoryMessaging method" Url="html/M-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.AddAutofacInMemoryMessaging.htm" />
+  <HelpKINode Title="CausationId property">
+    <HelpKINode Title="CausationId Property " Url="html/P-Twilight.CQRS.Contracts.IMessage.CausationId.htm" />
+    <HelpKINode Title="CausationId Property " Url="html/P-Twilight.CQRS.Message.CausationId.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Command class">
+    <HelpKINode Title="Command Class" Url="html/T-Twilight.CQRS.Commands.Command.htm" />
+    <HelpKINode Title="Command Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command.htm" />
+    <HelpKINode Title="about Command class" Url="html/T-Twilight.CQRS.Commands.Command.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Commands.Command.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Commands.Command.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Commands.Command.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Command(Of TParameters) class">
+    <HelpKINode Title="Command(TParameters) Class" Url="html/T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="Command(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="about Command(Of TParameters) class" Url="html/T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Commands.Command-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Commands.Command-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Command(Of TParameters).Command constructor" Url="html/M-Twilight.CQRS.Commands.Command-1.-ctor.htm" />
+  <HelpKINode Title="Command(Of TParameters).Params property" Url="html/P-Twilight.CQRS.Commands.Command-1.Params.htm" />
+  <HelpKINode Title="Command.Command constructor" Url="html/M-Twilight.CQRS.Commands.Command.-ctor.htm" />
+  <HelpKINode Title="Command&lt;TParameters&gt; class">
+    <HelpKINode Title="Command(TParameters) Class" Url="html/T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="Command(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="about Command&lt;TParameters&gt; class" Url="html/T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Commands.Command-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Commands.Command-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Command&lt;TParameters&gt;.Command constructor" Url="html/M-Twilight.CQRS.Commands.Command-1.-ctor.htm" />
+  <HelpKINode Title="Command&lt;TParameters&gt;.Params property" Url="html/P-Twilight.CQRS.Commands.Command-1.Params.htm" />
+  <HelpKINode Title="CommandHandlerBase(Of TCommand) class">
+    <HelpKINode Title="CommandHandlerBase(TCommand) Class" Url="html/T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="CommandHandlerBase(TCommand) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="about CommandHandlerBase(Of TCommand) class" Url="html/T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="CommandHandlerBase(Of TCommand).Handle method" Url="html/M-Twilight.CQRS.Commands.CommandHandlerBase-1.Handle.htm" />
+  <HelpKINode Title="CommandHandlerBase&lt;TCommand&gt; class">
+    <HelpKINode Title="CommandHandlerBase(TCommand) Class" Url="html/T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="CommandHandlerBase(TCommand) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="about CommandHandlerBase&lt;TCommand&gt; class" Url="html/T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="CommandHandlerBase&lt;TCommand&gt;.Handle method" Url="html/M-Twilight.CQRS.Commands.CommandHandlerBase-1.Handle.htm" />
+  <HelpKINode Title="ContainerBuilderExtensions class">
+    <HelpKINode Title="ContainerBuilderExtensions Class" Url="html/T-Twilight.CQRS.Autofac.ContainerBuilderExtensions.htm" />
+    <HelpKINode Title="ContainerBuilderExtensions Members" Url="html/AllMembers.T-Twilight.CQRS.Autofac.ContainerBuilderExtensions.htm" />
+    <HelpKINode Title="about ContainerBuilderExtensions class" Url="html/T-Twilight.CQRS.Autofac.ContainerBuilderExtensions.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Autofac.ContainerBuilderExtensions.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Autofac.ContainerBuilderExtensions.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ContainerBuilderExtensions.RegisterAssemblyTypes method" Url="html/M-Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterAssemblyTypes.htm" />
+  <HelpKINode Title="ContainerBuilderExtensions.RegisterCqrs method" Url="html/M-Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterCqrs.htm" />
+  <HelpKINode Title="CorrelationId property">
+    <HelpKINode Title="CorrelationId Property " Url="html/P-Twilight.CQRS.Contracts.IMessage.CorrelationId.htm" />
+    <HelpKINode Title="CorrelationId Property " Url="html/P-Twilight.CQRS.Message.CorrelationId.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Event class">
+    <HelpKINode Title="Event Class" Url="html/T-Twilight.CQRS.Events.Event.htm" />
+    <HelpKINode Title="Event Members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event.htm" />
+    <HelpKINode Title="about Event class" Url="html/T-Twilight.CQRS.Events.Event.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Events.Event.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Events.Event.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Events.Event.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Event(Of TParameters) class">
+    <HelpKINode Title="Event(TParameters) Class" Url="html/T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="Event(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="about Event(Of TParameters) class" Url="html/T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Events.Event-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Events.Event-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Event(Of TParameters).Event constructor" Url="html/M-Twilight.CQRS.Events.Event-1.-ctor.htm" />
+  <HelpKINode Title="Event(Of TParameters).Params property" Url="html/P-Twilight.CQRS.Events.Event-1.Params.htm" />
+  <HelpKINode Title="Event.Event constructor" Url="html/M-Twilight.CQRS.Events.Event.-ctor.htm" />
+  <HelpKINode Title="Event&lt;TParameters&gt; class">
+    <HelpKINode Title="Event(TParameters) Class" Url="html/T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="Event(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="about Event&lt;TParameters&gt; class" Url="html/T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Events.Event-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Events.Event-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Event&lt;TParameters&gt;.Event constructor" Url="html/M-Twilight.CQRS.Events.Event-1.-ctor.htm" />
+  <HelpKINode Title="Event&lt;TParameters&gt;.Params property" Url="html/P-Twilight.CQRS.Events.Event-1.Params.htm" />
+  <HelpKINode Title="EventHandlerBase(Of TEvent) class">
+    <HelpKINode Title="EventHandlerBase(TEvent) Class" Url="html/T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="EventHandlerBase(TEvent) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="about EventHandlerBase(Of TEvent) class" Url="html/T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="EventHandlerBase(Of TEvent).Handle method" Url="html/M-Twilight.CQRS.Events.EventHandlerBase-1.Handle.htm" />
+  <HelpKINode Title="EventHandlerBase&lt;TEvent&gt; class">
+    <HelpKINode Title="EventHandlerBase(TEvent) Class" Url="html/T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="EventHandlerBase(TEvent) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="about EventHandlerBase&lt;TEvent&gt; class" Url="html/T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="EventHandlerBase&lt;TEvent&gt;.Handle method" Url="html/M-Twilight.CQRS.Events.EventHandlerBase-1.Handle.htm" />
+  <HelpKINode Title="Handle method">
+    <HelpKINode Title="Handle Method " Url="html/M-Twilight.CQRS.Events.EventHandlerBase-1.Handle.htm" />
+    <HelpKINode Title="Handle Method " Url="html/M-Twilight.CQRS.Contracts.ICommandHandler-1.Handle.htm" />
+    <HelpKINode Title="Handle Method " Url="html/M-Twilight.CQRS.Contracts.IEventHandler-1.Handle.htm" />
+    <HelpKINode Title="Handle Method " Url="html/M-Twilight.CQRS.Contracts.IQueryHandler-2.Handle.htm" />
+    <HelpKINode Title="Handle Method " Url="html/M-Twilight.CQRS.Commands.CommandHandlerBase-1.Handle.htm" />
+    <HelpKINode Title="Handle Method " Url="html/M-Twilight.CQRS.Queries.QueryHandlerBase-2.Handle.htm" />
+  </HelpKINode>
+  <HelpKINode Title="HandlerNotFoundException class">
+    <HelpKINode Title="HandlerNotFoundException Class" Url="html/T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+    <HelpKINode Title="HandlerNotFoundException Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+    <HelpKINode Title="about HandlerNotFoundException class" Url="html/T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+  </HelpKINode>
+  <HelpKINode Title="HandlerNotFoundException.HandlerNotFoundException constructor" Url="html/M-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.-ctor.htm" />
+  <HelpKINode Title="IAggregate interface">
+    <HelpKINode Title="IAggregate Interface" Url="html/T-Twilight.ES.Contracts.IAggregate.htm" />
+    <HelpKINode Title="IAggregate Members" Url="html/AllMembers.T-Twilight.ES.Contracts.IAggregate.htm" />
+    <HelpKINode Title="about IAggregate interface" Url="html/T-Twilight.ES.Contracts.IAggregate.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.ES.Contracts.IAggregate.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.ES.Contracts.IAggregate.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.ES.Contracts.IAggregate.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IAggregate.AggregateId property" Url="html/P-Twilight.ES.Contracts.IAggregate.AggregateId.htm" />
+  <HelpKINode Title="ICommand interface">
+    <HelpKINode Title="ICommand Interface" Url="html/T-Twilight.CQRS.Contracts.ICommand.htm" />
+    <HelpKINode Title="ICommand Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.ICommand.htm" />
+    <HelpKINode Title="about ICommand interface" Url="html/T-Twilight.CQRS.Contracts.ICommand.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.ICommand.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.ICommand.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ICommandHandler interface">
+    <HelpKINode Title="ICommandHandler Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ICommandHandler(Of TCommand) interface">
+    <HelpKINode Title="ICommandHandler(TCommand) Interface" Url="html/T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+    <HelpKINode Title="about ICommandHandler(Of TCommand) interface" Url="html/T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ICommandHandler(Of TCommand).Handle method" Url="html/M-Twilight.CQRS.Contracts.ICommandHandler-1.Handle.htm" />
+  <HelpKINode Title="ICommandHandler&lt;TCommand&gt; interface">
+    <HelpKINode Title="ICommandHandler(TCommand) Interface" Url="html/T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+    <HelpKINode Title="about ICommandHandler&lt;TCommand&gt; interface" Url="html/T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ICommandHandler&lt;TCommand&gt;.Handle method" Url="html/M-Twilight.CQRS.Contracts.ICommandHandler-1.Handle.htm" />
+  <HelpKINode Title="IEvent interface">
+    <HelpKINode Title="IEvent Interface" Url="html/T-Twilight.CQRS.Contracts.IEvent.htm" />
+    <HelpKINode Title="IEvent Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IEvent.htm" />
+    <HelpKINode Title="about IEvent interface" Url="html/T-Twilight.CQRS.Contracts.IEvent.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IEvent.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.IEvent.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IEventHandler interface">
+    <HelpKINode Title="IEventHandler Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IEventHandler(Of TEvent) interface">
+    <HelpKINode Title="IEventHandler(TEvent) Interface" Url="html/T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+    <HelpKINode Title="about IEventHandler(Of TEvent) interface" Url="html/T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IEventHandler(Of TEvent).Handle method" Url="html/M-Twilight.CQRS.Contracts.IEventHandler-1.Handle.htm" />
+  <HelpKINode Title="IEventHandler&lt;TEvent&gt; interface">
+    <HelpKINode Title="IEventHandler(TEvent) Interface" Url="html/T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+    <HelpKINode Title="about IEventHandler&lt;TEvent&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IEventHandler&lt;TEvent&gt;.Handle method" Url="html/M-Twilight.CQRS.Contracts.IEventHandler-1.Handle.htm" />
+  <HelpKINode Title="IMessage interface">
+    <HelpKINode Title="IMessage Interface" Url="html/T-Twilight.CQRS.Contracts.IMessage.htm" />
+    <HelpKINode Title="IMessage Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IMessage.htm" />
+    <HelpKINode Title="about IMessage interface" Url="html/T-Twilight.CQRS.Contracts.IMessage.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IMessage.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.IMessage.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Contracts.IMessage.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMessage.CausationId property" Url="html/P-Twilight.CQRS.Contracts.IMessage.CausationId.htm" />
+  <HelpKINode Title="IMessage.CorrelationId property" Url="html/P-Twilight.CQRS.Contracts.IMessage.CorrelationId.htm" />
+  <HelpKINode Title="IMessage.MessageId property" Url="html/P-Twilight.CQRS.Contracts.IMessage.MessageId.htm" />
+  <HelpKINode Title="IMessageHandler interface">
+    <HelpKINode Title="IMessageHandler Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMessageHandler(Of TMessage) interface">
+    <HelpKINode Title="IMessageHandler(TMessage) Interface" Url="html/T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+    <HelpKINode Title="about IMessageHandler(Of TMessage) interface" Url="html/T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMessageHandler(Of TMessage).Logger property" Url="html/P-Twilight.CQRS.Contracts.IMessageHandler-1.Logger.htm" />
+  <HelpKINode Title="IMessageHandler(Of TMessage).OnAfterHandling method" Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.OnAfterHandling.htm" />
+  <HelpKINode Title="IMessageHandler(Of TMessage).OnBeforeHandling method" Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.OnBeforeHandling.htm" />
+  <HelpKINode Title="IMessageHandler(Of TMessage).ValidateMessage method" Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.ValidateMessage.htm" />
+  <HelpKINode Title="IMessageHandler&lt;TMessage&gt; interface">
+    <HelpKINode Title="IMessageHandler(TMessage) Interface" Url="html/T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+    <HelpKINode Title="about IMessageHandler&lt;TMessage&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMessageHandler&lt;TMessage&gt;.Logger property" Url="html/P-Twilight.CQRS.Contracts.IMessageHandler-1.Logger.htm" />
+  <HelpKINode Title="IMessageHandler&lt;TMessage&gt;.OnAfterHandling method" Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.OnAfterHandling.htm" />
+  <HelpKINode Title="IMessageHandler&lt;TMessage&gt;.OnBeforeHandling method" Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.OnBeforeHandling.htm" />
+  <HelpKINode Title="IMessageHandler&lt;TMessage&gt;.ValidateMessage method" Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.ValidateMessage.htm" />
+  <HelpKINode Title="IMessageSender interface">
+    <HelpKINode Title="IMessageSender Interface" Url="html/T-Twilight.CQRS.Messaging.Contracts.IMessageSender.htm" />
+    <HelpKINode Title="IMessageSender Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Contracts.IMessageSender.htm" />
+    <HelpKINode Title="about IMessageSender interface" Url="html/T-Twilight.CQRS.Messaging.Contracts.IMessageSender.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Contracts.IMessageSender.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Messaging.Contracts.IMessageSender.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IMessageSender.Publish method" Url="html/Overload-Twilight.CQRS.Messaging.Contracts.IMessageSender.Publish-.htm" />
+  <HelpKINode Title="IMessageSender.Send method" Url="html/Overload-Twilight.CQRS.Messaging.Contracts.IMessageSender.Send-.htm" />
+  <HelpKINode Title="IQuery interface">
+    <HelpKINode Title="IQuery Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IQuery(Of TResponse) interface">
+    <HelpKINode Title="IQuery(TResponse) Interface" Url="html/T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+    <HelpKINode Title="about IQuery(Of TResponse) interface" Url="html/T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IQuery&lt;TResponse&gt; interface">
+    <HelpKINode Title="IQuery(TResponse) Interface" Url="html/T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+    <HelpKINode Title="about IQuery&lt;TResponse&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IQueryHandler interface">
+    <HelpKINode Title="IQueryHandler Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IQueryHandler(Of TQuery, TResponse) interface">
+    <HelpKINode Title="IQueryHandler(TQuery, TResponse) Interface" Url="html/T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+    <HelpKINode Title="about IQueryHandler(Of TQuery, TResponse) interface" Url="html/T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IQueryHandler(Of TQuery, TResponse).Handle method" Url="html/M-Twilight.CQRS.Contracts.IQueryHandler-2.Handle.htm" />
+  <HelpKINode Title="IQueryHandler&lt;TQuery, TResponse&gt; interface">
+    <HelpKINode Title="IQueryHandler(TQuery, TResponse) Interface" Url="html/T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+    <HelpKINode Title="about IQueryHandler&lt;TQuery, TResponse&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IQueryHandler&lt;TQuery, TResponse&gt;.Handle method" Url="html/M-Twilight.CQRS.Contracts.IQueryHandler-2.Handle.htm" />
+  <HelpKINode Title="Logger property">
+    <HelpKINode Title="Logger Property " Url="html/P-Twilight.CQRS.MessageHandler-1.Logger.htm" />
+    <HelpKINode Title="Logger Property " Url="html/P-Twilight.CQRS.Contracts.IMessageHandler-1.Logger.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Message class">
+    <HelpKINode Title="Message Class" Url="html/T-Twilight.CQRS.Message.htm" />
+    <HelpKINode Title="Message Members" Url="html/AllMembers.T-Twilight.CQRS.Message.htm" />
+    <HelpKINode Title="about Message class" Url="html/T-Twilight.CQRS.Message.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Message.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Message.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Message.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Message.CausationId property" Url="html/P-Twilight.CQRS.Message.CausationId.htm" />
+  <HelpKINode Title="Message.CorrelationId property" Url="html/P-Twilight.CQRS.Message.CorrelationId.htm" />
+  <HelpKINode Title="Message.MessageId property" Url="html/P-Twilight.CQRS.Message.MessageId.htm" />
+  <HelpKINode Title="MessageHandler(Of TMessage) class">
+    <HelpKINode Title="MessageHandler(TMessage) Class" Url="html/T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="MessageHandler(TMessage) Members" Url="html/AllMembers.T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="about MessageHandler(Of TMessage) class" Url="html/T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.MessageHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MessageHandler(Of TMessage).Logger property" Url="html/P-Twilight.CQRS.MessageHandler-1.Logger.htm" />
+  <HelpKINode Title="MessageHandler(Of TMessage).OnAfterHandling method" Url="html/M-Twilight.CQRS.MessageHandler-1.OnAfterHandling.htm" />
+  <HelpKINode Title="MessageHandler(Of TMessage).OnBeforeHandling method" Url="html/M-Twilight.CQRS.MessageHandler-1.OnBeforeHandling.htm" />
+  <HelpKINode Title="MessageHandler(Of TMessage).ValidateMessage method" Url="html/M-Twilight.CQRS.MessageHandler-1.ValidateMessage.htm" />
+  <HelpKINode Title="MessageHandler&lt;TMessage&gt; class">
+    <HelpKINode Title="MessageHandler(TMessage) Class" Url="html/T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="MessageHandler(TMessage) Members" Url="html/AllMembers.T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="about MessageHandler&lt;TMessage&gt; class" Url="html/T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.MessageHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MessageHandler&lt;TMessage&gt;.Logger property" Url="html/P-Twilight.CQRS.MessageHandler-1.Logger.htm" />
+  <HelpKINode Title="MessageHandler&lt;TMessage&gt;.OnAfterHandling method" Url="html/M-Twilight.CQRS.MessageHandler-1.OnAfterHandling.htm" />
+  <HelpKINode Title="MessageHandler&lt;TMessage&gt;.OnBeforeHandling method" Url="html/M-Twilight.CQRS.MessageHandler-1.OnBeforeHandling.htm" />
+  <HelpKINode Title="MessageHandler&lt;TMessage&gt;.ValidateMessage method" Url="html/M-Twilight.CQRS.MessageHandler-1.ValidateMessage.htm" />
+  <HelpKINode Title="MessageId property">
+    <HelpKINode Title="MessageId Property " Url="html/P-Twilight.CQRS.Contracts.IMessage.MessageId.htm" />
+    <HelpKINode Title="MessageId Property " Url="html/P-Twilight.CQRS.Message.MessageId.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MultipleCommandHandlersDefinedException class">
+    <HelpKINode Title="MultipleCommandHandlersDefinedException Class" Url="html/T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+    <HelpKINode Title="MultipleCommandHandlersDefinedException Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+    <HelpKINode Title="about MultipleCommandHandlersDefinedException class" Url="html/T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+  </HelpKINode>
+  <HelpKINode Title="MultipleCommandHandlersDefinedException.MultipleCommandHandlersDefinedException constructor" Url="html/M-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.-ctor.htm" />
+  <HelpKINode Title="OnAfterHandling method">
+    <HelpKINode Title="OnAfterHandling Method " Url="html/M-Twilight.CQRS.MessageHandler-1.OnAfterHandling.htm" />
+    <HelpKINode Title="OnAfterHandling Method " Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.OnAfterHandling.htm" />
+  </HelpKINode>
+  <HelpKINode Title="OnBeforeHandling method">
+    <HelpKINode Title="OnBeforeHandling Method " Url="html/M-Twilight.CQRS.MessageHandler-1.OnBeforeHandling.htm" />
+    <HelpKINode Title="OnBeforeHandling Method " Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.OnBeforeHandling.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Params property">
+    <HelpKINode Title="Params Property " Url="html/P-Twilight.CQRS.Events.Event-1.Params.htm" />
+    <HelpKINode Title="Params Property " Url="html/P-Twilight.CQRS.Commands.Command-1.Params.htm" />
+    <HelpKINode Title="Params Property " Url="html/P-Twilight.CQRS.Queries.Query-2.Params.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Payload property" Url="html/P-Twilight.CQRS.Queries.QueryResponse-1.Payload.htm" />
+  <HelpKINode Title="Publish method" Url="html/Overload-Twilight.CQRS.Messaging.Contracts.IMessageSender.Publish-.htm" />
+  <HelpKINode Title="Query(Of TParameters, TResponse) class">
+    <HelpKINode Title="Query(TParameters, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="Query(TParameters, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="about Query(Of TParameters, TResponse) class" Url="html/T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Queries.Query-2.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.Query-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Query(Of TParameters, TResponse).Params property" Url="html/P-Twilight.CQRS.Queries.Query-2.Params.htm" />
+  <HelpKINode Title="Query(Of TParameters, TResponse).Query constructor" Url="html/M-Twilight.CQRS.Queries.Query-2.-ctor.htm" />
+  <HelpKINode Title="Query(Of TResponse) class">
+    <HelpKINode Title="Query(TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="Query(TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="about Query(Of TResponse) class" Url="html/T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Queries.Query-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.Query-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Query(Of TResponse).Query constructor" Url="html/M-Twilight.CQRS.Queries.Query-1.-ctor.htm" />
+  <HelpKINode Title="Query&lt;TParameters, TResponse&gt; class">
+    <HelpKINode Title="Query(TParameters, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="Query(TParameters, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="about Query&lt;TParameters, TResponse&gt; class" Url="html/T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Queries.Query-2.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.Query-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Query&lt;TParameters, TResponse&gt;.Params property" Url="html/P-Twilight.CQRS.Queries.Query-2.Params.htm" />
+  <HelpKINode Title="Query&lt;TParameters, TResponse&gt;.Query constructor" Url="html/M-Twilight.CQRS.Queries.Query-2.-ctor.htm" />
+  <HelpKINode Title="Query&lt;TResponse&gt; class">
+    <HelpKINode Title="Query(TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="Query(TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="about Query&lt;TResponse&gt; class" Url="html/T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Queries.Query-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.Query-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Query&lt;TResponse&gt;.Query constructor" Url="html/M-Twilight.CQRS.Queries.Query-1.-ctor.htm" />
+  <HelpKINode Title="QueryHandlerBase(Of TQuery, TResponse) class">
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="about QueryHandlerBase(Of TQuery, TResponse) class" Url="html/T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="QueryHandlerBase(Of TQuery, TResponse).Handle method" Url="html/M-Twilight.CQRS.Queries.QueryHandlerBase-2.Handle.htm" />
+  <HelpKINode Title="QueryHandlerBase&lt;TQuery, TResponse&gt; class">
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="about QueryHandlerBase&lt;TQuery, TResponse&gt; class" Url="html/T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="QueryHandlerBase&lt;TQuery, TResponse&gt;.Handle method" Url="html/M-Twilight.CQRS.Queries.QueryHandlerBase-2.Handle.htm" />
+  <HelpKINode Title="QueryResponse(Of TPayload) class">
+    <HelpKINode Title="QueryResponse(TPayload) Class" Url="html/T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="QueryResponse(TPayload) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="about QueryResponse(Of TPayload) class" Url="html/T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Queries.QueryResponse-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="QueryResponse(Of TPayload).Payload property" Url="html/P-Twilight.CQRS.Queries.QueryResponse-1.Payload.htm" />
+  <HelpKINode Title="QueryResponse(Of TPayload).QueryResponse constructor" Url="html/M-Twilight.CQRS.Queries.QueryResponse-1.-ctor.htm" />
+  <HelpKINode Title="QueryResponse&lt;TPayload&gt; class">
+    <HelpKINode Title="QueryResponse(TPayload) Class" Url="html/T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="QueryResponse(TPayload) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="about QueryResponse&lt;TPayload&gt; class" Url="html/T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="all members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="constructor" Url="html/M-Twilight.CQRS.Queries.QueryResponse-1.-ctor.htm" />
+    <HelpKINode Title="methods" Url="html/Methods.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="properties" Url="html/Properties.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="QueryResponse&lt;TPayload&gt;.Payload property" Url="html/P-Twilight.CQRS.Queries.QueryResponse-1.Payload.htm" />
+  <HelpKINode Title="QueryResponse&lt;TPayload&gt;.QueryResponse constructor" Url="html/M-Twilight.CQRS.Queries.QueryResponse-1.-ctor.htm" />
+  <HelpKINode Title="RegisterAssemblyTypes method" Url="html/M-Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterAssemblyTypes.htm" />
+  <HelpKINode Title="RegisterCqrs method" Url="html/M-Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterCqrs.htm" />
+  <HelpKINode Title="Send method" Url="html/Overload-Twilight.CQRS.Messaging.Contracts.IMessageSender.Send-.htm" />
+  <HelpKINode Title="Twilight.CQRS namespace" Url="html/N-Twilight.CQRS.htm" />
+  <HelpKINode Title="Twilight.CQRS.Autofac namespace" Url="html/N-Twilight.CQRS.Autofac.htm" />
+  <HelpKINode Title="Twilight.CQRS.Autofac.ContainerBuilderExtensions class">
+    <HelpKINode Title="ContainerBuilderExtensions Class" Url="html/T-Twilight.CQRS.Autofac.ContainerBuilderExtensions.htm" />
+    <HelpKINode Title="ContainerBuilderExtensions Members" Url="html/AllMembers.T-Twilight.CQRS.Autofac.ContainerBuilderExtensions.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Commands namespace" Url="html/N-Twilight.CQRS.Commands.htm" />
+  <HelpKINode Title="Twilight.CQRS.Commands.Command class">
+    <HelpKINode Title="Command Class" Url="html/T-Twilight.CQRS.Commands.Command.htm" />
+    <HelpKINode Title="Command Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Commands.Command(Of TParameters) class">
+    <HelpKINode Title="Command(TParameters) Class" Url="html/T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="Command(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Commands.Command&lt;TParameters&gt; class">
+    <HelpKINode Title="Command(TParameters) Class" Url="html/T-Twilight.CQRS.Commands.Command-1.htm" />
+    <HelpKINode Title="Command(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.Command-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Commands.CommandHandlerBase(Of TCommand) class">
+    <HelpKINode Title="CommandHandlerBase(TCommand) Class" Url="html/T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="CommandHandlerBase(TCommand) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Commands.CommandHandlerBase&lt;TCommand&gt; class">
+    <HelpKINode Title="CommandHandlerBase(TCommand) Class" Url="html/T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+    <HelpKINode Title="CommandHandlerBase(TCommand) Members" Url="html/AllMembers.T-Twilight.CQRS.Commands.CommandHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Contracts namespace" Url="html/N-Twilight.CQRS.Contracts.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.ICommand interface">
+    <HelpKINode Title="ICommand Interface" Url="html/T-Twilight.CQRS.Contracts.ICommand.htm" />
+    <HelpKINode Title="ICommand Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.ICommand.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Contracts.ICommandHandler interface" Url="html/AllMembers.T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.ICommandHandler(Of TCommand) interface" Url="html/T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.ICommandHandler&lt;TCommand&gt; interface" Url="html/T-Twilight.CQRS.Contracts.ICommandHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IEvent interface">
+    <HelpKINode Title="IEvent Interface" Url="html/T-Twilight.CQRS.Contracts.IEvent.htm" />
+    <HelpKINode Title="IEvent Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IEvent.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Contracts.IEventHandler interface" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IEventHandler(Of TEvent) interface" Url="html/T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IEventHandler&lt;TEvent&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IEventHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IMessage interface">
+    <HelpKINode Title="IMessage Interface" Url="html/T-Twilight.CQRS.Contracts.IMessage.htm" />
+    <HelpKINode Title="IMessage Members" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IMessage.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Contracts.IMessageHandler interface" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IMessageHandler(Of TMessage) interface" Url="html/T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IMessageHandler&lt;TMessage&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IMessageHandler-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IQuery interface" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IQuery(Of TResponse) interface" Url="html/T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IQuery&lt;TResponse&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IQuery-1.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IQueryHandler interface" Url="html/AllMembers.T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IQueryHandler(Of TQuery, TResponse) interface" Url="html/T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+  <HelpKINode Title="Twilight.CQRS.Contracts.IQueryHandler&lt;TQuery, TResponse&gt; interface" Url="html/T-Twilight.CQRS.Contracts.IQueryHandler-2.htm" />
+  <HelpKINode Title="Twilight.CQRS.Events namespace" Url="html/N-Twilight.CQRS.Events.htm" />
+  <HelpKINode Title="Twilight.CQRS.Events.Event class">
+    <HelpKINode Title="Event Class" Url="html/T-Twilight.CQRS.Events.Event.htm" />
+    <HelpKINode Title="Event Members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Events.Event(Of TParameters) class">
+    <HelpKINode Title="Event(TParameters) Class" Url="html/T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="Event(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Events.Event&lt;TParameters&gt; class">
+    <HelpKINode Title="Event(TParameters) Class" Url="html/T-Twilight.CQRS.Events.Event-1.htm" />
+    <HelpKINode Title="Event(TParameters) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.Event-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Events.EventHandlerBase(Of TEvent) class">
+    <HelpKINode Title="EventHandlerBase(TEvent) Class" Url="html/T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="EventHandlerBase(TEvent) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Events.EventHandlerBase&lt;TEvent&gt; class">
+    <HelpKINode Title="EventHandlerBase(TEvent) Class" Url="html/T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+    <HelpKINode Title="EventHandlerBase(TEvent) Members" Url="html/AllMembers.T-Twilight.CQRS.Events.EventHandlerBase-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Message class">
+    <HelpKINode Title="Message Class" Url="html/T-Twilight.CQRS.Message.htm" />
+    <HelpKINode Title="Message Members" Url="html/AllMembers.T-Twilight.CQRS.Message.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.MessageHandler(Of TMessage) class">
+    <HelpKINode Title="MessageHandler(TMessage) Class" Url="html/T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="MessageHandler(TMessage) Members" Url="html/AllMembers.T-Twilight.CQRS.MessageHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.MessageHandler&lt;TMessage&gt; class">
+    <HelpKINode Title="MessageHandler(TMessage) Class" Url="html/T-Twilight.CQRS.MessageHandler-1.htm" />
+    <HelpKINode Title="MessageHandler(TMessage) Members" Url="html/AllMembers.T-Twilight.CQRS.MessageHandler-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Messaging.Contracts namespace" Url="html/N-Twilight.CQRS.Messaging.Contracts.htm" />
+  <HelpKINode Title="Twilight.CQRS.Messaging.Contracts.IMessageSender interface">
+    <HelpKINode Title="IMessageSender Interface" Url="html/T-Twilight.CQRS.Messaging.Contracts.IMessageSender.htm" />
+    <HelpKINode Title="IMessageSender Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Contracts.IMessageSender.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Messaging.InMemory.Autofac namespace" Url="html/N-Twilight.CQRS.Messaging.InMemory.Autofac.htm" />
+  <HelpKINode Title="Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender class">
+    <HelpKINode Title="AutofacInMemoryMessageSender Class" Url="html/T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.htm" />
+    <HelpKINode Title="AutofacInMemoryMessageSender Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions class">
+    <HelpKINode Title="AutofacInMemoryMessagingRegistrationExtensions Class" Url="html/T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.htm" />
+    <HelpKINode Title="AutofacInMemoryMessagingRegistrationExtensions Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Messaging.Shared namespace" Url="html/N-Twilight.CQRS.Messaging.Shared.htm" />
+  <HelpKINode Title="Twilight.CQRS.Messaging.Shared.HandlerNotFoundException class">
+    <HelpKINode Title="HandlerNotFoundException Class" Url="html/T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+    <HelpKINode Title="HandlerNotFoundException Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Shared.HandlerNotFoundException.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException class">
+    <HelpKINode Title="MultipleCommandHandlersDefinedException Class" Url="html/T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+    <HelpKINode Title="MultipleCommandHandlersDefinedException Members" Url="html/AllMembers.T-Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries namespace" Url="html/N-Twilight.CQRS.Queries.htm" />
+  <HelpKINode Title="Twilight.CQRS.Queries.Query(Of TParameters, TResponse) class">
+    <HelpKINode Title="Query(TParameters, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="Query(TParameters, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries.Query(Of TResponse) class">
+    <HelpKINode Title="Query(TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="Query(TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries.Query&lt;TParameters, TResponse&gt; class">
+    <HelpKINode Title="Query(TParameters, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-2.htm" />
+    <HelpKINode Title="Query(TParameters, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries.Query&lt;TResponse&gt; class">
+    <HelpKINode Title="Query(TResponse) Class" Url="html/T-Twilight.CQRS.Queries.Query-1.htm" />
+    <HelpKINode Title="Query(TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.Query-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries.QueryHandlerBase(Of TQuery, TResponse) class">
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries.QueryHandlerBase&lt;TQuery, TResponse&gt; class">
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Class" Url="html/T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+    <HelpKINode Title="QueryHandlerBase(TQuery, TResponse) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryHandlerBase-2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries.QueryResponse(Of TPayload) class">
+    <HelpKINode Title="QueryResponse(TPayload) Class" Url="html/T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="QueryResponse(TPayload) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.CQRS.Queries.QueryResponse&lt;TPayload&gt; class">
+    <HelpKINode Title="QueryResponse(TPayload) Class" Url="html/T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+    <HelpKINode Title="QueryResponse(TPayload) Members" Url="html/AllMembers.T-Twilight.CQRS.Queries.QueryResponse-1.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.ES namespace" Url="html/N-Twilight.ES.htm" />
+  <HelpKINode Title="Twilight.ES.Aggregate class">
+    <HelpKINode Title="Aggregate Class" Url="html/T-Twilight.ES.Aggregate.htm" />
+    <HelpKINode Title="Aggregate Members" Url="html/AllMembers.T-Twilight.ES.Aggregate.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Twilight.ES.Contracts namespace" Url="html/N-Twilight.ES.Contracts.htm" />
+  <HelpKINode Title="Twilight.ES.Contracts.IAggregate interface">
+    <HelpKINode Title="IAggregate Interface" Url="html/T-Twilight.ES.Contracts.IAggregate.htm" />
+    <HelpKINode Title="IAggregate Members" Url="html/AllMembers.T-Twilight.ES.Contracts.IAggregate.htm" />
+  </HelpKINode>
+  <HelpKINode Title="ValidateMessage method">
+    <HelpKINode Title="ValidateMessage Method " Url="html/M-Twilight.CQRS.MessageHandler-1.ValidateMessage.htm" />
+    <HelpKINode Title="ValidateMessage Method " Url="html/M-Twilight.CQRS.Contracts.IMessageHandler-1.ValidateMessage.htm" />
+  </HelpKINode>
+</HelpKI>

@@ -1,0 +1,175 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac;
+using Autofac.Core;
+using Autofac.Core.Registration;
+using Microsoft.Extensions.Logging;
+using Twilight.CQRS.Contracts;
+using Twilight.CQRS.Messaging.Contracts;
+using Twilight.CQRS.Messaging.Shared;
+
+namespace Twilight.CQRS.Messaging.InMemory.Autofac
+{
+    /// <summary>
+    ///     <para>
+    ///         Provides a means of dispatching messages. This implementation uses Autofac to resolve a registered message
+    ///         handler from the container and call that handler, passing any appropriate message. This class cannot be
+    ///         inherited.
+    ///     </para>
+    ///     <para>Implements <see cref="IMessageSender" />.</para>
+    /// </summary>
+    /// <seealso cref="IMessageSender" />
+    public sealed class AutofacInMemoryMessageSender : IMessageSender
+    {
+        private readonly ILifetimeScope _lifetimeScope;
+        private readonly ILogger<AutofacInMemoryMessageSender> _logger;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AutofacInMemoryMessageSender" /> class.
+        /// </summary>
+        /// <param name="lifetimeScope">The Autofac lifetime scope.</param>
+        /// <param name="logger">The logger.</param>
+        public AutofacInMemoryMessageSender(ILifetimeScope lifetimeScope, ILogger<AutofacInMemoryMessageSender> logger)
+        {
+            _lifetimeScope = lifetimeScope;
+            _logger = logger;
+        }
+
+        /// <exception cref="MultipleCommandHandlersDefinedException">
+        ///     Thrown when more than one command handler is resolved from the container.
+        /// </exception>
+        /// <exception cref="HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
+        /// <inheritdoc />
+        public async Task Send<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : ICommand
+        {
+            await using var scope = _lifetimeScope.BeginLifetimeScope();
+
+            var assemblyQualifiedName = typeof(ICommandHandler<TCommand>).AssemblyQualifiedName;
+
+            IEnumerable<ICommandHandler<TCommand>>? handlers;
+
+            try
+            {
+                _lifetimeScope.TryResolve(out handlers);
+            }
+            catch (DependencyResolutionException ex)
+            {
+                _logger.LogError(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+            }
+
+            var commandHandlers = (handlers ?? Array.Empty<ICommandHandler<TCommand>>()).ToList();
+
+            if (commandHandlers.Count == 0)
+            {
+                _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                throw new HandlerNotFoundException(assemblyQualifiedName);
+            }
+
+            if (commandHandlers.Count > 1)
+            {
+                _logger.LogError("Multiple handlers found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                throw new MultipleCommandHandlersDefinedException(assemblyQualifiedName);
+            }
+
+            await commandHandlers.First().Handle(command, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
+        /// <inheritdoc />
+        public async Task<TResult> Send<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
+        {
+            var genericType = typeof(IQueryHandler<,>);
+            var closedGenericType = genericType.MakeGenericType(query.GetType(), typeof(TResult));
+            var assemblyQualifiedName = closedGenericType.AssemblyQualifiedName;
+
+            await using var scope = _lifetimeScope.BeginLifetimeScope();
+
+            object result;
+
+            try
+            {
+                var handlerExists = _lifetimeScope.TryResolve(closedGenericType, out var handler);
+
+                if (!handlerExists || handler == null)
+                {
+                    _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                    throw new HandlerNotFoundException(assemblyQualifiedName);
+                }
+
+                result = handler.GetType()
+                                .GetRuntimeMethod("Handle", new[] {query.GetType(), typeof(CancellationToken)})
+                                .Invoke(handler, new object[] {query, cancellationToken});
+            }
+            catch (DependencyResolutionException ex)
+            {
+                _logger.LogError(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+            }
+
+            return await (Task<TResult>) result;
+        }
+
+        /// <inheritdoc />
+        public async Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken)
+            where TEvent : IEvent
+        {
+            var enumerable = events as TEvent[] ?? events.ToArray();
+
+            if (!enumerable.Length.Equals(0))
+            {
+                _logger.LogCritical("No events received for publishing when at least one event was expected. Check calls to publish.");
+            }
+
+            foreach (var @event in enumerable)
+            {
+                await Publish(@event, cancellationToken);
+            }
+        }
+
+        /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
+        /// <inheritdoc />
+        public async Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken)
+            where TEvent : IEvent
+        {
+            await using var scope = _lifetimeScope.BeginLifetimeScope();
+
+            var assemblyQualifiedName = typeof(IEventHandler<TEvent>).AssemblyQualifiedName;
+
+            IEnumerable<IEventHandler<TEvent>> handlers;
+
+            try
+            {
+                handlers = _lifetimeScope.Resolve<IEnumerable<IEventHandler<TEvent>>>()
+                                         .ToList();
+            }
+            catch (ComponentNotRegisteredException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+            }
+            catch (DependencyResolutionException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+            }
+
+            if (!handlers.Any())
+            {
+                _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                throw new HandlerNotFoundException(assemblyQualifiedName);
+            }
+
+            var tasks = new List<Task>(handlers.Count());
+
+            tasks.AddRange(handlers.Select(handler => handler.Handle(@event, cancellationToken)));
+
+            await Task.WhenAll(tasks);
+        }
+    }
+}

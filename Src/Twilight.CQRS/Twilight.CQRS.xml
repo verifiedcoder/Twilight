@@ -1,0 +1,345 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Twilight.CQRS</name>
+    </assembly>
+    <members>
+        <member name="T:Twilight.CQRS.Commands.Command">
+            <summary>
+                <para>
+                    Represents an action that <em>does</em> something and may carry parameters as a payload or not. Irrespective of
+                    whether a command has parameters or not, a command is always a 'fire-and-forget' operation and therefore should
+                    not return a response.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Message" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.ICommand" />.</para>
+            </summary>
+            <seealso cref="T:Twilight.CQRS.Message" />
+            <seealso cref="T:Twilight.CQRS.Contracts.ICommand" />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.Command.#ctor(System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.Command" /> class.
+            </summary>
+            <param name="correlationId">The command correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this command to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="T:Twilight.CQRS.Commands.Command`1">
+            <summary>
+                <para>
+                    Represents an action that <em>does</em> something and may carry a payload of arbitrary type
+                    <typeparamref name="TParameters" />. The command may carry parameters as a payload or not. Irrespective of
+                    whether a command has parameters or not, a command is always a 'fire-and-forget' operation and therefore should
+                    not return a response.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Message" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.ICommand" />.</para>
+            </summary>
+            <typeparam name="TParameters">The type of the parameters.</typeparam>
+            <seealso cref="T:Twilight.CQRS.Message" />
+            <seealso cref="T:Twilight.CQRS.Contracts.ICommand" />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.Command`1.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.Command`1" /> class.
+            </summary>
+            <param name="parameters">The typed command parameters.</param>
+            <param name="correlationId">The command correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this command to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="P:Twilight.CQRS.Commands.Command`1.Params">
+            <summary>
+                Gets the typed command parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="T:Twilight.CQRS.Commands.CommandHandlerBase`1">
+            <summary>
+                <para>
+                    Represents the ability to process (handle) commands. A command handler receives a command and brokers a result.
+                    A result is either a successful application of the command, or an exception. This class cannot be instantiated.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.MessageHandler`1" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.ICommandHandler`1" />.</para>
+            </summary>
+            <typeparam name="TCommand">The type of the command.</typeparam>
+            <seealso cref="T:Twilight.CQRS.MessageHandler`1" />
+            <seealso cref="T:Twilight.CQRS.Contracts.ICommandHandler`1" />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.CommandHandlerBase`1.#ctor(Twilight.CQRS.Messaging.Contracts.IMessageSender,Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CommandHandlerBase`1" /> class.
+            </summary>
+            <param name="messageSender">The message sender.</param>
+            <param name="validator">The command validator.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="P:Twilight.CQRS.Commands.CommandHandlerBase`1.MessageSender">
+            <summary>
+                Gets the message sender.
+            </summary>
+            <value>The message sender.</value>
+        </member>
+        <member name="M:Twilight.CQRS.Commands.CommandHandlerBase`1.Handle(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.CommandHandlerBase`1.HandleCommand(`0,System.Threading.CancellationToken)">
+            <summary>
+                Handles the command.
+            </summary>
+            <param name="command">The command.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task that represents the asynchronous handle command operation.</returns>
+        </member>
+        <member name="T:Twilight.CQRS.Events.Event">
+            <summary>
+                <para>
+                    Represents something that has already taken place in the domain. As such, always name an event with a
+                    past-participle verb, e.g. UserCreated. Events are facts and can be used to influence business decisions within
+                    the domain. Irrespective of whether an event has parameters or not, an event is always a 'fire-and-forget'
+                    operation and therefore does not return a response.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Message" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.IEvent" />.</para>
+            </summary>
+            <seealso cref="T:Twilight.CQRS.Message" />
+            <seealso cref="T:Twilight.CQRS.Contracts.IEvent" />
+        </member>
+        <member name="M:Twilight.CQRS.Events.Event.#ctor(System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.Event" /> class.
+            </summary>
+            <param name="correlationId">The event correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this event to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="T:Twilight.CQRS.Events.Event`1">
+            <summary>
+                <para>
+                    Represents something that has already taken place in the domain. As such, always name an event with a
+                    past-participle verb, e.g. UserCreated. Events are facts and can be used to influence business decisions within
+                    the domain. Irrespective of whether an event has parameters or not, an event is always a 'fire-and-forget'
+                    operation and therefore does not return a response.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Message" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.IEvent" />.</para>
+            </summary>
+            <typeparam name="TParameters">The type of the parameters.</typeparam>
+            <seealso cref="T:Twilight.CQRS.Message" />
+            <seealso cref="T:Twilight.CQRS.Events.Event" />
+        </member>
+        <member name="M:Twilight.CQRS.Events.Event`1.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.Event`1" /> class.
+            </summary>
+            <param name="parameters">The parameters.</param>
+            <param name="correlationId">The event correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this event to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="P:Twilight.CQRS.Events.Event`1.Params">
+            <summary>
+                Gets the typed event parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="T:Twilight.CQRS.Events.EventHandlerBase`1">
+            <summary>
+                <para>
+                    Represents the ability to process (handle) events. An event handler receives a <em>published</em> event and
+                    brokers a result. A result is either a successful consumption of the event, or an exception. Events can be
+                    consumed by multiple event handlers. This class cannot be instantiated.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.MessageHandler`1" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.IEventHandler`1" />.</para>
+            </summary>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+            <seealso cref="T:Twilight.CQRS.MessageHandler`1" />
+            <seealso cref="T:Twilight.CQRS.Contracts.IEventHandler`1" />
+        </member>
+        <member name="M:Twilight.CQRS.Events.EventHandlerBase`1.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.EventHandlerBase`1" /> class.
+            </summary>
+            <param name="validator">The event validator.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Twilight.CQRS.Events.EventHandlerBase`1.Handle(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Events.EventHandlerBase`1.HandleEvent(`0,System.Threading.CancellationToken)">
+            <summary>
+                Handles the event.
+            </summary>
+            <param name="event">The event.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task that represents the asynchronous handle event operation.</returns>
+        </member>
+        <member name="T:Twilight.CQRS.Message">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Message.#ctor(System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Message" /> class.
+            </summary>
+            <param name="correlationId">The message correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this message to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="P:Twilight.CQRS.Message.MessageId">
+            <inheritdoc />
+        </member>
+        <member name="P:Twilight.CQRS.Message.CorrelationId">
+            <inheritdoc />
+        </member>
+        <member name="P:Twilight.CQRS.Message.CausationId">
+            <inheritdoc />
+        </member>
+        <member name="T:Twilight.CQRS.MessageHandler`1">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.MessageHandler`1.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.MessageHandler`1" /> class.
+            </summary>
+            <param name="validator">The message validator.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="P:Twilight.CQRS.MessageHandler`1.Logger">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.MessageHandler`1.OnBeforeHandling(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.MessageHandler`1.ValidateMessage(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.MessageHandler`1.OnAfterHandling(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Twilight.CQRS.Queries.Query`1">
+            <summary>
+                <para>
+                    Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Message" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.IQuery`1" />.</para>
+            </summary>
+            <typeparam name="TResponse">The type of the response.</typeparam>
+            <seealso cref="T:Twilight.CQRS.Message" />
+            <seealso cref="T:Twilight.CQRS.Contracts.IQuery`1" />
+        </member>
+        <member name="M:Twilight.CQRS.Queries.Query`1.#ctor(System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.Query`1" /> class.
+            </summary>
+            <param name="correlationId">The query correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this query to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="T:Twilight.CQRS.Queries.Query`2">
+            <summary>
+                <para>
+                    Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Message" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.IQuery`1" />.</para>
+            </summary>
+            <typeparam name="TParameters">The type of the parameters.</typeparam>
+            <typeparam name="TResponse">The type of the response.</typeparam>
+            <seealso cref="T:Twilight.CQRS.Message" />
+            <seealso cref="T:Twilight.CQRS.Contracts.IQuery`1" />
+        </member>
+        <member name="M:Twilight.CQRS.Queries.Query`2.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.Query`2" /> class.
+            </summary>
+            <param name="parameters">The parameters.</param>
+            <param name="correlationId">The query correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this query to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="P:Twilight.CQRS.Queries.Query`2.Params">
+            <summary>
+                Gets the typed query parameters.
+            </summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="T:Twilight.CQRS.Queries.QueryHandlerBase`2">
+            <summary>
+                <para>
+                    Represents the ability to process (handle) queries. A query handler receives a query and directs the query for
+                    processing. This class cannot be instantiated.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.MessageHandler`1" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Contracts.IQueryHandler`2" />.</para>
+            </summary>
+            <typeparam name="TQuery">The type of the query.</typeparam>
+            <typeparam name="TResponse">The type of the query response.</typeparam>
+            <seealso cref="T:Twilight.CQRS.MessageHandler`1" />
+            <seealso cref="T:Twilight.CQRS.Contracts.IQueryHandler`2" />
+        </member>
+        <member name="M:Twilight.CQRS.Queries.QueryHandlerBase`2.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.QueryHandlerBase`2" /> class.
+            </summary>
+            <param name="validator">The query validator.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Twilight.CQRS.Queries.QueryHandlerBase`2.Handle(`0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Queries.QueryHandlerBase`2.HandleQuery(`0,System.Threading.CancellationToken)">
+            <summary>
+                Handles the query.
+            </summary>
+            <param name="query">The query.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>
+                <para>A task that represents the asynchronous query handler operation.</para>
+                <para>The task result contains the query execution response.</para>
+            </returns>
+        </member>
+        <member name="T:Twilight.CQRS.Queries.QueryResponse`1">
+            <summary>
+                <para>Represents an encapsulated response from a query handler.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Message" />.</para>
+            </summary>
+            <typeparam name="TPayload">The type of the payload.</typeparam>
+            <seealso cref="T:Twilight.CQRS.Message" />
+        </member>
+        <member name="M:Twilight.CQRS.Queries.QueryResponse`1.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.QueryResponse`1" /> class.
+            </summary>
+            <param name="payload">The payload.</param>
+            <param name="correlationId">The message correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the query that caused this response to be produced.
+                Optional.
+            </param>
+        </member>
+        <member name="P:Twilight.CQRS.Queries.QueryResponse`1.Payload">
+            <summary>
+                Gets the typed query response payload.
+            </summary>
+            <value>The payload.</value>
+        </member>
+    </members>
+</doc>
