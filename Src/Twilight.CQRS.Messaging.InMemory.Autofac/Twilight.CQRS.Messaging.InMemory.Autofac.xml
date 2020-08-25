@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Twilight.CQRS.Messaging.InMemory.Autofac</name>
+    </assembly>
+    <members>
+        <member name="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender">
+            <summary>
+                <para>
+                    Provides a means of dispatching messages. This implementation uses Autofac to resolve a registered message
+                    handler from the container and call that handler, passing any appropriate message. This class cannot be
+                    inherited.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Messaging.Contracts.IMessageSender" />.</para>
+            </summary>
+            <seealso cref="T:Twilight.CQRS.Messaging.Contracts.IMessageSender" />
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.#ctor(Autofac.ILifetimeScope,Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender" /> class.
+            </summary>
+            <param name="lifetimeScope">The Autofac lifetime scope.</param>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Send``1(``0,System.Threading.CancellationToken)">
+            <exception cref="T:Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException">
+                Thrown when more than one command handler is resolved from the container.
+            </exception>
+            <exception cref="T:Twilight.CQRS.Messaging.Shared.HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Send``1(Twilight.CQRS.Contracts.IQuery{``0},System.Threading.CancellationToken)">
+            <exception cref="T:Twilight.CQRS.Messaging.Shared.HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Publish``1(System.Collections.Generic.IEnumerable{``0},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Publish``1(``0,System.Threading.CancellationToken)">
+            <exception cref="T:Twilight.CQRS.Messaging.Shared.HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
+            <inheritdoc />
+        </member>
+        <member name="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions">
+            <summary>
+                Provides an extension that uses Autofac to register in-memory messaging.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions.AddAutofacInMemoryMessaging(Autofac.ContainerBuilder)">
+            <summary>
+                Adds in-memory messaging using Autofac.
+            </summary>
+            <param name="builder">The component registration builder.</param>
+            <returns>ContainerBuilder.</returns>
+        </member>
+    </members>
+</doc>
