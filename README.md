@@ -6,7 +6,7 @@ Twilight is a CQRS library that, 'out-of-the-box', provides an in-memory message
 
 It is not intended for this to be published as NuGet packages as support is not possible. The expectation is to use this repository as a learning aid and fork for your own specific requirements.
 
-## Requirements
+### Requirements
 
 - Microsoft Visual Studio 2019
 - .Net Core 3.1
@@ -73,7 +73,7 @@ A handler is required to act as a middleman between messages and the intended de
 
 There can only be one handler for a specific command or query. Unlike commands and queries, events can be consumed by multiple handlers (a powerful capability of CQRS).
 
-## Naming **Twilight**
+## Naming Twilight
 
 This project started out some time ago with an grander aim and was going to use Paramore Brighter and Darker repositories. When that was dropped as being unnecessarily ambitious, the name as a combination of the Brighter and Darker, Twilight, stuck with attendant "can you see what I did there" gusto.
 
@@ -89,7 +89,7 @@ The structure of parameters is up to you as the implementer. Strive for as littl
 
 Note that when run in debug, you should expect execution to stop for a validation exception. This is expected behaviour.
 
-#Architecture
+## Architecture
 
 Twilight CQRS is broken into discrete areas of functionality in order to best separate concerns. It allows the implementer to use as much or as little of the code as possible without attaching unwanted dependencies.
 
@@ -97,7 +97,7 @@ The following dependency graph shows the careful planning of the relationships b
 
 ![Dependencies Graph](DependenciesGraph.png)
 
-# API Documentation
+## API Documentation
 
 The XML documentation for the public API has been used to generate full developer documentation for Twilight and is available in the "Documentation" folder. Just open the index file in any web browser.
 
