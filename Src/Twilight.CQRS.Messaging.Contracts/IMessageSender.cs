@@ -39,7 +39,7 @@ namespace Twilight.CQRS.Messaging.Contracts
         /// <param name="events">The domain events.</param>
         /// <param name="cancellationToken">Task cancellation token.</param>
         /// <returns>Task that completes when all handlers finish processing.</returns>
-        Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken)
+        Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
             where TEvent : IEvent;
 
         /// <summary>

@@ -16,6 +16,10 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration
 {
     public sealed class AutofacDependencyResolutionExceptionTests : IAsyncLifetime
     {
+        private static IContainer? _container;
+
+        private readonly IMessageSender _subject;
+
         public AutofacDependencyResolutionExceptionTests()
         {
             var builder = new ContainerBuilder();
@@ -27,10 +31,6 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration
 
             _subject = _container.Resolve<IMessageSender>();
         }
-
-        private static IContainer? _container;
-
-        private readonly IMessageSender _subject;
 
         public async Task InitializeAsync()
         {

@@ -7,9 +7,8 @@ namespace Twilight.CQRS.Tests.Unit.Queries
 {
     public sealed class QueryTests
     {
-        public QueryTests() => _params = new TestParameters();
-
         private readonly TestParameters _params;
+        public QueryTests() => _params = new TestParameters();
 
         [Fact]
         public void QueryWithoutParametersShouldAssignCausationIdWhenCreated()

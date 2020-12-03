@@ -10,9 +10,8 @@ namespace Twilight.CQRS.Autofac.Tests.Unit
 {
     public sealed class CqrsRegistrationExtensionsTests
     {
-        public CqrsRegistrationExtensionsTests() => _builder = new ContainerBuilder();
-
         private readonly ContainerBuilder _builder;
+        public CqrsRegistrationExtensionsTests() => _builder = new ContainerBuilder();
 
         // ReSharper disable once SuggestBaseTypeForParameter as don't want multiple enumeration
         private static void AssertOnExpectedServices(IEnumerable<string> expectedServices, List<string> services)

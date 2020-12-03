@@ -7,8 +7,8 @@ namespace Twilight.Sample
 {
     internal sealed class AppHost : IHostedService
     {
-        private readonly IRunner _runner;
         private readonly ILogger<AppHost> _logger;
+        private readonly IRunner _runner;
 
         public AppHost(IRunner runner, ILogger<AppHost> logger)
         {

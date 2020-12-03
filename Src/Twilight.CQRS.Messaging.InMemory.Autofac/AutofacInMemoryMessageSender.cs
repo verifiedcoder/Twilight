@@ -44,12 +44,12 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
         /// </exception>
         /// <exception cref="HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
         /// <inheritdoc />
-        public async Task Send<TCommand>(TCommand command, CancellationToken cancellationToken)
+        public async Task Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : ICommand
         {
             await using var scope = _lifetimeScope.BeginLifetimeScope();
 
-            var assemblyQualifiedName = typeof(ICommandHandler<TCommand>).AssemblyQualifiedName;
+            var assemblyQualifiedName = typeof(ICommandHandler<TCommand>).AssemblyQualifiedName ?? "Unknown Assembly";
 
             IEnumerable<ICommandHandler<TCommand>>? handlers;
 
@@ -81,12 +81,13 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
         }
 
         /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when a handler type cannot resolved the type's 'Handle' method.</exception>
         /// <inheritdoc />
-        public async Task<TResult> Send<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
+        public async Task<TResult> Send<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         {
             var genericType = typeof(IQueryHandler<,>);
             var closedGenericType = genericType.MakeGenericType(query.GetType(), typeof(TResult));
-            var assemblyQualifiedName = closedGenericType.AssemblyQualifiedName;
+            var assemblyQualifiedName = closedGenericType.AssemblyQualifiedName ?? "Unknown Assembly";
 
             await using var scope = _lifetimeScope.BeginLifetimeScope();
 
@@ -102,9 +103,11 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
                     throw new HandlerNotFoundException(assemblyQualifiedName);
                 }
 
-                result = handler.GetType()
-                                .GetRuntimeMethod("Handle", new[] {query.GetType(), typeof(CancellationToken)})
-                                .Invoke(handler, new object[] {query, cancellationToken});
+                var handlerType = handler.GetType();
+                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] {query.GetType(), typeof(CancellationToken)})
+                                            ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
+
+                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] {query, cancellationToken}) ?? throw new InvalidOperationException();
             }
             catch (DependencyResolutionException ex)
             {
@@ -116,7 +119,7 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
         }
 
         /// <inheritdoc />
-        public async Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken)
+        public async Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
             where TEvent : IEvent
         {
             var enumerable = events as TEvent[] ?? events.ToArray();
@@ -134,12 +137,12 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
 
         /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
         /// <inheritdoc />
-        public async Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken)
+        public async Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
             where TEvent : IEvent
         {
             await using var scope = _lifetimeScope.BeginLifetimeScope();
 
-            var assemblyQualifiedName = typeof(IEventHandler<TEvent>).AssemblyQualifiedName;
+            var assemblyQualifiedName = typeof(IEventHandler<TEvent>).AssemblyQualifiedName ?? "Unknown Assembly";
 
             IEnumerable<IEventHandler<TEvent>> handlers;
 

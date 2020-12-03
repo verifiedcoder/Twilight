@@ -15,6 +15,9 @@ namespace Twilight.CQRS.Tests.Unit.Commands
 {
     public sealed class CommandHandlerTests
     {
+        private readonly IMessageSender _messageSender;
+        private readonly TestCommandHandler _subject;
+
         public CommandHandlerTests()
         {
             var logger = Substitute.For<ILogger<TestCommandHandler>>();
@@ -27,9 +30,6 @@ namespace Twilight.CQRS.Tests.Unit.Commands
 
             _subject = new TestCommandHandler(_messageSender, logger, validator);
         }
-
-        private readonly IMessageSender _messageSender;
-        private readonly TestCommandHandler _subject;
 
         [Fact]
         public async Task HandlerShouldPublishEventWhenHandling()
