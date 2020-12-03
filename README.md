@@ -9,9 +9,9 @@ It is not intended for this repository to be published as NuGet packages as supp
 ### Requirements
 
 - Microsoft Visual Studio 2019
-- .Net Core 3.1
+- .NET 5.0
 
-It is recommended that all relevant updates are applied.
+If using Visual Studio 2019, it is recommended that all relevant updates are applied.
 
 ## CQRS
 
