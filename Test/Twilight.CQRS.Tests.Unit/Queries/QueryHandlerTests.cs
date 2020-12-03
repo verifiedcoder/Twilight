@@ -13,6 +13,8 @@ namespace Twilight.CQRS.Tests.Unit.Queries
 {
     public sealed class QueryHandlerTests
     {
+        private readonly TestQueryHandler _subject;
+
         public QueryHandlerTests()
         {
             var logger = Substitute.For<ILogger<TestQueryHandler>>();
@@ -23,8 +25,6 @@ namespace Twilight.CQRS.Tests.Unit.Queries
 
             _subject = new TestQueryHandler(logger, validator);
         }
-
-        private readonly TestQueryHandler _subject;
 
         [Fact]
         public async Task HandlerShouldHandleQuery()

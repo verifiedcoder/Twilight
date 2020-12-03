@@ -13,6 +13,8 @@ namespace Twilight.CQRS.Tests.Unit.Events
 {
     public sealed class EventHandlerTests
     {
+        private readonly TestEventHandler _subject;
+
         public EventHandlerTests()
         {
             var logger = Substitute.For<ILogger<TestEventHandler>>();
@@ -23,8 +25,6 @@ namespace Twilight.CQRS.Tests.Unit.Events
 
             _subject = new TestEventHandler(logger, validator);
         }
-
-        private readonly TestEventHandler _subject;
 
         [Fact]
         public async Task HandlerShouldNotThrowWhenValidatingValidEventParameters()

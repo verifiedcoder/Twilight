@@ -13,6 +13,8 @@ namespace Twilight.CQRS.Tests.Unit.Queries
 {
     public sealed class NonValidatingQueryHandlerTests
     {
+        private readonly NonValidatingTestQueryHandler _subject;
+
         public NonValidatingQueryHandlerTests()
         {
             var logger = Substitute.For<ILogger<NonValidatingTestQueryHandler>>();
@@ -21,8 +23,6 @@ namespace Twilight.CQRS.Tests.Unit.Queries
 
             _subject = new NonValidatingTestQueryHandler(logger);
         }
-
-        private readonly NonValidatingTestQueryHandler _subject;
 
         [Fact]
         public async Task HandlerShouldNotThrowWhenEventValidatorIsDefault()

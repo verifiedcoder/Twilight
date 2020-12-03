@@ -81,7 +81,9 @@ The following dependency graph shows the careful planning of the relationships b
 
 ## API Documentation
 
-The XML documentation for the public API has been used to generate full developer documentation for Twilight and is available in the *"Documentation"* folder. Once you have a local copy of this repository, just open the index file in any web browser.
+The XML documentation for the public API can be used to generate full developer documentation for Twilight.
+
+You can use DocFX to generate the documentation. For more information, see [here](https://dotnet.github.io/docfx/).
 
 ## Sample: Console App
 

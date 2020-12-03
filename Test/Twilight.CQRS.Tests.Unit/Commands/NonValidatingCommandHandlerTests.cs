@@ -14,6 +14,8 @@ namespace Twilight.CQRS.Tests.Unit.Commands
 {
     public sealed class NonValidatingCommandHandlerTests
     {
+        private readonly NonValidatingTestCommandHandler _subject;
+
         public NonValidatingCommandHandlerTests()
         {
             var logger = Substitute.For<ILogger<NonValidatingTestCommandHandler>>();
@@ -24,8 +26,6 @@ namespace Twilight.CQRS.Tests.Unit.Commands
 
             _subject = new NonValidatingTestCommandHandler(messageSender, logger);
         }
-
-        private readonly NonValidatingTestCommandHandler _subject;
 
         [Fact]
         public async Task HandlerShouldNotThrowWhenCommandValidatorIsDefault()

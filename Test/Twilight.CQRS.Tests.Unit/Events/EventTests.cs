@@ -7,9 +7,8 @@ namespace Twilight.CQRS.Tests.Unit.Events
 {
     public sealed class EventTests
     {
-        public EventTests() => _params = new TestParameters();
-
         private readonly TestParameters _params;
+        public EventTests() => _params = new TestParameters();
 
         [Fact]
         public void EventWithoutParametersShouldAssignCausationIdWhenCreated()

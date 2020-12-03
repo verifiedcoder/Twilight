@@ -21,7 +21,6 @@ namespace Twilight.CQRS
             Logger = logger;
 
             _validator = validator;
-
         }
 
         /// <inheritdoc />
@@ -51,7 +50,7 @@ namespace Twilight.CQRS
                 return;
             }
 
-            await _validator.ValidateAndThrowAsync(message, cancellationToken: cancellationToken);
+            await _validator.ValidateAndThrowAsync(message, cancellationToken);
         }
 
         /// <inheritdoc />
