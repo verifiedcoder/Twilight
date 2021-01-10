@@ -4,6 +4,6 @@
     {
         public TestQueryResponse() => Value = string.Empty;
 
-        public string Value { get; set; }
+        public string Value { get; init; }
     }
 }

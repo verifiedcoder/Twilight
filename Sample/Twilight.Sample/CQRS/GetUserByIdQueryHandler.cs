@@ -21,7 +21,7 @@ namespace Twilight.Sample.CQRS
         {
             Logger.LogInformation("Handled query, {QueryTypeName}.", query.GetType().FullName);
 
-            var user = await _context.UsersView.FindAsync(query.Params.UserId);
+            var user = await _context.UsersView.FindAsync(new object[] {query.Params.UserId}, cancellationToken);
 
             var payload = new GetUserByIdQueryResponsePayload(user.Id, user.Forename, user.Surname);
             var response = new QueryResponse<GetUserByIdQueryResponsePayload>(payload, query.CorrelationId, query.MessageId);
