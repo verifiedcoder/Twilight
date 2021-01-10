@@ -65,19 +65,25 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
 
             var commandHandlers = (handlers ?? Array.Empty<ICommandHandler<TCommand>>()).ToList();
 
-            if (commandHandlers.Count == 0)
+            switch (commandHandlers.Count)
             {
-                _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
-                throw new HandlerNotFoundException(assemblyQualifiedName);
-            }
+                case 0:
 
-            if (commandHandlers.Count > 1)
-            {
-                _logger.LogError("Multiple handlers found in {AssemblyQualifiedName}.", assemblyQualifiedName);
-                throw new MultipleCommandHandlersDefinedException(assemblyQualifiedName);
-            }
+                    _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
 
-            await commandHandlers.First().Handle(command, cancellationToken).ConfigureAwait(false);
+                    throw new HandlerNotFoundException(assemblyQualifiedName);
+
+                case > 1:
+
+                    _logger.LogError("Multiple handlers found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+
+                    throw new MultipleCommandHandlersDefinedException(assemblyQualifiedName);
+
+                default:
+
+                    await commandHandlers.First().Handle(command, cancellationToken).ConfigureAwait(false);
+                    break;
+            }
         }
 
         /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
