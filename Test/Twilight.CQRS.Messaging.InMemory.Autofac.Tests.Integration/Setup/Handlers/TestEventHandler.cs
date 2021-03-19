@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Events;
 using Twilight.CQRS.Tests.Unit.Shared;
 
@@ -12,9 +11,8 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handl
         private readonly ITestService _service;
 
         public TestEventHandler(ITestService service,
-                                ILogger<TestEventHandler> logger,
                                 IValidator<Event<TestParameters>> validator)
-            : base(logger, validator) => _service = service;
+            : base(validator) => _service = service;
 
         protected override async Task HandleEvent(Event<TestParameters> @event, CancellationToken cancellationToken = default)
         {

@@ -3,8 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
 using Twilight.CQRS.Queries;
 using Twilight.CQRS.Tests.Unit.Shared;
 using Xunit;
@@ -15,14 +13,7 @@ namespace Twilight.CQRS.Tests.Unit.Queries
     {
         private readonly NonValidatingTestQueryHandler _subject;
 
-        public NonValidatingQueryHandlerTests()
-        {
-            var logger = Substitute.For<ILogger<NonValidatingTestQueryHandler>>();
-
-            logger.IsEnabled(LogLevel.Trace).Returns(true);
-
-            _subject = new NonValidatingTestQueryHandler(logger);
-        }
+        public NonValidatingQueryHandlerTests() => _subject = new NonValidatingTestQueryHandler();
 
         [Fact]
         public async Task HandlerShouldNotThrowWhenEventValidatorIsDefault()

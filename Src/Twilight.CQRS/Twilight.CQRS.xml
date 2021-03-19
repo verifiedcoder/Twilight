@@ -17,7 +17,7 @@
             <seealso cref="T:Twilight.CQRS.Message" />
             <seealso cref="T:Twilight.CQRS.Contracts.ICommand" />
         </member>
-        <member name="M:Twilight.CQRS.Commands.Command.#ctor(System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Commands.Command.#ctor(System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.Command" /> class.
             </summary>
@@ -42,7 +42,7 @@
             <seealso cref="T:Twilight.CQRS.Message" />
             <seealso cref="T:Twilight.CQRS.Contracts.ICommand" />
         </member>
-        <member name="M:Twilight.CQRS.Commands.Command`1.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Commands.Command`1.#ctor(`0,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.Command`1" /> class.
             </summary>
@@ -72,13 +72,12 @@
             <seealso cref="T:Twilight.CQRS.MessageHandler`1" />
             <seealso cref="T:Twilight.CQRS.Contracts.ICommandHandler`1" />
         </member>
-        <member name="M:Twilight.CQRS.Commands.CommandHandlerBase`1.#ctor(Twilight.CQRS.Messaging.Contracts.IMessageSender,Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+        <member name="M:Twilight.CQRS.Commands.CommandHandlerBase`1.#ctor(Twilight.CQRS.Messaging.Contracts.IMessageSender,FluentValidation.IValidator{`0})">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CommandHandlerBase`1" /> class.
             </summary>
             <param name="messageSender">The message sender.</param>
             <param name="validator">The command validator.</param>
-            <param name="logger">The logger.</param>
         </member>
         <member name="P:Twilight.CQRS.Commands.CommandHandlerBase`1.MessageSender">
             <summary>
@@ -111,7 +110,7 @@
             <seealso cref="T:Twilight.CQRS.Message" />
             <seealso cref="T:Twilight.CQRS.Contracts.IEvent" />
         </member>
-        <member name="M:Twilight.CQRS.Events.Event.#ctor(System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Events.Event.#ctor(System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.Event" /> class.
             </summary>
@@ -136,7 +135,7 @@
             <seealso cref="T:Twilight.CQRS.Message" />
             <seealso cref="T:Twilight.CQRS.Events.Event" />
         </member>
-        <member name="M:Twilight.CQRS.Events.Event`1.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Events.Event`1.#ctor(`0,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.Event`1" /> class.
             </summary>
@@ -167,12 +166,11 @@
             <seealso cref="T:Twilight.CQRS.MessageHandler`1" />
             <seealso cref="T:Twilight.CQRS.Contracts.IEventHandler`1" />
         </member>
-        <member name="M:Twilight.CQRS.Events.EventHandlerBase`1.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+        <member name="M:Twilight.CQRS.Events.EventHandlerBase`1.#ctor(FluentValidation.IValidator{`0})">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.EventHandlerBase`1" /> class.
             </summary>
             <param name="validator">The event validator.</param>
-            <param name="logger">The logger.</param>
         </member>
         <member name="M:Twilight.CQRS.Events.EventHandlerBase`1.Handle(`0,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -188,7 +186,7 @@
         <member name="T:Twilight.CQRS.Message">
             <inheritdoc />
         </member>
-        <member name="M:Twilight.CQRS.Message.#ctor(System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Message.#ctor(System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Message" /> class.
             </summary>
@@ -210,15 +208,23 @@
         <member name="T:Twilight.CQRS.MessageHandler`1">
             <inheritdoc />
         </member>
-        <member name="M:Twilight.CQRS.MessageHandler`1.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+        <member name="M:Twilight.CQRS.MessageHandler`1.#ctor(FluentValidation.IValidator{`0})">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.MessageHandler`1" /> class.
             </summary>
             <param name="validator">The message validator.</param>
-            <param name="logger">The logger.</param>
         </member>
-        <member name="P:Twilight.CQRS.MessageHandler`1.Logger">
-            <inheritdoc />
+        <member name="P:Twilight.CQRS.MessageHandler`1.ActivitySourceName">
+            <summary>
+                Gets the Open Telemetry activity source identifier.
+            </summary>
+            <value>The activity source identifier.</value>
+        </member>
+        <member name="P:Twilight.CQRS.MessageHandler`1.AssemblyVersion">
+            <summary>
+                Gets the assembly version.
+            </summary>
+            <value>The assembly version.</value>
         </member>
         <member name="M:Twilight.CQRS.MessageHandler`1.OnBeforeHandling(`0,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -241,7 +247,7 @@
             <seealso cref="T:Twilight.CQRS.Message" />
             <seealso cref="T:Twilight.CQRS.Contracts.IQuery`1" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.Query`1.#ctor(System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Queries.Query`1.#ctor(System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.Query`1" /> class.
             </summary>
@@ -264,7 +270,7 @@
             <seealso cref="T:Twilight.CQRS.Message" />
             <seealso cref="T:Twilight.CQRS.Contracts.IQuery`1" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.Query`2.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Queries.Query`2.#ctor(`0,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.Query`2" /> class.
             </summary>
@@ -295,12 +301,11 @@
             <seealso cref="T:Twilight.CQRS.MessageHandler`1" />
             <seealso cref="T:Twilight.CQRS.Contracts.IQueryHandler`2" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.QueryHandlerBase`2.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Contracts.IMessageHandler{`0}},FluentValidation.IValidator{`0})">
+        <member name="M:Twilight.CQRS.Queries.QueryHandlerBase`2.#ctor(FluentValidation.IValidator{`0})">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.QueryHandlerBase`2" /> class.
             </summary>
             <param name="validator">The query validator.</param>
-            <param name="logger">The logger.</param>
         </member>
         <member name="M:Twilight.CQRS.Queries.QueryHandlerBase`2.Handle(`0,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -324,7 +329,7 @@
             <typeparam name="TPayload">The type of the payload.</typeparam>
             <seealso cref="T:Twilight.CQRS.Message" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.QueryResponse`1.#ctor(`0,System.Guid,System.Nullable{System.Guid})">
+        <member name="M:Twilight.CQRS.Queries.QueryResponse`1.#ctor(`0,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.QueryResponse`1" /> class.
             </summary>

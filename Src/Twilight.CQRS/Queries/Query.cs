@@ -1,5 +1,4 @@
-﻿using System;
-using Twilight.CQRS.Contracts;
+﻿using Twilight.CQRS.Contracts;
 
 namespace Twilight.CQRS.Queries
 {
@@ -23,7 +22,7 @@ namespace Twilight.CQRS.Queries
         ///     The causation identifier. Identifies the message that caused this query to be produced.
         ///     Optional.
         /// </param>
-        public Query(Guid correlationId, Guid? causationId = null)
+        public Query(string correlationId, string? causationId = null)
             : base(correlationId, causationId)
         {
         }
@@ -52,7 +51,7 @@ namespace Twilight.CQRS.Queries
         ///     The causation identifier. Identifies the message that caused this query to be produced.
         ///     Optional.
         /// </param>
-        public Query(TParameters parameters, Guid correlationId, Guid? causationId = null)
+        public Query(TParameters parameters, string correlationId, string? causationId = null)
             : base(correlationId, causationId) => Params = parameters;
 
         /// <summary>

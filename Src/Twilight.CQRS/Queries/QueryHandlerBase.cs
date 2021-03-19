@@ -1,7 +1,7 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Contracts;
 
 namespace Twilight.CQRS.Queries
@@ -25,24 +25,50 @@ namespace Twilight.CQRS.Queries
         ///     Initializes a new instance of the <see cref="QueryHandlerBase{TQuery,TResponse}" /> class.
         /// </summary>
         /// <param name="validator">The query validator.</param>
-        /// <param name="logger">The logger.</param>
-        protected QueryHandlerBase(ILogger<IMessageHandler<TQuery>> logger, IValidator<TQuery>? validator = default)
-            : base(logger, validator)
+        protected QueryHandlerBase(IValidator<TQuery>? validator = default)
+            : base(validator)
         {
         }
 
         /// <inheritdoc />
         public async Task<TResponse> Handle(TQuery query, CancellationToken cancellationToken = default)
         {
-            await OnBeforeHandling(query, cancellationToken);
+            var activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
 
-            await ValidateMessage(query, cancellationToken);
+            using var activity = activitySource.StartActivity($"Handle {query.GetType()}");
+            {
+                using (var childSpan = activitySource.StartActivity("OnBeforeHandlingQuery", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(QueryHandlerBase<TQuery, TResponse>)}.{nameof(OnBeforeHandling)}"));
 
-            var response = await HandleQuery(query, cancellationToken);
+                    await OnBeforeHandling(query, cancellationToken);
+                }
 
-            await OnAfterHandling(query, cancellationToken);
+                using (var childSpan = activitySource.StartActivity("ValidateQuery", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(QueryHandlerBase<TQuery, TResponse>)}.{nameof(ValidateMessage)}"));
 
-            return response;
+                    await ValidateMessage(query, cancellationToken);
+                }
+
+                TResponse response;
+
+                using (var childSpan = activitySource.StartActivity("HandleQuery", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(QueryHandlerBase<TQuery, TResponse>)}.{nameof(HandleQuery)}"));
+
+                    response = await HandleQuery(query, cancellationToken);
+                }
+
+                using (var childSpan = activitySource.StartActivity("OnAfterHandlingQuery", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(QueryHandlerBase<TQuery, TResponse>)}.{nameof(OnAfterHandling)}"));
+
+                    await OnAfterHandling(query, cancellationToken);
+                }
+
+                return response;
+            }
         }
 
         /// <summary>

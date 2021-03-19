@@ -3,8 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
 using Twilight.CQRS.Events;
 using Twilight.CQRS.Tests.Unit.Shared;
 using Xunit;
@@ -17,13 +15,9 @@ namespace Twilight.CQRS.Tests.Unit.Events
 
         public EventHandlerTests()
         {
-            var logger = Substitute.For<ILogger<TestEventHandler>>();
-
-            logger.IsEnabled(LogLevel.Trace).Returns(true);
-
             IValidator<Event<TestParameters>> validator = new TestEventParametersValidator();
 
-            _subject = new TestEventHandler(logger, validator);
+            _subject = new TestEventHandler(validator);
         }
 
         [Fact]

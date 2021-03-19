@@ -32,7 +32,7 @@ namespace Twilight.Sample
         private async Task RegisterUser()
         {
             var parameters = new RegisterUserCommandParameters("Bilbo", "Baggins");
-            var command = new Command<RegisterUserCommandParameters>(parameters, SequentialGuid.NewGuid());
+            var command = new Command<RegisterUserCommandParameters>(parameters, SequentialGuid.NewGuid().ToString());
 
             await _messageSender.Send(command);
         }
@@ -40,7 +40,7 @@ namespace Twilight.Sample
         private async Task GetRegisteredUser()
         {
             var parameters = new GetUserByIdQueryParameters(1);
-            var query = new Query<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>(parameters, SequentialGuid.NewGuid());
+            var query = new Query<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
 
             var response = await _messageSender.Send(query);
 
@@ -50,7 +50,7 @@ namespace Twilight.Sample
         private async Task GetUsersView()
         {
             var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(-1));
-            var query = new Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid());
+            var query = new Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
 
             var response = await _messageSender.Send(query);
 
@@ -60,7 +60,7 @@ namespace Twilight.Sample
         private async Task GetInvalidUsersView()
         {
             var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(+1));
-            var query = new Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid());
+            var query = new Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
 
             try
             {

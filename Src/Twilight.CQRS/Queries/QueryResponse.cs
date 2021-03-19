@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Twilight.CQRS.Queries
+﻿namespace Twilight.CQRS.Queries
 {
     /// <summary>
     ///     <para>Represents an encapsulated response from a query handler.</para>
@@ -20,7 +18,7 @@ namespace Twilight.CQRS.Queries
         ///     The causation identifier. Identifies the query that caused this response to be produced.
         ///     Optional.
         /// </param>
-        public QueryResponse(TPayload payload, Guid correlationId, Guid? causationId = null)
+        public QueryResponse(TPayload payload, string correlationId, string? causationId = null)
             : base(correlationId, causationId) => Payload = payload;
 
         /// <summary>

@@ -76,13 +76,6 @@
             </summary>
             <typeparam name="TMessage">The type of the message.</typeparam>
         </member>
-        <member name="P:Twilight.CQRS.Contracts.IMessageHandler`1.Logger">
-            <summary>
-                Gets the logger.
-            </summary>
-            <remarks>The ILogger type parameter is used for the logger category name.</remarks>
-            <value>The logger.</value>
-        </member>
         <member name="M:Twilight.CQRS.Contracts.IMessageHandler`1.OnBeforeHandling(`0,System.Threading.CancellationToken)">
             <summary>
                 Occurs before handling a message.

@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Events;
 using Twilight.CQRS.Messaging.Contracts;
@@ -12,9 +11,8 @@ namespace Twilight.CQRS.Tests.Unit.Commands
     public sealed class TestCommandHandler : CommandHandlerBase<Command<TestParameters>>
     {
         public TestCommandHandler(IMessageSender messageSender,
-                                  ILogger<TestCommandHandler> logger,
                                   IValidator<Command<TestParameters>> validator)
-            : base(messageSender, logger, validator)
+            : base(messageSender, validator)
         {
         }
 

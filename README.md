@@ -107,3 +107,7 @@ We all learn from the teachings and example of others and this project is no exc
 
 - [https://github.com/jbogard/MediatR](https://github.com/jbogard/MediatR)
 - [https://martinfowler.com/bliki/CQRS.html](https://martinfowler.com/bliki/CQRS.html)
+
+## Update [2021-03-19]
+
+Twilight CQRS now incorporates [Open Telemetry](https://opentelemetry.io/). A console exporter has been added to the sample so you can see the data. You can use the correlation / causation ids along with the message id, the Open Telemetry activity id and parent id - or both.

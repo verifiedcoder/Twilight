@@ -13,11 +13,16 @@ namespace Twilight.Sample.CQRS
     public sealed class UserRegisteredEventHandler : EventHandlerBase<Event<UserRegisteredEventParameters>>
     {
         private readonly UsersViewContext _context;
+        private readonly ILogger<IMessageHandler<Event<UserRegisteredEventParameters>>> _logger;
 
         public UserRegisteredEventHandler(UsersViewContext context,
                                           ILogger<IMessageHandler<Event<UserRegisteredEventParameters>>> logger,
                                           IValidator<Event<UserRegisteredEventParameters>> validator)
-            : base(logger, validator) => _context = context;
+            : base(validator)
+        {
+            _logger = logger;
+            _context = context;
+        }
 
         protected override async Task HandleEvent(Event<UserRegisteredEventParameters> @event, CancellationToken cancellationToken = default)
         {
@@ -35,7 +40,7 @@ namespace Twilight.Sample.CQRS
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            Logger.LogInformation("User Registered Handler: Handled event, {EventTypeName}.", @event.GetType().FullName);
+            _logger.LogInformation("User Registered Handler: Handled event, {EventTypeName}.", @event.GetType().FullName);
 
             await Task.CompletedTask;
         }

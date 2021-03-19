@@ -1,5 +1,4 @@
-﻿using System;
-using Twilight.CQRS.Contracts;
+﻿using Twilight.CQRS.Contracts;
 
 namespace Twilight.CQRS.Events
 {
@@ -25,7 +24,7 @@ namespace Twilight.CQRS.Events
         ///     The causation identifier. Identifies the message that caused this event to be produced.
         ///     Optional.
         /// </param>
-        public Event(Guid correlationId, Guid? causationId = null)
+        public Event(string correlationId, string? causationId = null)
             : base(correlationId, causationId)
         {
         }
@@ -56,7 +55,7 @@ namespace Twilight.CQRS.Events
         ///     The causation identifier. Identifies the message that caused this event to be produced.
         ///     Optional.
         /// </param>
-        public Event(TParameters parameters, Guid correlationId, Guid? causationId = null)
+        public Event(TParameters parameters, string correlationId, string? causationId = null)
             : base(correlationId, causationId) => Params = parameters;
 
         /// <summary>

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Events;
@@ -20,15 +19,11 @@ namespace Twilight.CQRS.Tests.Unit.Commands
 
         public CommandHandlerTests()
         {
-            var logger = Substitute.For<ILogger<TestCommandHandler>>();
-
-            logger.IsEnabled(LogLevel.Trace).Returns(true);
-
             _messageSender = Substitute.For<IMessageSender>();
 
             IValidator<Command<TestParameters>> validator = new TestParametersValidator();
 
-            _subject = new TestCommandHandler(_messageSender, logger, validator);
+            _subject = new TestCommandHandler(_messageSender, validator);
         }
 
         [Fact]

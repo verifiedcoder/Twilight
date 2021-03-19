@@ -1,7 +1,7 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Contracts;
 using Twilight.CQRS.Messaging.Contracts;
 
@@ -26,9 +26,8 @@ namespace Twilight.CQRS.Commands
         /// </summary>
         /// <param name="messageSender">The message sender.</param>
         /// <param name="validator">The command validator.</param>
-        /// <param name="logger">The logger.</param>
-        protected CommandHandlerBase(IMessageSender messageSender, ILogger<IMessageHandler<TCommand>> logger, IValidator<TCommand>? validator = default)
-            : base(logger, validator) => MessageSender = messageSender;
+        protected CommandHandlerBase(IMessageSender messageSender, IValidator<TCommand>? validator = default)
+            : base(validator) => MessageSender = messageSender;
 
         /// <summary>
         ///     Gets the message sender.
@@ -39,13 +38,38 @@ namespace Twilight.CQRS.Commands
         /// <inheritdoc />
         public async Task Handle(TCommand command, CancellationToken cancellationToken = default)
         {
-            await OnBeforeHandling(command, cancellationToken);
+            var activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
 
-            await ValidateMessage(command, cancellationToken);
+            using var activity = activitySource.StartActivity($"Handle {command.GetType()}");
+            {
+                using (var childSpan = activitySource.StartActivity("OnBeforeHandlingCommand", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(CommandHandlerBase<TCommand>)}.{nameof(OnBeforeHandling)}"));
 
-            await HandleCommand(command, cancellationToken);
+                    await OnBeforeHandling(command, cancellationToken);
+                }
 
-            await OnAfterHandling(command, cancellationToken);
+                using (var childSpan = activitySource.StartActivity("ValidateCommand", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(CommandHandlerBase<TCommand>)}.{nameof(ValidateMessage)}"));
+
+                    await ValidateMessage(command, cancellationToken);
+                }
+
+                using (var childSpan = activitySource.StartActivity("HandleCommand", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(CommandHandlerBase<TCommand>)}.{nameof(HandleCommand)}"));
+
+                    await HandleCommand(command, cancellationToken);
+                }
+
+                using (var childSpan = activitySource.StartActivity("OnAfterHandlingCommand", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(CommandHandlerBase<TCommand>)}.{nameof(OnAfterHandling)}"));
+
+                    await OnAfterHandling(command, cancellationToken);
+                }
+            }
         }
 
         /// <summary>
