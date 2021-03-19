@@ -1,7 +1,7 @@
-﻿using System.Threading;
+﻿using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Contracts;
 
 namespace Twilight.CQRS
@@ -15,36 +15,29 @@ namespace Twilight.CQRS
         ///     Initializes a new instance of the <see cref="MessageHandler{TMessage}" /> class.
         /// </summary>
         /// <param name="validator">The message validator.</param>
-        /// <param name="logger">The logger.</param>
-        protected MessageHandler(ILogger<IMessageHandler<TMessage>> logger, IValidator<TMessage>? validator = default)
-        {
-            Logger = logger;
+        protected MessageHandler(IValidator<TMessage>? validator = default) => _validator = validator;
 
-            _validator = validator;
-        }
+        /// <summary>
+        ///     Gets the Open Telemetry activity source identifier.
+        /// </summary>
+        /// <value>The activity source identifier.</value>
+        internal static string ActivitySourceName => typeof(MessageHandler<TMessage>).Namespace ?? nameof(MessageHandler<TMessage>);
 
-        /// <inheritdoc />
-        public ILogger<IMessageHandler<TMessage>> Logger { get; }
+        /// <summary>
+        ///     Gets the assembly version.
+        /// </summary>
+        /// <value>The assembly version.</value>
+        internal static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0.0";
 
         /// <inheritdoc />
         public virtual async Task OnBeforeHandling(TMessage message, CancellationToken cancellationToken = default)
         {
-            if (Logger.IsEnabled(LogLevel.Trace))
-            {
-                Logger.LogTrace($"[{nameof(OnBeforeHandling)}] {message?.GetType()}");
-            }
-
             await Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public virtual async Task ValidateMessage(TMessage message, CancellationToken cancellationToken = default)
         {
-            if (Logger.IsEnabled(LogLevel.Trace))
-            {
-                Logger.LogTrace($"[{nameof(ValidateMessage)}] {message?.GetType()}");
-            }
-
             if (_validator == default)
             {
                 return;
@@ -56,11 +49,6 @@ namespace Twilight.CQRS
         /// <inheritdoc />
         public virtual async Task OnAfterHandling(TMessage message, CancellationToken cancellationToken = default)
         {
-            if (Logger.IsEnabled(LogLevel.Trace))
-            {
-                Logger.LogTrace($"[{nameof(OnAfterHandling)}] {message?.GetType()}");
-            }
-
             await Task.CompletedTask;
         }
     }

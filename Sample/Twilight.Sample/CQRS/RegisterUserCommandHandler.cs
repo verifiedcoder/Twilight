@@ -14,16 +14,21 @@ namespace Twilight.Sample.CQRS
     public sealed class RegisterUserCommandHandler : CommandHandlerBase<Command<RegisterUserCommandParameters>>
     {
         private readonly UsersContext _context;
+        private readonly ILogger<IMessageHandler<Command<RegisterUserCommandParameters>>> _logger;
 
         public RegisterUserCommandHandler(UsersContext context,
                                           IMessageSender messageSender,
                                           ILogger<IMessageHandler<Command<RegisterUserCommandParameters>>> logger,
                                           IValidator<Command<RegisterUserCommandParameters>> validator)
-            : base(messageSender, logger, validator) => _context = context;
+            : base(messageSender, validator)
+        {
+            _logger = logger;
+            _context = context;
+        }
 
         protected override async Task HandleCommand(Command<RegisterUserCommandParameters> command, CancellationToken cancellationToken = default)
         {
-            Logger.LogInformation("Handled command, {CommandTypeName}.", command.GetType().FullName);
+            _logger.LogInformation("Handled command, {CommandTypeName}.", command.GetType().FullName);
 
             var userEntity = new UserEntity
                              {

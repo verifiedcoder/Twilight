@@ -1,7 +1,7 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Contracts;
 
 namespace Twilight.CQRS.Events
@@ -25,22 +25,46 @@ namespace Twilight.CQRS.Events
         ///     Initializes a new instance of the <see cref="EventHandlerBase{TEvent}" /> class.
         /// </summary>
         /// <param name="validator">The event validator.</param>
-        /// <param name="logger">The logger.</param>
-        protected EventHandlerBase(ILogger<IMessageHandler<TEvent>> logger, IValidator<TEvent>? validator = default)
-            : base(logger, validator)
+        protected EventHandlerBase(IValidator<TEvent>? validator = default)
+            : base(validator)
         {
         }
 
         /// <inheritdoc />
         public async Task Handle(TEvent @event, CancellationToken cancellationToken = default)
         {
-            await OnBeforeHandling(@event, cancellationToken);
+            var activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
 
-            await ValidateMessage(@event, cancellationToken);
+            using var activity = activitySource.StartActivity($"Handle {@event.GetType()}");
+            {
+                using (var childSpan = activitySource.StartActivity("OnBeforeHandlingEvent", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(EventHandlerBase<TEvent>)}.{nameof(OnBeforeHandling)}"));
 
-            await HandleEvent(@event, cancellationToken);
+                    await OnBeforeHandling(@event, cancellationToken);
+                }
 
-            await OnAfterHandling(@event, cancellationToken);
+                using (var childSpan = activitySource.StartActivity("ValidateEvent", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(EventHandlerBase<TEvent>)}.{nameof(ValidateMessage)}"));
+
+                    await ValidateMessage(@event, cancellationToken);
+                }
+
+                using (var childSpan = activitySource.StartActivity("HandleEvent", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(EventHandlerBase<TEvent>)}.{nameof(HandleEvent)}"));
+
+                    await HandleEvent(@event, cancellationToken);
+                }
+
+                using (var childSpan = activitySource.StartActivity("OnAfterHandlingEvent", ActivityKind.Consumer))
+                {
+                    childSpan?.AddEvent(new ActivityEvent($"{nameof(EventHandlerBase<TEvent>)}.{nameof(OnAfterHandling)}"));
+
+                    await OnAfterHandling(@event, cancellationToken);
+                }
+            }
         }
 
         /// <summary>

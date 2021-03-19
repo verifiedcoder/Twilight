@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -39,6 +40,9 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
             _logger = logger;
         }
 
+        private static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0.0";
+        private static string Namespace => typeof(AutofacInMemoryMessageSender).Namespace ?? nameof(AutofacInMemoryMessageSender);
+
         /// <exception cref="MultipleCommandHandlersDefinedException">
         ///     Thrown when more than one command handler is resolved from the container.
         /// </exception>
@@ -47,42 +51,47 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
         public async Task Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
             where TCommand : ICommand
         {
-            await using var scope = _lifetimeScope.BeginLifetimeScope();
+            var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
-            var assemblyQualifiedName = typeof(ICommandHandler<TCommand>).AssemblyQualifiedName ?? "Unknown Assembly";
-
-            IEnumerable<ICommandHandler<TCommand>>? handlers;
-
-            try
+            using var activity = activitySource.StartActivity($"Send {command.GetType()}");
             {
-                _lifetimeScope.TryResolve(out handlers);
-            }
-            catch (DependencyResolutionException ex)
-            {
-                _logger.LogError(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
-            }
+                await using var scope = _lifetimeScope.BeginLifetimeScope();
 
-            var commandHandlers = (handlers ?? Array.Empty<ICommandHandler<TCommand>>()).ToList();
+                var assemblyQualifiedName = typeof(ICommandHandler<TCommand>).AssemblyQualifiedName ?? "Unknown Assembly";
 
-            switch (commandHandlers.Count)
-            {
-                case 0:
+                IEnumerable<ICommandHandler<TCommand>>? handlers;
 
-                    _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                try
+                {
+                    _lifetimeScope.TryResolve(out handlers);
+                }
+                catch (DependencyResolutionException ex)
+                {
+                    _logger.LogError(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                    throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                }
 
-                    throw new HandlerNotFoundException(assemblyQualifiedName);
+                var commandHandlers = (handlers ?? Array.Empty<ICommandHandler<TCommand>>()).ToList();
 
-                case > 1:
+                switch (commandHandlers.Count)
+                {
+                    case 0:
 
-                    _logger.LogError("Multiple handlers found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                        _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
 
-                    throw new MultipleCommandHandlersDefinedException(assemblyQualifiedName);
+                        throw new HandlerNotFoundException(assemblyQualifiedName);
 
-                default:
+                    case > 1:
 
-                    await commandHandlers.First().Handle(command, cancellationToken).ConfigureAwait(false);
-                    break;
+                        _logger.LogError("Multiple handlers found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+
+                        throw new MultipleCommandHandlersDefinedException(assemblyQualifiedName);
+
+                    default:
+
+                        await commandHandlers.First().Handle(command, cancellationToken).ConfigureAwait(false);
+                        break;
+                }
             }
         }
 
@@ -97,31 +106,36 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
 
             await using var scope = _lifetimeScope.BeginLifetimeScope();
 
-            object result;
+            var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
-            try
+            using var activity = activitySource.StartActivity($"Send {query.GetType()}");
             {
-                var handlerExists = _lifetimeScope.TryResolve(closedGenericType, out var handler);
+                object result;
 
-                if (!handlerExists || handler == null)
+                try
                 {
-                    _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
-                    throw new HandlerNotFoundException(assemblyQualifiedName);
+                    var handlerExists = _lifetimeScope.TryResolve(closedGenericType, out var handler);
+
+                    if (!handlerExists || handler == null)
+                    {
+                        _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                        throw new HandlerNotFoundException(assemblyQualifiedName);
+                    }
+
+                    var handlerType = handler.GetType();
+                    var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] {query.GetType(), typeof(CancellationToken)})
+                                                ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
+
+                    result = handlerTypeRuntimeMethod.Invoke(handler, new object[] {query, cancellationToken}) ?? throw new InvalidOperationException();
+                }
+                catch (DependencyResolutionException ex)
+                {
+                    _logger.LogError(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                    throw new HandlerNotFoundException(assemblyQualifiedName, ex);
                 }
 
-                var handlerType = handler.GetType();
-                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] {query.GetType(), typeof(CancellationToken)})
-                                            ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
-
-                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] {query, cancellationToken}) ?? throw new InvalidOperationException();
+                return await (Task<TResult>) result;
             }
-            catch (DependencyResolutionException ex)
-            {
-                _logger.LogError(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
-            }
-
-            return await (Task<TResult>) result;
         }
 
         /// <inheritdoc />
@@ -146,39 +160,47 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac
         public async Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
             where TEvent : IEvent
         {
-            await using var scope = _lifetimeScope.BeginLifetimeScope();
+            var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
-            var assemblyQualifiedName = typeof(IEventHandler<TEvent>).AssemblyQualifiedName ?? "Unknown Assembly";
-
-            IEnumerable<IEventHandler<TEvent>> handlers;
-
-            try
+            using var activity = activitySource.StartActivity($"Publish {@event.GetType()}");
             {
-                handlers = _lifetimeScope.Resolve<IEnumerable<IEventHandler<TEvent>>>()
-                                         .ToList();
-            }
-            catch (ComponentNotRegisteredException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
-            }
-            catch (DependencyResolutionException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
-            }
+                await using var scope = _lifetimeScope.BeginLifetimeScope();
 
-            if (!handlers.Any())
-            {
-                _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
-                throw new HandlerNotFoundException(assemblyQualifiedName);
+                var assemblyQualifiedName = typeof(IEventHandler<TEvent>).AssemblyQualifiedName ?? "Unknown Assembly";
+
+                IEnumerable<IEventHandler<TEvent>> handlers;
+
+                try
+                {
+                    handlers = _lifetimeScope.Resolve<IEnumerable<IEventHandler<TEvent>>>()
+                                             .ToList();
+                }
+                catch (ComponentNotRegisteredException ex)
+                {
+                    _logger.LogError(ex, ex.Message);
+
+                    throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                }
+                catch (DependencyResolutionException ex)
+                {
+                    _logger.LogError(ex, ex.Message);
+
+                    throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                }
+
+                if (!handlers.Any())
+                {
+                    _logger.LogError("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+
+                    throw new HandlerNotFoundException(assemblyQualifiedName);
+                }
+
+                var tasks = new List<Task>(handlers.Count());
+
+                tasks.AddRange(handlers.Select(handler => handler.Handle(@event, cancellationToken)));
+
+                await Task.WhenAll(tasks);
             }
-
-            var tasks = new List<Task>(handlers.Count());
-
-            tasks.AddRange(handlers.Select(handler => handler.Handle(@event, cancellationToken)));
-
-            await Task.WhenAll(tasks);
         }
     }
 }

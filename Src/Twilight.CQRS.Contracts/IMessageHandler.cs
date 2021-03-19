@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Twilight.CQRS.Contracts
 {
@@ -10,13 +9,6 @@ namespace Twilight.CQRS.Contracts
     /// <typeparam name="TMessage">The type of the message.</typeparam>
     public interface IMessageHandler<in TMessage>
     {
-        /// <summary>
-        ///     Gets the logger.
-        /// </summary>
-        /// <remarks>The ILogger type parameter is used for the logger category name.</remarks>
-        /// <value>The logger.</value>
-        ILogger<IMessageHandler<TMessage>> Logger { get; }
-
         /// <summary>
         ///     Occurs before handling a message.
         /// </summary>

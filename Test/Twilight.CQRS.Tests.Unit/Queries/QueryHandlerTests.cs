@@ -3,8 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
 using Twilight.CQRS.Queries;
 using Twilight.CQRS.Tests.Unit.Shared;
 using Xunit;
@@ -17,13 +15,9 @@ namespace Twilight.CQRS.Tests.Unit.Queries
 
         public QueryHandlerTests()
         {
-            var logger = Substitute.For<ILogger<TestQueryHandler>>();
-
-            logger.IsEnabled(LogLevel.Trace).Returns(true);
-
             IValidator<Query<TestParameters, QueryResponse<TestQueryResponse>>> validator = new TestQueryParametersValidator();
 
-            _subject = new TestQueryHandler(logger, validator);
+            _subject = new TestQueryHandler(validator);
         }
 
         [Fact]

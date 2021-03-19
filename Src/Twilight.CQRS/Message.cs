@@ -1,5 +1,4 @@
-﻿using System;
-using Taikandi;
+﻿using Taikandi;
 using Twilight.CQRS.Contracts;
 
 namespace Twilight.CQRS
@@ -15,20 +14,20 @@ namespace Twilight.CQRS
         ///     The causation identifier. Identifies the message that caused this message to be produced.
         ///     Optional.
         /// </param>
-        protected Message(Guid correlationId, Guid? causationId = null)
+        protected Message(string correlationId, string? causationId = null)
         {
-            MessageId = SequentialGuid.NewGuid();
+            MessageId = SequentialGuid.NewGuid().ToString();
             CorrelationId = correlationId;
             CausationId = causationId;
         }
 
         /// <inheritdoc />
-        public Guid MessageId { get; }
+        public string MessageId { get; }
 
         /// <inheritdoc />
-        public Guid CorrelationId { get; }
+        public string CorrelationId { get; }
 
         /// <inheritdoc />
-        public Guid? CausationId { get; }
+        public string? CausationId { get; }
     }
 }

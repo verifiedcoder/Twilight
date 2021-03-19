@@ -14,15 +14,20 @@ namespace Twilight.Sample.CQRS
     public sealed class GetUsersViewQueryHandler : QueryHandlerBase<Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>, QueryResponse<GetUsersViewQueryResponsePayload>>
     {
         private readonly UsersViewContext _context;
+        private readonly ILogger<IMessageHandler<Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>>> _logger;
 
         public GetUsersViewQueryHandler(UsersViewContext context,
                                         ILogger<IMessageHandler<Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>>> logger,
                                         IValidator<Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>> validator)
-            : base(logger, validator) => _context = context;
+            : base(validator)
+        {
+            _logger = logger;
+            _context = context;
+        }
 
         protected override async Task<QueryResponse<GetUsersViewQueryResponsePayload>> HandleQuery(Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>> query, CancellationToken cancellationToken = default)
         {
-            Logger.LogInformation("Handled query, {QueryTypeName}.", query.GetType().FullName);
+            _logger.LogInformation("Handled query, {QueryTypeName}.", query.GetType().FullName);
 
             var userViewEntities = await _context.UsersView.Where(u => u.RegistrationDate >= query.Params.RegistrationDate)
                                                  .OrderBy(v => v.RegistrationDate)

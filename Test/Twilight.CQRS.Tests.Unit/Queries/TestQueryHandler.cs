@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Queries;
 using Twilight.CQRS.Tests.Unit.Shared;
 
@@ -9,8 +8,8 @@ namespace Twilight.CQRS.Tests.Unit.Queries
 {
     public class TestQueryHandler : QueryHandlerBase<Query<TestParameters, QueryResponse<TestQueryResponse>>, QueryResponse<TestQueryResponse>>
     {
-        public TestQueryHandler(ILogger<TestQueryHandler> logger, IValidator<Query<TestParameters, QueryResponse<TestQueryResponse>>> validator)
-            : base(logger, validator)
+        public TestQueryHandler(IValidator<Query<TestParameters, QueryResponse<TestQueryResponse>>> validator)
+            : base(validator)
         {
         }
 

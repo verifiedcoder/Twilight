@@ -15,7 +15,7 @@ namespace Twilight.CQRS.Tests.Unit.Queries
         {
             var subject = new Query<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
 
-            subject.CausationId.ToString().Should().Be(Constants.CausationId.ToString());
+            subject.CausationId.Should().Be(Constants.CausationId);
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace Twilight.CQRS.Tests.Unit.Queries
         {
             var subject = new Query<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
 
-            subject.CorrelationId.ToString().Should().Be(Constants.CorrelationId.ToString());
+            subject.CorrelationId.Should().Be(Constants.CorrelationId);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace Twilight.CQRS.Tests.Unit.Queries
         {
             var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
-            subject.CausationId.ToString().Should().Be(Constants.CausationId.ToString());
+            subject.CausationId.Should().Be(Constants.CausationId);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Twilight.CQRS.Tests.Unit.Queries
         {
             var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
-            subject.CorrelationId.ToString().Should().Be(Constants.CorrelationId.ToString());
+            subject.CorrelationId.Should().Be(Constants.CorrelationId);
         }
 
         [Fact]
