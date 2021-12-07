@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentValidation" Version="10.3.4" />
+		<PackageReference Include="FluentValidation" Version="10.3.5" />
 		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
 		<PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
 	</ItemGroup>
