@@ -11,9 +11,9 @@
                     handler from the container and call that handler, passing any appropriate message. This class cannot be
                     inherited.
                 </para>
-                <para>Implements <see cref="T:Twilight.CQRS.Messaging.Contracts.IMessageSender" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Messaging.Interfaces.IMessageSender" />.</para>
             </summary>
-            <seealso cref="T:Twilight.CQRS.Messaging.Contracts.IMessageSender" />
+            <seealso cref="T:Twilight.CQRS.Messaging.Interfaces.IMessageSender" />
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.#ctor(Autofac.ILifetimeScope,Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender})">
             <summary>
@@ -23,14 +23,25 @@
             <param name="logger">The logger.</param>
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Send``1(``0,System.Threading.CancellationToken)">
-            <exception cref="T:Twilight.CQRS.Messaging.Shared.MultipleCommandHandlersDefinedException">
+            <exception cref="T:Twilight.CQRS.Messaging.Common.MultipleCommandHandlersDefinedException">
                 Thrown when more than one command handler is resolved from the container.
             </exception>
-            <exception cref="T:Twilight.CQRS.Messaging.Shared.HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
+            <exception cref="T:Twilight.CQRS.Messaging.Common.HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
+            <exception cref="T:Twilight.CQRS.Messaging.Common.MultipleCommandHandlersDefinedException">
+                Thrown when more than one command handler with the same
+                definition is found.
+            </exception>
             <inheritdoc />
         </member>
-        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Send``1(Twilight.CQRS.Contracts.IQuery{``0},System.Threading.CancellationToken)">
-            <exception cref="T:Twilight.CQRS.Messaging.Shared.HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Send``1(Twilight.CQRS.Interfaces.ICommand{``0},System.Threading.CancellationToken)">
+            <exception cref="T:Twilight.CQRS.Messaging.Common.MultipleCommandHandlersDefinedException">
+                Thrown when more than one command handler is resolved from the container.
+            </exception>
+            <exception cref="T:Twilight.CQRS.Messaging.Common.HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
+            <inheritdoc />
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Send``1(Twilight.CQRS.Interfaces.IQuery{``0},System.Threading.CancellationToken)">
+            <exception cref="T:Twilight.CQRS.Messaging.Common.HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
             <exception cref="T:System.InvalidOperationException">Thrown when a handler type cannot resolved the type's 'Handle' method.</exception>
             <inheritdoc />
         </member>
@@ -38,7 +49,7 @@
             <inheritdoc />
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Publish``1(``0,System.Threading.CancellationToken)">
-            <exception cref="T:Twilight.CQRS.Messaging.Shared.HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
+            <exception cref="T:Twilight.CQRS.Messaging.Common.HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
             <inheritdoc />
         </member>
         <member name="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions">

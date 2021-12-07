@@ -1,61 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Autofac;
+﻿using Autofac;
 using FluentAssertions;
 using Twilight.CQRS.Autofac.Tests.Unit.Setup;
 using Xunit;
 
-namespace Twilight.CQRS.Autofac.Tests.Unit
+namespace Twilight.CQRS.Autofac.Tests.Unit;
+
+public sealed class CqrsRegistrationExtensionsTests
 {
-    public sealed class CqrsRegistrationExtensionsTests
+    private readonly ContainerBuilder _builder;
+
+    // Setup
+    public CqrsRegistrationExtensionsTests()
+        => _builder = new ContainerBuilder();
+
+    [Fact]
+    public void CallingRegisterForCqrsWithNullAssembliesDoesNotThrow()
     {
-        private readonly ContainerBuilder _builder;
-        public CqrsRegistrationExtensionsTests() => _builder = new ContainerBuilder();
+        // Arrange / Act
+        var subjectResult = () => { _builder.RegisterAssemblyTypes(); };
 
-        // ReSharper disable once SuggestBaseTypeForParameter as don't want multiple enumeration
-        private static void AssertOnExpectedServices(IEnumerable<string> expectedServices, List<string> services)
+        // Assert
+        subjectResult.Should().NotThrow();
+    }
+
+    [Fact]
+    public void RegisterForCqrsRegistersAssemblyServices()
+    {
+        // Arrange
+        var assembly = typeof(TestCommandHandler).Assembly;
+
+        _builder.RegisterAssemblyTypes(assembly);
+
+        // Act
+        var container = _builder.Build();
+
+        // Assert
+        container.ComponentRegistry.Registrations.Count().Should().Be(4);
+        container.ComponentRegistry.Registrations.Should().OnlyHaveUniqueItems();
+
+        var services = (from r in container.ComponentRegistry.Registrations
+                        from s in r.Services
+                        select s.Description).ToList();
+
+        var expectedServices = new List<string>
         {
-            foreach (var expectedService in expectedServices)
-            {
-                var selectedService = (from service in services
-                                       where service.Contains(expectedService)
-                                       select service).FirstOrDefault();
+            typeof(TestCommandHandler).Namespace ?? string.Empty
+        };
 
-                selectedService.Should().NotBeNull();
-            }
-        }
+        AssertOnExpectedServices(expectedServices, services);
+    }
 
-        [Fact]
-        public void CallingRegisterForCqrsWithNullAssembliesDoesNotThrow()
+    // ReSharper disable once SuggestBaseTypeForParameter as don't want multiple enumeration
+    private static void AssertOnExpectedServices(IEnumerable<string> expectedServices, List<string> services)
+    {
+        foreach (var expectedService in expectedServices)
         {
-            Action subjectResult = () => { _builder.RegisterAssemblyTypes(); };
+            var selectedService = (from service in services
+                                    where service.Contains(expectedService)
+                                    select service).FirstOrDefault();
 
-            subjectResult.Should().NotThrow();
-        }
-
-        [Fact]
-        public void RegisterForCqrsRegistersAssemblyServices()
-        {
-            var assembly = typeof(TestCommandHandler).Assembly;
-
-            _builder.RegisterAssemblyTypes(assembly, new[] {"Handler"});
-
-            var container = _builder.Build();
-
-            container.ComponentRegistry.Registrations.Count().Should().Be(2);
-            container.ComponentRegistry.Registrations.Should().OnlyHaveUniqueItems();
-
-            var services = (from r in container.ComponentRegistry.Registrations
-                            from s in r.Services
-                            select s.Description).ToList();
-
-            var expectedServices = new List<string>
-                                   {
-                                       typeof(TestCommandHandler).Namespace ?? string.Empty
-                                   };
-
-            AssertOnExpectedServices(expectedServices, services);
+            selectedService.Should().NotBeNull();
         }
     }
 }

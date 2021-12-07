@@ -1,30 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.1.0" />
-    <PackageReference Include="FluentValidation" Version="9.5.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="NSubstitute" Version="4.2.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="XunitXml.TestLogger" Version="3.0.66" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="FluentValidation" Version="10.3.4" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+		<PackageReference Include="xunit" Version="2.4.1" />
+		<PackageReference Include="FluentAssertions" Version="6.2.0" />
+		<PackageReference Include="NSubstitute" Version="4.2.2" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="XunitXml.TestLogger" Version="3.0.70" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Src\Twilight.CQRS.Autofac\Twilight.CQRS.Autofac.csproj" />
-    <ProjectReference Include="..\..\Src\Twilight.CQRS\Twilight.CQRS.csproj" />
-    <ProjectReference Include="..\..\Src\Twilight.CQRS.Messaging.InMemory.Autofac\Twilight.CQRS.Messaging.InMemory.Autofac.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Src\Twilight.CQRS.Autofac\Twilight.CQRS.Autofac.csproj" />
+		<ProjectReference Include="..\..\Src\Twilight.CQRS\Twilight.CQRS.csproj" />
+		<ProjectReference Include="..\..\Src\Twilight.CQRS.Messaging.InMemory.Autofac\Twilight.CQRS.Messaging.InMemory.Autofac.csproj" />
+	</ItemGroup>
 
 </Project>

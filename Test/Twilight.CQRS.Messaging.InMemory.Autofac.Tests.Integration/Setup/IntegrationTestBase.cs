@@ -1,45 +1,41 @@
-﻿using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using FluentAssertions;
 using NSubstitute;
-using Twilight.CQRS.Messaging.Contracts;
+using Twilight.CQRS.Messaging.Interfaces;
 using Xunit;
 
-namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup
+namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
+
+public abstract class IntegrationTestBase : IAsyncLifetime
 {
-    public abstract class IntegrationTestBase : IAsyncLifetime
+    private readonly IContainer _container;
+
+    protected IntegrationTestBase()
     {
-        private readonly IContainer _container;
+        Verifier = Substitute.For<IVerifier>();
 
-        protected IntegrationTestBase()
-        {
-            Verifier = Substitute.For<IVerifier>();
+        var builder = new ContainerBuilder();
+        var testService = new TestService(Verifier).As<ITestService>();
 
-            var builder = new ContainerBuilder();
-            var testService = new TestService(Verifier).As<ITestService>();
+        builder.RegisterModule<IntegrationTestModule>();
+        builder.RegisterInstance(testService);
 
-            builder.RegisterModule<IntegrationTestModule>();
-            builder.RegisterInstance(testService);
+        _container = builder.Build();
 
-            _container = builder.Build();
+        Subject = _container.Resolve<IMessageSender>();
+    }
 
-            Subject = _container.Resolve<IMessageSender>();
-        }
+    protected IMessageSender Subject { get; }
 
-        protected IMessageSender Subject { get; }
+    protected IVerifier Verifier { get; }
 
-        protected IVerifier Verifier { get; }
+    public async Task InitializeAsync()
+        => await Task.CompletedTask;
 
-        public async Task InitializeAsync()
-        {
-            await Task.CompletedTask;
-        }
+    public async Task DisposeAsync()
+    {
+        _container.Dispose();
 
-        public async Task DisposeAsync()
-        {
-            _container.Dispose();
-
-            await Task.CompletedTask;
-        }
+        await Task.CompletedTask;
     }
 }

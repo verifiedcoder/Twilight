@@ -1,5 +1,38 @@
 <?xml version="1.0"?>
-
 <doc>
-  <assembly><name>Twilight.CQRS.Autofac</name></assembly> <members><member name="T:Twilight.CQRS.Autofac.ContainerBuilderExtensions"><summary>Provides extensions to the Autofac Container builder that allow for the easy registration of CQRS components from assemblies.</summary></member> <member name="M:Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterAssemblyTypes(Autofac.ContainerBuilder,System.Reflection.Assembly,System.String[])"><summary>Scans the specified assembly and registers types matching the specified endings against their implemented interfaces.</summary> <remarks>All registrations will be made with instance per lifetime scope.</remarks> <param name="builder">The container builder.</param> <param name="assembly">The assembly to scan.</param> <param name="typeNameEndings">The file endings to match against.</param></member> <member name="M:Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterCqrs(Autofac.ContainerBuilder,System.Reflection.Assembly)"><summary>Registers CQRS command, event, query handlers and message validators in the specified assembly.</summary> <param name="builder">The container builder.</param> <param name="assembly">The assembly to scan.</param></member></members>
+    <assembly>
+        <name>Twilight.CQRS.Autofac</name>
+    </assembly>
+    <members>
+        <member name="T:Twilight.CQRS.Autofac.ContainerBuilderExtensions">
+            <summary>
+                Provides extensions to the Autofac Container builder that allow for the easy registration of CQRS components from
+                assemblies.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterAssemblyTypes(Autofac.ContainerBuilder,System.Reflection.Assembly,System.String[])">
+            <summary>
+                Scans the specified assembly and registers types matching the specified endings against their implemented
+                interfaces.
+            </summary>
+            <remarks>All registrations will be made with instance per lifetime scope.</remarks>
+            <param name="builder">The container builder.</param>
+            <param name="assembly">The assembly to scan.</param>
+            <param name="typeNameEndings">The file endings to match against.</param>
+        </member>
+        <member name="M:Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterCqrs(Autofac.ContainerBuilder,System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+                Registers CQRS command, event, query handlers and message validators in the specified assembly.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="assemblies">The assemblies to scan.</param>
+        </member>
+        <member name="M:Twilight.CQRS.Autofac.ContainerBuilderExtensions.RegisterCqrs(Autofac.ContainerBuilder,System.Reflection.Assembly)">
+            <summary>
+                Registers CQRS command, event, query handlers and message validators in the specified assembly.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="assembly">The assembly to scan.</param>
+        </member>
+    </members>
 </doc>

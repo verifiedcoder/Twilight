@@ -1,17 +1,19 @@
 # Twilight
 
+See the [LICENSE](LICENSE) file for legal guidance on using the code in this repository. The MIT lcense was dropped as that could expose the author to potential software patent abuse by external consumers of this code.
+
 ## Introduction
 
 Twilight is an implementation of the CQRS design pattern that, 'out-of-the-box', provides an in-memory message transport that uses [Autofac](https://autofac.org/) to register its components. It is meant to be used as a learning resource for the basis of a full-featured system.
 
-It is not intended for this repository to be published as NuGet packages as support is not possible. The expectation is to use this repository as an educational resource and fork for your own specific requirements.
+It is not intended for this repository to be published as NuGet packages as support is not possible. The expectation is to use this repository as an educational resource and fork for your own specific requirements. It will be periodically updated to the latest Long Term Support (LTS) version of .Net.
 
 ### Requirements
 
-- Microsoft Visual Studio 2019
-- .NET 5.0
+- Microsoft Visual Studio 2022
+- .NET 6.0
 
-If using Visual Studio 2019, it is recommended that all relevant updates are applied.
+If using Visual Studio 2022, it is recommended that all relevant updates are applied.
 
 ## CQRS
 
@@ -39,7 +41,7 @@ ES is a non-trivial pattern that requires a deep understanding of many advanced 
 
 Further information on the use-case for ES: [https://microservices.io/patterns/data/event-sourcing.html](https://microservices.io/patterns/data/event-sourcing.html)
 
-Note: A future sample will expand upon the use of event sourcing. The included aggregate is for convenience and is not opinionated.
+Note: A future sample will expand upon the use of event sourcing.
 
 ## CQRS Components
 
@@ -85,13 +87,13 @@ The XML documentation for the public API can be used to generate full developer 
 
 You can use DocFX to generate the documentation. For more information, see [here](https://dotnet.github.io/docfx/).
 
-## Sample: Console App
+## Sample
 
-This simple sample exists to show the mechanics of creating, sending and handling commands, queries and events.
+The sample exists to show the mechanics of creating, sending and handling commands, queries and events.
 
-The structure of parameters is up to you as the implementer. Strive for as little mutability as possible. The console sample is stripped down to make it easy to follow. Keep that in mind.
+As an implementer, much of the structure of messages and handlers is up to you. Strive for as much simplicity as possible. All too often, applications are routinely over-engineered.
 
-Note that when run in debug, you should expect execution to stop for a validation exception. This is expected behaviour.
+The samples are stripped down to make them easy to follow and makes use of Open Telemetry to illustrate the path of a message through the system. Using activity identifiers, correlation and causation, you can easily build a full path and timeline of all system interactions
 
 ## Naming Twilight
 
@@ -107,7 +109,12 @@ We all learn from the teachings and example of others and this project is no exc
 
 - [https://github.com/jbogard/MediatR](https://github.com/jbogard/MediatR)
 - [https://martinfowler.com/bliki/CQRS.html](https://martinfowler.com/bliki/CQRS.html)
+- [https://martinfowler.com/eaaDev/EventSourcing.html](https://martinfowler.com/eaaDev/EventSourcing.html)
 
-## Update [2021-03-19]
+## Note
 
-Twilight CQRS now incorporates [Open Telemetry](https://opentelemetry.io/). A console exporter has been added to the sample so you can see the data. You can use the correlation / causation ids along with the message id, the Open Telemetry activity id and parent id - or both.
+Twilight incorporates [Open Telemetry](https://opentelemetry.io/). A console exporter has been added to the sample so you can see the data.
+
+You can use correlation, causation and message identifiers in tandem with the Open Telemetry activity and parent identifiers to build a robust activity logging infrastructure.
+
+At this point, Open Telemetry integration with Twilight CQRS should be considered experimental.

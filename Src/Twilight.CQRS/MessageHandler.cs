@@ -1,55 +1,79 @@
 ﻿using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentValidation;
-using Twilight.CQRS.Contracts;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Diagnostics;
+using Twilight.CQRS.Interfaces;
 
-namespace Twilight.CQRS
+namespace Twilight.CQRS;
+
+/// <inheritdoc />
+public abstract class MessageHandler<THandler, TMessage> : IMessageHandler<TMessage>
+    where TMessage : class
 {
-    /// <inheritdoc />
-    public abstract class MessageHandler<TMessage> : IMessageHandler<TMessage>
+    const string defaultAssemblyVersion = "1.0.0.0";
+
+    private readonly IValidator<TMessage>? _validator;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="MessageHandler{THandler, TMessage}" /> class.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="validator">The message validator.</param>
+    protected MessageHandler(ILogger<THandler> logger, IValidator<TMessage>? validator = default)
     {
-        private readonly IValidator<TMessage>? _validator;
+        Guard.IsNotNull(logger, nameof(logger));
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MessageHandler{TMessage}" /> class.
-        /// </summary>
-        /// <param name="validator">The message validator.</param>
-        protected MessageHandler(IValidator<TMessage>? validator = default) => _validator = validator;
+        _validator = validator;
 
-        /// <summary>
-        ///     Gets the Open Telemetry activity source identifier.
-        /// </summary>
-        /// <value>The activity source identifier.</value>
-        internal static string ActivitySourceName => typeof(MessageHandler<TMessage>).Namespace ?? nameof(MessageHandler<TMessage>);
+        Logger = logger;
+    }
 
-        /// <summary>
-        ///     Gets the assembly version.
-        /// </summary>
-        /// <value>The assembly version.</value>
-        internal static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0.0";
+    /// <summary>
+    ///     Gets the Open Telemetry activity source identifier.
+    /// </summary>
+    /// <value>The activity source identifier.</value>
+    internal string ActivitySourceName => typeof(MessageHandler<THandler, TMessage>).Namespace ?? nameof(MessageHandler<THandler, TMessage>);
 
-        /// <inheritdoc />
-        public virtual async Task OnBeforeHandling(TMessage message, CancellationToken cancellationToken = default)
+    /// <summary>
+    ///     Gets the assembly version.
+    /// </summary>
+    /// <value>The assembly version.</value>
+#pragma warning disable CA1822 // Mark members as a static field in a generic type is not shared among instances of different close constructed types.
+    internal string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? defaultAssemblyVersion;
+#pragma warning restore CA1822 // Mark members as static
+
+    /// <summary>
+    ///     Gets the message handler logger.
+    /// </summary>
+    /// <value>The logger.</value>
+    protected ILogger<THandler> Logger { get; }
+
+    /// <inheritdoc />
+    public virtual async Task OnBeforeHandling(TMessage message, CancellationToken cancellationToken = default)
+    {
+        Guard.IsNotNull(message, nameof(message));
+
+        await Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public virtual async Task ValidateMessage(TMessage message, CancellationToken cancellationToken = default)
+    {
+        if (_validator == default)
         {
-            await Task.CompletedTask;
+            return;
         }
 
-        /// <inheritdoc />
-        public virtual async Task ValidateMessage(TMessage message, CancellationToken cancellationToken = default)
-        {
-            if (_validator == default)
-            {
-                return;
-            }
+        Guard.IsNotNull(message, nameof(message));
 
-            await _validator.ValidateAndThrowAsync(message, cancellationToken);
-        }
+        await _validator.ValidateAndThrowAsync(message, cancellationToken);
+    }
 
-        /// <inheritdoc />
-        public virtual async Task OnAfterHandling(TMessage message, CancellationToken cancellationToken = default)
-        {
-            await Task.CompletedTask;
-        }
+    /// <inheritdoc />
+    public virtual async Task OnAfterHandling(TMessage message, CancellationToken cancellationToken = default)
+    {
+        Guard.IsNotNull(message, nameof(message));
+
+        await Task.CompletedTask;
     }
 }

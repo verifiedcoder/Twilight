@@ -1,58 +1,55 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Twilight.CQRS.Commands;
-using Twilight.CQRS.Messaging.Contracts;
+using Twilight.CQRS.Messaging.Common;
 using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Parameters;
-using Twilight.CQRS.Messaging.Shared;
-using Twilight.CQRS.Tests.Unit.Shared;
+using Twilight.CQRS.Messaging.Interfaces;
+using Twilight.CQRS.Tests.Unit.Common;
 using Xunit;
 
-namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration
+namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration;
+
+public sealed class AutofacDependencyResolutionExceptionTests : IAsyncLifetime
 {
-    public sealed class AutofacDependencyResolutionExceptionTests : IAsyncLifetime
+    private static IContainer? _container;
+
+    private readonly IMessageSender _subject;
+
+    public AutofacDependencyResolutionExceptionTests()
     {
-        private static IContainer? _container;
+        var builder = new ContainerBuilder();
 
-        private readonly IMessageSender _subject;
+        builder.RegisterType<AutofacInMemoryMessageSender>().As<IMessageSender>();
+        builder.RegisterType<NullLogger<AutofacInMemoryMessageSender>>().As<ILogger<AutofacInMemoryMessageSender>>();
 
-        public AutofacDependencyResolutionExceptionTests()
-        {
-            var builder = new ContainerBuilder();
+        _container = builder.Build();
 
-            builder.RegisterType<AutofacInMemoryMessageSender>().As<IMessageSender>();
-            builder.RegisterType<NullLogger<AutofacInMemoryMessageSender>>().As<ILogger<AutofacInMemoryMessageSender>>();
+        _subject = _container.Resolve<IMessageSender>();
+    }
 
-            _container = builder.Build();
+    public async Task InitializeAsync()
+        => await Task.CompletedTask;
 
-            _subject = _container.Resolve<IMessageSender>();
-        }
+    public async Task DisposeAsync()
+    {
+        _container?.Dispose();
 
-        public async Task InitializeAsync()
-        {
-            await Task.CompletedTask;
-        }
+        await Task.CompletedTask;
+    }
 
-        public async Task DisposeAsync()
-        {
-            _container?.Dispose();
+    [Fact]
+    public async Task MessageSenderThrowsWhenDependencyResolutionFails()
+    {
+        // Arrange
+        var parameters = new MultipleHandlersParameters();
+        var command = new Command<MultipleHandlersParameters>(parameters, Constants.CorrelationId);
 
-            await Task.CompletedTask;
-        }
+        // Act
+        Func<Task> subjectResult = async () => { await _subject.Send(command, CancellationToken.None); };
 
-        [Fact]
-        public async Task MessageSenderThrowsWhenDependencyResolutionFails()
-        {
-            var parameters = new MultipleHandlersParameters();
-            var command = new Command<MultipleHandlersParameters>(parameters, Constants.CorrelationId);
-
-            Func<Task> subjectResult = async () => { await _subject.Send(command, CancellationToken.None); };
-
-            await subjectResult.Should().ThrowAsync<HandlerNotFoundException>();
-        }
+        // Assert
+        await subjectResult.Should().ThrowAsync<HandlerNotFoundException>();
     }
 }
