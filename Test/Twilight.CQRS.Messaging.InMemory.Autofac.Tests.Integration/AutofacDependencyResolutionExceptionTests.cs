@@ -6,7 +6,7 @@ using Twilight.CQRS.Commands;
 using Twilight.CQRS.Messaging.Common;
 using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Parameters;
 using Twilight.CQRS.Messaging.Interfaces;
-using Twilight.CQRS.Tests.Unit.Common;
+using Twilight.CQRS.Tests.Common;
 using Xunit;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration;
@@ -44,7 +44,7 @@ public sealed class AutofacDependencyResolutionExceptionTests : IAsyncLifetime
     {
         // Arrange
         var parameters = new MultipleHandlersParameters();
-        var command = new Command<MultipleHandlersParameters>(parameters, Constants.CorrelationId);
+        var command = new CqrsCommand<MultipleHandlersParameters>(parameters, Constants.CorrelationId);
 
         // Act
         Func<Task> subjectResult = async () => { await _subject.Send(command, CancellationToken.None); };

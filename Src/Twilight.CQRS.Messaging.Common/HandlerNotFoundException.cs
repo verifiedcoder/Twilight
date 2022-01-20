@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Twilight.CQRS.Messaging.Common;
+﻿namespace Twilight.CQRS.Messaging.Common;
 
 /// <summary>
 ///     <para>Exception that should be thrown when a message handler is not found. This class cannot be inherited.</para>
@@ -19,8 +17,4 @@ public sealed class HandlerNotFoundException : Exception
         : base($"No concrete handlers for type '{typeName}' could be found.", exception)
     {
     }
-
-    /// <inheritdoc />
-    public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        => base.GetObjectData(info, context);
 }

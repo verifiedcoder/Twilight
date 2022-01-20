@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Twilight.CQRS.Queries;
-using Twilight.CQRS.Tests.Unit.Common;
+using Twilight.CQRS.Tests.Common;
 using Xunit;
 
 namespace Twilight.CQRS.Tests.Unit.Queries;
@@ -17,7 +17,7 @@ public sealed class QueryTests
     public void QueryWithoutParametersShouldAssignCausationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Query<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsQuery<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CausationId.Should().Be(Constants.CausationId);
@@ -27,7 +27,7 @@ public sealed class QueryTests
     public void QueryWithoutParametersShouldAssignCorrelationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Query<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsQuery<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CorrelationId.Should().Be(Constants.CorrelationId);
@@ -37,7 +37,7 @@ public sealed class QueryTests
     public void QueryWithParametersShouldAssignCausationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CausationId.Should().Be(Constants.CausationId);
@@ -47,7 +47,7 @@ public sealed class QueryTests
     public void QueryWithParametersShouldAssignCorrelationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CorrelationId.Should().Be(Constants.CorrelationId);
@@ -57,7 +57,7 @@ public sealed class QueryTests
     public void QueryWithParametersShouldAssignMessageIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.MessageId.Should().NotBeEmpty();
@@ -67,11 +67,10 @@ public sealed class QueryTests
     public void QueryWithParametersShouldAssignParameters()
     {
         // Arrange / Act
-        var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.Params.Should().NotBeNull();
         subject.Params.Should().BeEquivalentTo(_params);
     }
 }
-

@@ -8,40 +8,40 @@ namespace Twilight.CQRS.Messaging.Interfaces;
 public interface IMessageSender
 {
     /// <summary>
-    ///     Runs the command handler registered for the given command type.
+    ///     Runs the cqrsCommand handler registered for the given cqrsCommand type.
     /// </summary>
-    /// <typeparam name="TCommand">Type of the command.</typeparam>
-    /// <param name="command">Instance of the command.</param>
+    /// <typeparam name="TCommand">Type of the cqrsCommand.</typeparam>
+    /// <param name="cqrsCommand">Instance of the cqrsCommand.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>A Task that completes when the handler finished processing.</returns>
-    Task Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
-        where TCommand : ICommand;
+    Task Send<TCommand>(TCommand cqrsCommand, CancellationToken cancellationToken = default)
+        where TCommand : class, ICqrsCommand;
 
     /// <summary>
-    ///     Runs the command handler registered for the given command type.
+    ///     Runs the cqrsCommand handler registered for the given cqrsCommand type.
     /// </summary>
     /// <remarks>
     ///     This method should be implemented when a response (reply) to the originating service is required (i.e. the
-    ///     result of the command is fulfilled). It is recommended to restrain a command response to a scalar value.
+    ///     result of the cqrsCommand is fulfilled). It is recommended to restrain a cqrsCommand response to a scalar value.
     /// </remarks>
     /// <typeparam name="TResponse">Type of the result.</typeparam>
-    /// <param name="command">Instance of the command.</param>
+    /// <param name="cqrsCommand">Instance of the cqrsCommand.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
-    /// <returns>A Task that resolves to a result of the command handler.</returns>
-    Task<TResponse> Send<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default);
+    /// <returns>A Task that resolves to a result of the cqrsCommand handler.</returns>
+    Task<TResponse> Send<TResponse>(ICqrsCommand<TResponse> cqrsCommand, CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///     Runs the query handler registered for the given query type.
+    ///     Runs the cqrsQuery handler registered for the given cqrsQuery type.
     /// </summary>
     /// <remarks>
     ///     This method should be implemented when a response (reply) to the originating service is required (i.e. the
-    ///     result of the query is fulfilled).
+    ///     result of the cqrsQuery is fulfilled).
     /// </remarks>
     /// <typeparam name="TResponse">Type of the result.</typeparam>
-    /// <param name="query">Instance of the query.</param>
+    /// <param name="cqrsQuery">Instance of the cqrsQuery.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
-    /// <returns>A Task that resolves to a result of the query handler.</returns>
-    Task<TResponse> Send<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default);
+    /// <returns>A Task that resolves to a result of the cqrsQuery handler.</returns>
+    Task<TResponse> Send<TResponse>(ICqrsQuery<TResponse> cqrsQuery, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Runs all registered event handlers for the specified events.
@@ -50,7 +50,7 @@ public interface IMessageSender
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>Task that completes when all handlers finish processing.</returns>
     Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
-        where TEvent : IEvent;
+        where TEvent : class, ICqrsEvent;
 
     /// <summary>
     ///     Runs all registered event handlers for the specified event.
@@ -60,5 +60,5 @@ public interface IMessageSender
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>A Task that completes when all handlers finish processing.</returns>
     Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
-        where TEvent : IEvent;
+        where TEvent : class, ICqrsEvent;
 }

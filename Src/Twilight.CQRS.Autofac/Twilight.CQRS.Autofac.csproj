@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.3.0" />
+		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
 	</ItemGroup>
 
 	<ItemGroup>

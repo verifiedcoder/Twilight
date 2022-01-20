@@ -10,10 +10,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.3.0" />
-		<PackageReference Include="FluentValidation" Version="10.3.5" />
+		<PackageReference Include="FluentValidation" Version="10.3.6" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
 		<PackageReference Include="xunit" Version="2.4.1" />
-		<PackageReference Include="FluentAssertions" Version="6.2.0" />
+		<PackageReference Include="FluentAssertions" Version="6.3.0" />
 		<PackageReference Include="NSubstitute" Version="4.2.2" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
 			<PrivateAssets>all</PrivateAssets>
@@ -24,7 +24,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Src\Twilight.CQRS.Autofac\Twilight.CQRS.Autofac.csproj" />
-		<ProjectReference Include="..\Twilight.CQRS.Tests.Unit.Common\Twilight.CQRS.Tests.Unit.Common.csproj" />
+		<ProjectReference Include="..\Twilight.CQRS.Tests.Common\Twilight.CQRS.Tests.Common.csproj" />
 		<ProjectReference Include="..\..\Src\Twilight.CQRS\Twilight.CQRS.csproj" />
 	</ItemGroup>
 

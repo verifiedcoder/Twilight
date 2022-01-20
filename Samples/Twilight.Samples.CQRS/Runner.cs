@@ -1,28 +1,26 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
+using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Taikandi;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Messaging.Interfaces;
 using Twilight.CQRS.Queries;
-using Twilight.Samples.CQRS.Features.GetUserById;
-using Twilight.Samples.CQRS.Features.GetUsersView;
-using Twilight.Samples.CQRS.Features.RegisterUser;
+using Twilight.Samples.Common;
+using Twilight.Samples.Common.Features.GetUserById;
+using Twilight.Samples.Common.Features.GetUsersView;
+using Twilight.Samples.Common.Features.RegisterUser;
 
 namespace Twilight.Samples.CQRS;
 
 internal sealed class Runner : IRunner
 {
-    const string defaultAssemblyVersion = "1.0.0.0";
+    private const string DefaultAssemblyVersion = "1.0.0.0";
+
+    private readonly ActivitySource _activitySource;
 
     private readonly ILogger<Runner> _logger;
-    private readonly ActivitySource _activitySource;
     private readonly IMessageSender _messageSender;
-
-    private string ActivitySourceName => typeof(Runner).Namespace ?? nameof(Runner);
-
-    private static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? defaultAssemblyVersion;
 
     public Runner(IMessageSender messageSender, ILogger<Runner> logger)
     {
@@ -30,6 +28,10 @@ internal sealed class Runner : IRunner
         _logger = logger;
         _activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
     }
+
+    private static string ActivitySourceName => typeof(Runner).Namespace ?? nameof(Runner);
+
+    private static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? DefaultAssemblyVersion;
 
     public async Task Run()
     {
@@ -44,7 +46,7 @@ internal sealed class Runner : IRunner
         using var activity = _activitySource.StartActivity($"{nameof(RegisterUser)}");
         {
             var parameters = new RegisterUserCommandParameters("Bilbo", "Baggins");
-            var command = new Command<RegisterUserCommandParameters>(parameters, SequentialGuid.NewGuid().ToString());
+            var command = new CqrsCommand<RegisterUserCommandParameters>(parameters, SequentialGuid.NewGuid().ToString());
 
             await _messageSender.Send(command);
         }
@@ -55,7 +57,7 @@ internal sealed class Runner : IRunner
         using var activity = _activitySource.StartActivity($"{nameof(GetRegisteredUser)}");
         {
             var parameters = new GetUserByIdQueryParameters(1);
-            var query = new Query<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
+            var query = new CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
 
             var response = await _messageSender.Send(query);
 
@@ -68,7 +70,7 @@ internal sealed class Runner : IRunner
         using var activity = _activitySource.StartActivity($"{nameof(GetUsersView)}");
         {
             var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(-1));
-            var query = new Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
+            var query = new CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
 
             var response = await _messageSender.Send(query);
 
@@ -81,7 +83,7 @@ internal sealed class Runner : IRunner
         using var activity = _activitySource.StartActivity($"{nameof(GetInvalidUsersView)}");
         {
             var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(+1));
-            var query = new Query<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
+            var query = new CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, SequentialGuid.NewGuid().ToString());
 
             try
             {

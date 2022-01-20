@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.3.0" />
+        <PackageReference Include="Benchmarkdotnet" Version="0.13.1" />
+        <PackageReference Include="FluentValidation" Version="10.3.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Src\Twilight.CQRS\Twilight.CQRS.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.CQRS.Autofac\Twilight.CQRS.Autofac.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.CQRS.Messaging.InMemory.Autofac\Twilight.CQRS.Messaging.InMemory.Autofac.csproj" />
+    </ItemGroup>
+
+</Project>

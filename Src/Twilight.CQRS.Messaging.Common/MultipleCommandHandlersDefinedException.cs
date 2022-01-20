@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Twilight.CQRS.Messaging.Common;
+﻿namespace Twilight.CQRS.Messaging.Common;
 
 /// <summary>
 ///     <para>
@@ -21,8 +19,4 @@ public sealed class MultipleCommandHandlersDefinedException : Exception
         : base($"Multiple command handlers for type '{typeName}' were found. Only one handler can exist for a command.")
     {
     }
-
-    /// <inheritdoc />
-    public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        => base.GetObjectData(info, context);
 }

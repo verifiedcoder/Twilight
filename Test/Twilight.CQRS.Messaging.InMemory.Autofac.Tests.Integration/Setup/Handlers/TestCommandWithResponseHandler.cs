@@ -2,26 +2,26 @@
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Messaging.Interfaces;
-using Twilight.CQRS.Tests.Unit.Common;
+using Twilight.CQRS.Tests.Common;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers;
 
-public sealed class TestCommandWithResponseHandler : CommandHandlerBase<TestCommandWithResponseHandler, Command<TestParameters, CommandResponse<string>>, CommandResponse<string>>
+internal sealed class TestCqrsCommandWithResponseHandler : CqrsCommandHandlerBase<TestCqrsCommandWithResponseHandler, CqrsCommand<TestParameters, CqrsCommandResponse<string>>, CqrsCommandResponse<string>>
 {
     private readonly ITestService _service;
 
-    public TestCommandWithResponseHandler(IMessageSender messageSender,
-                                            ITestService service,
-                                            ILogger<TestCommandWithResponseHandler> logger,
-                                            IValidator<Command<TestParameters, CommandResponse<string>>> validator)
+    public TestCqrsCommandWithResponseHandler(IMessageSender messageSender,
+                                              ITestService service,
+                                              ILogger<TestCqrsCommandWithResponseHandler> logger,
+                                              IValidator<CqrsCommand<TestParameters, CqrsCommandResponse<string>>> validator)
         : base(messageSender, logger, validator)
         => _service = service;
 
-    protected override async Task<CommandResponse<string>> HandleCommand(Command<TestParameters, CommandResponse<string>> command, CancellationToken cancellationToken = default)
+    protected override async Task<CqrsCommandResponse<string>> HandleCommand(CqrsCommand<TestParameters, CqrsCommandResponse<string>> cqrsCommand, CancellationToken cancellationToken = default)
     {
-        await _service.Receive(command.Params.Value);
+        await _service.Receive(cqrsCommand.Params.Value);
 
-        var response = new CommandResponse<string>(nameof(TestCommandWithResponseHandler), command.CorrelationId, command.MessageId);
+        var response = new CqrsCommandResponse<string>(nameof(TestCqrsCommandWithResponseHandler), cqrsCommand.CorrelationId, cqrsCommand.MessageId);
 
         return response;
     }

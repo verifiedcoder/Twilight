@@ -4,28 +4,28 @@
         <name>Twilight.CQRS.Interfaces</name>
     </assembly>
     <members>
-        <member name="T:Twilight.CQRS.Interfaces.ICommand">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsCommand">
             <summary>
                 <para>Represents a message of type command.</para>
-                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.IMessage" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />.</para>
             </summary>
-            <seealso cref="T:Twilight.CQRS.Interfaces.IMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.ICommand`1">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsCommand`1">
             <summary>
                 <para>Represents a message of type command with a response of arbitrary type.</para>
-                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.IMessage" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />.</para>
             </summary>
             <typeparam name="TResponse">The type of the response payload.</typeparam>
-            <seealso cref="T:Twilight.CQRS.Interfaces.IMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.ICommandHandler`1">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1">
             <summary>
                 Represents a means of handling a command in order to broker a result.
             </summary>
             <typeparam name="TCommand">The type of the command.</typeparam>
         </member>
-        <member name="M:Twilight.CQRS.Interfaces.ICommandHandler`1.Handle(`0,System.Threading.CancellationToken)">
+        <member name="M:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1.Handle(`0,System.Threading.CancellationToken)">
             <summary>
                 Handles the command.
             </summary>
@@ -33,14 +33,14 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns>A task that represents the asynchronous command handler operation.</returns>
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.ICommandHandler`2">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`2">
             <summary>
                 Represents a command message handler.
             </summary>
             <typeparam name="TCommand">The type of the command.</typeparam>
             <typeparam name="TResponse">The type of the response.</typeparam>
         </member>
-        <member name="M:Twilight.CQRS.Interfaces.ICommandHandler`2.Handle(`0,System.Threading.CancellationToken)">
+        <member name="M:Twilight.CQRS.Interfaces.ICqrsCommandHandler`2.Handle(`0,System.Threading.CancellationToken)">
             <summary>
                 Handles the command.
             </summary>
@@ -51,20 +51,20 @@
                 <para>The task result contains the command execution response.</para>
             </returns>
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.IEvent">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsEvent">
             <summary>
                 <para>Represents a message of type event.</para>
-                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.IMessage" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />.</para>
             </summary>
-            <seealso cref="T:Twilight.CQRS.Interfaces.IMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.IEventHandler`1">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsEventHandler`1">
             <summary>
                 Represents a means of handling an event in order to broker a result.
             </summary>
             <typeparam name="TEvent">The type of the event.</typeparam>
         </member>
-        <member name="M:Twilight.CQRS.Interfaces.IEventHandler`1.Handle(`0,System.Threading.CancellationToken)">
+        <member name="M:Twilight.CQRS.Interfaces.ICqrsEventHandler`1.Handle(`0,System.Threading.CancellationToken)">
             <summary>
                 Handles the event.
             </summary>
@@ -72,37 +72,37 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns>A task that represents the asynchronous event handler operation.</returns>
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.IMessage">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsMessage">
             <summary>
                 Represents base properties for messages. This class cannot be instantiated.
             </summary>
         </member>
-        <member name="P:Twilight.CQRS.Interfaces.IMessage.MessageId">
+        <member name="P:Twilight.CQRS.Interfaces.ICqrsMessage.MessageId">
             <summary>
                 Gets the message identifier.
             </summary>
             <value>The message identifier.</value>
         </member>
-        <member name="P:Twilight.CQRS.Interfaces.IMessage.CorrelationId">
+        <member name="P:Twilight.CQRS.Interfaces.ICqrsMessage.CorrelationId">
             <summary>
                 Gets the correlation identifier.
             </summary>
             <value>The message correlation identifier.</value>
         </member>
-        <member name="P:Twilight.CQRS.Interfaces.IMessage.CausationId">
+        <member name="P:Twilight.CQRS.Interfaces.ICqrsMessage.CausationId">
             <summary>
                 Gets the causation identifier.
             </summary>
             <remarks>Identifies the message (by that message's identifier) that caused a message instance to be produced.</remarks>
             <value>The causation identifier.</value>
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.IMessageHandler`1">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsMessageHandler`1">
             <summary>
                 Represents base message handling functionality. This class cannot be inherited.
             </summary>
             <typeparam name="TMessage">The type of the message.</typeparam>
         </member>
-        <member name="M:Twilight.CQRS.Interfaces.IMessageHandler`1.OnBeforeHandling(`0,System.Threading.CancellationToken)">
+        <member name="M:Twilight.CQRS.Interfaces.ICqrsMessageHandler`1.OnBeforeHandling(`0,System.Threading.CancellationToken)">
             <summary>
                 Occurs before handling a message.
             </summary>
@@ -110,7 +110,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns>A task that represents the asynchronous operation.</returns>
         </member>
-        <member name="M:Twilight.CQRS.Interfaces.IMessageHandler`1.ValidateMessage(`0,System.Threading.CancellationToken)">
+        <member name="M:Twilight.CQRS.Interfaces.ICqrsMessageHandler`1.ValidateMessage(`0,System.Threading.CancellationToken)">
             <summary>
                 Occurs when validating a message.
             </summary>
@@ -118,7 +118,7 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns>A task that represents the asynchronous operation.</returns>
         </member>
-        <member name="M:Twilight.CQRS.Interfaces.IMessageHandler`1.OnAfterHandling(`0,System.Threading.CancellationToken)">
+        <member name="M:Twilight.CQRS.Interfaces.ICqrsMessageHandler`1.OnAfterHandling(`0,System.Threading.CancellationToken)">
             <summary>
                 Occurs when handling a message has completed.
             </summary>
@@ -126,22 +126,22 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns>A task that represents the asynchronous operation.</returns>
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.IQuery`1">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsQuery`1">
             <summary>
                 <para>Represents a message of type query with a response of arbitrary type.</para>
-                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.IMessage" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />.</para>
             </summary>
             <typeparam name="TResponse">The type of the response payload.</typeparam>
-            <seealso cref="T:Twilight.CQRS.Interfaces.IMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsMessage" />
         </member>
-        <member name="T:Twilight.CQRS.Interfaces.IQueryHandler`2">
+        <member name="T:Twilight.CQRS.Interfaces.ICqrsQueryHandler`2">
             <summary>
                 Represents a query message handler.
             </summary>
             <typeparam name="TQuery">The type of the query.</typeparam>
             <typeparam name="TResponse">The type of the response.</typeparam>
         </member>
-        <member name="M:Twilight.CQRS.Interfaces.IQueryHandler`2.Handle(`0,System.Threading.CancellationToken)">
+        <member name="M:Twilight.CQRS.Interfaces.ICqrsQueryHandler`2.Handle(`0,System.Threading.CancellationToken)">
             <summary>
                 Handles the query.
             </summary>

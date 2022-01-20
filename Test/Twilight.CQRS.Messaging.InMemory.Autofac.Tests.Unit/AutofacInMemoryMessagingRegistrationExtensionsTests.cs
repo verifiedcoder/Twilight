@@ -25,9 +25,9 @@ public sealed class AutofacInMemoryMessagingRegistrationExtensionsTests
         container.ComponentRegistry.Registrations.Count().Should().Be(3);
 
         container.ComponentRegistry
-                    .Registrations.Any(x => x.Services.Any(s => s.Description == typeof(IMessageSender).FullName))
-                    .Should()
-                    .BeTrue();
+                 .Registrations.Any(x => x.Services.Any(s => s.Description == typeof(IMessageSender).FullName))
+                 .Should()
+                 .BeTrue();
 
         var messageSender = container.Resolve<IMessageSender>();
 

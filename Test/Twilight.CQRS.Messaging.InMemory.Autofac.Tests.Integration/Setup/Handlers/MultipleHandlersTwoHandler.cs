@@ -6,15 +6,15 @@ using Twilight.CQRS.Messaging.Interfaces;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers;
 
-public sealed class MultipleHandlersTwoHandler : CommandHandlerBase<MultipleHandlersOneHandler, Command<MultipleHandlersParameters>>
+internal sealed class MultipleHandlersTwoHandler : CqrsCommandHandlerBase<MultipleHandlersOneHandler, CqrsCommand<MultipleHandlersParameters>>
 {
     public MultipleHandlersTwoHandler(IMessageSender messageSender,
-                                        ILogger<MultipleHandlersOneHandler> logger,
-                                        IValidator<Command<MultipleHandlersParameters>> validator)
+                                      ILogger<MultipleHandlersOneHandler> logger,
+                                      IValidator<CqrsCommand<MultipleHandlersParameters>> validator)
         : base(messageSender, logger, validator)
     {
     }
 
-    public override Task HandleCommand(Command<MultipleHandlersParameters> command, CancellationToken cancellationToken = default)
+    public override Task HandleCommand(CqrsCommand<MultipleHandlersParameters> cqrsCommand, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 }

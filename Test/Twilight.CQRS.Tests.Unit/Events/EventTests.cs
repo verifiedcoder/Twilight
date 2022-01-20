@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Twilight.CQRS.Events;
-using Twilight.CQRS.Tests.Unit.Common;
+using Twilight.CQRS.Tests.Common;
 using Xunit;
 
 namespace Twilight.CQRS.Tests.Unit.Events;
@@ -17,7 +17,7 @@ public sealed class EventTests
     public void EventWithoutParametersShouldAssignCausationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Event(Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsEvent(Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CausationId.Should().Be(Constants.CausationId);
@@ -27,7 +27,7 @@ public sealed class EventTests
     public void EventWithoutParametersShouldAssignCorrelationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Event(Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsEvent(Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CorrelationId.Should().Be(Constants.CorrelationId);
@@ -37,7 +37,7 @@ public sealed class EventTests
     public void EventWithParametersShouldAssignCausationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Event<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsEvent<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CausationId.Should().Be(Constants.CausationId);
@@ -47,7 +47,7 @@ public sealed class EventTests
     public void EventWithParametersShouldAssignCorrelationIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Event<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsEvent<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.CorrelationId.Should().Be(Constants.CorrelationId);
@@ -57,7 +57,7 @@ public sealed class EventTests
     public void EventWithParametersShouldAssignMessageIdWhenCreated()
     {
         // Arrange / Act
-        var subject = new Event<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsEvent<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.MessageId.Should().NotBeEmpty();
@@ -67,7 +67,7 @@ public sealed class EventTests
     public void EventWithParametersShouldAssignParameters()
     {
         // Arrange / Act
-        var subject = new Event<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
+        var subject = new CqrsEvent<TestParameters>(_params, Constants.CorrelationId, Constants.CausationId);
 
         // Assert
         subject.Params.Should().NotBeNull();

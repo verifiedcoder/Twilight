@@ -4,6 +4,6 @@ using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Parameter
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Validators;
 
-public sealed class MultipleHandlersValidator : AbstractValidator<Command<MultipleHandlersParameters>>
+internal sealed class MultipleHandlersValidator : AbstractValidator<CqrsCommand<MultipleHandlersParameters>>
 {
 }

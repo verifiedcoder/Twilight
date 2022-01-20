@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
+using Microsoft.Toolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Autofac;
@@ -18,10 +19,12 @@ public static class ContainerBuilderExtensions
     /// <param name="builder">The container builder.</param>
     /// <param name="assembly">The assembly to scan.</param>
     /// <param name="typeNameEndings">The file endings to match against.</param>
-    // ReSharper disable once ParameterTypeCanBeEnumerable.Global as desired behaviour
     public static void RegisterAssemblyTypes(this ContainerBuilder builder, Assembly assembly, string[] typeNameEndings)
     {
-        if (assembly == null || !typeNameEndings.Any())
+        Guard.IsNotNull(assembly, nameof(assembly));
+        Guard.IsNotNull(typeNameEndings, nameof(typeNameEndings));
+
+        if (!typeNameEndings.Any())
         {
             return;
         }
@@ -29,7 +32,7 @@ public static class ContainerBuilderExtensions
         foreach (var typeNameEnding in typeNameEndings)
         {
             builder.RegisterAssemblyTypes(assembly)
-                   .Where(t => t.Name.EndsWith(typeNameEnding, StringComparison.InvariantCultureIgnoreCase) && !t.IsAbstract)
+                   .Where(type => type.Name.EndsWith(typeNameEnding, StringComparison.InvariantCultureIgnoreCase) && !type.IsAbstract)
                    .AsImplementedInterfaces()
                    .InstancePerLifetimeScope()
                    .AsSelf();
@@ -43,15 +46,16 @@ public static class ContainerBuilderExtensions
     /// <param name="assemblies">The assemblies to scan.</param>
     public static ContainerBuilder RegisterCqrs(this ContainerBuilder builder, IEnumerable<Assembly> assemblies)
     {
-        if (!assemblies.Any())
+        Guard.IsNotNull(assemblies, nameof(assemblies));
+
+        var assemblyList = assemblies.ToList();
+
+        if (!assemblyList.Any())
         {
             return builder;
         }
 
-        foreach (var assembly in assemblies)
-        {
-            builder.RegisterCqrs(assembly);
-        }
+        assemblyList.ForEach(assembly => builder.RegisterCqrs(assembly));
 
         return builder;
     }
@@ -63,22 +67,19 @@ public static class ContainerBuilderExtensions
     /// <param name="assembly">The assembly to scan.</param>
     public static ContainerBuilder RegisterCqrs(this ContainerBuilder builder, Assembly assembly)
     {
-        if (assembly == null)
-        {
-            return builder;
-        }
+        Guard.IsNotNull(assembly, nameof(assembly));
 
         builder.RegisterAssemblyTypes(assembly)
-               .AsClosedTypesOf(typeof(ICommandHandler<>));
+               .AsClosedTypesOf(typeof(ICqrsCommandHandler<>));
 
         builder.RegisterAssemblyTypes(assembly)
-               .AsClosedTypesOf(typeof(ICommandHandler<,>));
+               .AsClosedTypesOf(typeof(ICqrsCommandHandler<,>));
 
         builder.RegisterAssemblyTypes(assembly)
-               .AsClosedTypesOf(typeof(IQueryHandler<,>));
+               .AsClosedTypesOf(typeof(ICqrsQueryHandler<,>));
 
         builder.RegisterAssemblyTypes(assembly)
-               .AsClosedTypesOf(typeof(IEventHandler<>));
+               .AsClosedTypesOf(typeof(ICqrsEventHandler<>));
 
         builder.RegisterAssemblyTypes(assembly, new[] { "validator" });
 

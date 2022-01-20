@@ -4,11 +4,11 @@ namespace Twilight.CQRS.Queries;
 
 /// <summary>
 ///     <para>Represents an encapsulated response from a query handler.</para>
-///     <para>Implements <see cref="Message" />.</para>
+///     <para>Implements <see cref="CqrsMessage" />.</para>
 /// </summary>
 /// <typeparam name="TPayload">The type of the payload.</typeparam>
-/// <seealso cref="Message" />
-public class QueryResponse<TPayload> : Message
+/// <seealso cref="CqrsMessage" />
+public class QueryResponse<TPayload> : CqrsMessage
     where TPayload : class
 {
     /// <summary>
@@ -17,7 +17,7 @@ public class QueryResponse<TPayload> : Message
     /// <param name="payload">The payload.</param>
     /// <param name="correlationId">The message correlation identifier.</param>
     /// <param name="causationId">
-    ///     The causation identifier. Identifies the query that caused this response to be produced.
+    ///     The causation identifier. Identifies the cqrsQuery that caused this response to be produced.
     ///     Optional.
     /// </param>
     public QueryResponse(TPayload payload, string correlationId, string? causationId = null)

@@ -3,31 +3,30 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Twilight.CQRS.Queries;
-using Twilight.CQRS.Tests.Unit.Common;
+using Twilight.CQRS.Tests.Common;
 using Xunit;
 
 namespace Twilight.CQRS.Tests.Unit.Queries;
 
 public sealed class QueryHandlerTests
 {
-    private readonly ILogger<TestQueryHandler> _logger;
-    private readonly TestQueryHandler _subject;
+    private readonly TestCqrsQueryHandler _subject;
 
     // Setup
     public QueryHandlerTests()
     {
-        _logger = Substitute.For<ILogger<TestQueryHandler>>();
+        var logger = Substitute.For<ILogger<TestCqrsQueryHandler>>();
 
-        IValidator<Query<TestParameters, QueryResponse<TestQueryResponse>>> validator = new TestQueryParametersValidator();
+        IValidator<CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>> validator = new TestQueryParametersValidator();
 
-        _subject = new TestQueryHandler(_logger, validator);
+        _subject = new TestCqrsQueryHandler(logger, validator);
     }
 
     [Fact]
     public async Task HandlerShouldHandleQuery()
     {
         // Arrange
-        var testQuery = new Query<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
+        var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
 
         // Act
         var response = await _subject.Handle(testQuery, CancellationToken.None);
@@ -40,7 +39,7 @@ public sealed class QueryHandlerTests
     public async Task HandlerShouldNotThrowWhenValidatingValidQueryParameters()
     {
         // Arrange
-        var testQuery = new Query<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
+        var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
 
         // Act
         Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
@@ -53,7 +52,7 @@ public sealed class QueryHandlerTests
     public async Task HandlerShouldThrowWhenValidatingInvalidQueryParameters()
     {
         // Arrange
-        var testQuery = new Query<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(string.Empty), Constants.CorrelationId);
+        var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(string.Empty), Constants.CorrelationId);
 
         // Act
         Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };

@@ -5,7 +5,7 @@ using Twilight.CQRS.Autofac;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
 
-public sealed class IntegrationTestModule : Module
+internal sealed class IntegrationTestModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {

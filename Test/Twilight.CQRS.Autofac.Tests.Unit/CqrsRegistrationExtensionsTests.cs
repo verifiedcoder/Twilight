@@ -27,7 +27,7 @@ public sealed class CqrsRegistrationExtensionsTests
     public void RegisterForCqrsRegistersAssemblyServices()
     {
         // Arrange
-        var assembly = typeof(TestCommandHandler).Assembly;
+        var assembly = typeof(TestCqrsCommandHandler).Assembly;
 
         _builder.RegisterAssemblyTypes(assembly);
 
@@ -44,7 +44,7 @@ public sealed class CqrsRegistrationExtensionsTests
 
         var expectedServices = new List<string>
         {
-            typeof(TestCommandHandler).Namespace ?? string.Empty
+            typeof(TestCqrsCommandHandler).Namespace ?? string.Empty
         };
 
         AssertOnExpectedServices(expectedServices, services);
@@ -56,8 +56,8 @@ public sealed class CqrsRegistrationExtensionsTests
         foreach (var expectedService in expectedServices)
         {
             var selectedService = (from service in services
-                                    where service.Contains(expectedService)
-                                    select service).FirstOrDefault();
+                                   where service.Contains(expectedService)
+                                   select service).FirstOrDefault();
 
             selectedService.Should().NotBeNull();
         }
