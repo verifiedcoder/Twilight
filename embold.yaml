@@ -1,0 +1,26 @@
+version: 1
+
+sources:
+  exclusions:
+    - 'test'
+    - 'generated'
+    - 'mock'
+    - 'thirdparty'
+    - 'third-party'
+    - '3rd-party'
+    - '3rdparty'
+    - 'external'
+    - 'build'
+    - 'node_modules'
+    - 'assets'
+    - 'gulp'
+    - 'grunt'
+    - 'library'
+    - '.git'
+    
+languages: 'C_SHARP'
+
+# Justification: No point checking ConfigureAwait() as .Net 6 has no context
+modules:
+  - name: AwaitExpressionEustEndWithConfigureAwait
+    enables: false
