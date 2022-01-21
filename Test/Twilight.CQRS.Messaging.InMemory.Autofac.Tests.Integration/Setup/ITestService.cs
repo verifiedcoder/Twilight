@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
 
-namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup
+public interface ITestService
 {
-    public interface ITestService
-    {
-        Task Receive(string parameters);
-    }
+    Task Receive(string parameters);
 }

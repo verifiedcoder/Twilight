@@ -1,54 +1,64 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using Twilight.CQRS.Queries;
-using Twilight.CQRS.Tests.Unit.Shared;
+using Twilight.CQRS.Tests.Common;
 using Xunit;
 
-namespace Twilight.CQRS.Tests.Unit.Queries
+namespace Twilight.CQRS.Tests.Unit.Queries;
+
+public sealed class QueryHandlerTests
 {
-    public sealed class QueryHandlerTests
+    private readonly TestCqrsQueryHandler _subject;
+
+    // Setup
+    public QueryHandlerTests()
     {
-        private readonly TestQueryHandler _subject;
+        var logger = Substitute.For<ILogger<TestCqrsQueryHandler>>();
 
-        public QueryHandlerTests()
-        {
-            IValidator<Query<TestParameters, QueryResponse<TestQueryResponse>>> validator = new TestQueryParametersValidator();
+        IValidator<CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>> validator = new TestQueryParametersValidator();
 
-            _subject = new TestQueryHandler(validator);
-        }
+        _subject = new TestCqrsQueryHandler(logger, validator);
+    }
 
-        [Fact]
-        public async Task HandlerShouldHandleQuery()
-        {
-            var testQuery = new Query<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
+    [Fact]
+    public async Task HandlerShouldHandleQuery()
+    {
+        // Arrange
+        var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
 
-            var response = await _subject.Handle(testQuery, CancellationToken.None);
+        // Act
+        var response = await _subject.Handle(testQuery, CancellationToken.None);
 
-            response.Payload.Value.Should().Be("1");
-        }
+        // Assert
+        response.Payload.Value.Should().Be("1");
+    }
 
-        [Fact]
-        public async Task HandlerShouldNotThrowWhenValidatingValidQueryParameters()
-        {
-            var testQuery = new Query<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
+    [Fact]
+    public async Task HandlerShouldNotThrowWhenValidatingValidQueryParameters()
+    {
+        // Arrange
+        var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
 
-            Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
+        // Act
+        Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
 
-            await subjectResult.Should().NotThrowAsync<ValidationException>();
-        }
+        // Assert
+        await subjectResult.Should().NotThrowAsync<ValidationException>();
+    }
 
-        [Fact]
-        public async Task HandlerShouldThrowWhenValidatingInvalidQueryParameters()
-        {
-            var testQuery = new Query<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(string.Empty), Constants.CorrelationId);
+    [Fact]
+    public async Task HandlerShouldThrowWhenValidatingInvalidQueryParameters()
+    {
+        // Arrange
+        var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(string.Empty), Constants.CorrelationId);
 
-            Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
+        // Act
+        Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
 
-            await subjectResult.Should().ThrowAsync<ValidationException>()
-                               .WithMessage($"Validation failed: {Environment.NewLine} -- Params.Value: 'Params. Value' must not be empty.");
-        }
+        // Assert
+        await subjectResult.Should().ThrowAsync<ValidationException>()
+                           .WithMessage($"Validation failed: {Environment.NewLine} -- Params.Value: 'Params Value' must not be empty. Severity: Error");
     }
 }

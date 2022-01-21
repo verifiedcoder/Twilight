@@ -1,14 +1,11 @@
 ﻿using FluentValidation;
 using Twilight.CQRS.Commands;
-using Twilight.CQRS.Tests.Unit.Shared;
+using Twilight.CQRS.Tests.Common;
 
-namespace Twilight.CQRS.Tests.Unit
+namespace Twilight.CQRS.Tests.Unit;
+
+internal sealed class TestParametersValidator : AbstractValidator<CqrsCommand<TestParameters>>
 {
-    public sealed class TestParametersValidator : AbstractValidator<Command<TestParameters>>
-    {
-        public TestParametersValidator()
-        {
-            RuleFor(p => p.Params.Value).NotEmpty();
-        }
-    }
+    public TestParametersValidator()
+        => RuleFor(p => p.Params.Value).NotEmpty();
 }

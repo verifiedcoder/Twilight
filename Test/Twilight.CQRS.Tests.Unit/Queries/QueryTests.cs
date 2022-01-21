@@ -1,62 +1,76 @@
 ﻿using FluentAssertions;
 using Twilight.CQRS.Queries;
-using Twilight.CQRS.Tests.Unit.Shared;
+using Twilight.CQRS.Tests.Common;
 using Xunit;
 
-namespace Twilight.CQRS.Tests.Unit.Queries
+namespace Twilight.CQRS.Tests.Unit.Queries;
+
+public sealed class QueryTests
 {
-    public sealed class QueryTests
+    private readonly TestParameters _params;
+
+    // Setup
+    public QueryTests()
+        => _params = new TestParameters();
+
+    [Fact]
+    public void QueryWithoutParametersShouldAssignCausationIdWhenCreated()
     {
-        private readonly TestParameters _params;
-        public QueryTests() => _params = new TestParameters();
+        // Arrange / Act
+        var subject = new CqrsQuery<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
 
-        [Fact]
-        public void QueryWithoutParametersShouldAssignCausationIdWhenCreated()
-        {
-            var subject = new Query<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
+        // Assert
+        subject.CausationId.Should().Be(Constants.CausationId);
+    }
 
-            subject.CausationId.Should().Be(Constants.CausationId);
-        }
+    [Fact]
+    public void QueryWithoutParametersShouldAssignCorrelationIdWhenCreated()
+    {
+        // Arrange / Act
+        var subject = new CqrsQuery<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
 
-        [Fact]
-        public void QueryWithoutParametersShouldAssignCorrelationIdWhenCreated()
-        {
-            var subject = new Query<TestQueryResponse>(Constants.CorrelationId, Constants.CausationId);
+        // Assert
+        subject.CorrelationId.Should().Be(Constants.CorrelationId);
+    }
 
-            subject.CorrelationId.Should().Be(Constants.CorrelationId);
-        }
+    [Fact]
+    public void QueryWithParametersShouldAssignCausationIdWhenCreated()
+    {
+        // Arrange / Act
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
-        [Fact]
-        public void QueryWithParametersShouldAssignCausationIdWhenCreated()
-        {
-            var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
+        // Assert
+        subject.CausationId.Should().Be(Constants.CausationId);
+    }
 
-            subject.CausationId.Should().Be(Constants.CausationId);
-        }
+    [Fact]
+    public void QueryWithParametersShouldAssignCorrelationIdWhenCreated()
+    {
+        // Arrange / Act
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
-        [Fact]
-        public void QueryWithParametersShouldAssignCorrelationIdWhenCreated()
-        {
-            var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
+        // Assert
+        subject.CorrelationId.Should().Be(Constants.CorrelationId);
+    }
 
-            subject.CorrelationId.Should().Be(Constants.CorrelationId);
-        }
+    [Fact]
+    public void QueryWithParametersShouldAssignMessageIdWhenCreated()
+    {
+        // Arrange / Act
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
-        [Fact]
-        public void QueryWithParametersShouldAssignMessageIdWhenCreated()
-        {
-            var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
+        // Assert
+        subject.MessageId.Should().NotBeEmpty();
+    }
 
-            subject.MessageId.Should().NotBeEmpty();
-        }
+    [Fact]
+    public void QueryWithParametersShouldAssignParameters()
+    {
+        // Arrange / Act
+        var subject = new CqrsQuery<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
 
-        [Fact]
-        public void QueryWithParametersShouldAssignParameters()
-        {
-            var subject = new Query<TestParameters, TestQueryResponse>(_params, Constants.CorrelationId, Constants.CausationId);
-
-            subject.Params.Should().NotBeNull();
-            subject.Params.Should().BeEquivalentTo(_params);
-        }
+        // Assert
+        subject.Params.Should().NotBeNull();
+        subject.Params.Should().BeEquivalentTo(_params);
     }
 }

@@ -1,21 +1,20 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
-using Twilight.CQRS.Messaging.Contracts;
 using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Parameters;
+using Twilight.CQRS.Messaging.Interfaces;
 
-namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers
+namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers;
+
+internal sealed class MultipleHandlersTwoHandler : CqrsCommandHandlerBase<MultipleHandlersOneHandler, CqrsCommand<MultipleHandlersParameters>>
 {
-    public sealed class MultipleHandlersTwoHandler : CommandHandlerBase<Command<MultipleHandlersParameters>>
+    public MultipleHandlersTwoHandler(IMessageSender messageSender,
+                                      ILogger<MultipleHandlersOneHandler> logger,
+                                      IValidator<CqrsCommand<MultipleHandlersParameters>> validator)
+        : base(messageSender, logger, validator)
     {
-        public MultipleHandlersTwoHandler(IMessageSender messageSender,
-                                          IValidator<Command<MultipleHandlersParameters>> validator)
-            : base(messageSender, validator)
-        {
-        }
-
-        protected override Task HandleCommand(Command<MultipleHandlersParameters> command, CancellationToken cancellationToken = default) => throw new NotImplementedException();
     }
+
+    public override Task HandleCommand(CqrsCommand<MultipleHandlersParameters> cqrsCommand, CancellationToken cancellationToken = default)
+        => throw new NotImplementedException();
 }

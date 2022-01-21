@@ -1,23 +1,22 @@
 ﻿using Autofac;
-using Twilight.CQRS.Messaging.Contracts;
+using Twilight.CQRS.Messaging.Interfaces;
 
-namespace Twilight.CQRS.Messaging.InMemory.Autofac
+namespace Twilight.CQRS.Messaging.InMemory.Autofac;
+
+/// <summary>
+///     Provides an extension that uses Autofac to register in-memory messaging.
+/// </summary>
+public static class AutofacInMemoryMessagingRegistrationExtensions
 {
     /// <summary>
-    ///     Provides an extension that uses Autofac to register in-memory messaging.
+    ///     Adds in-memory messaging using Autofac.
     /// </summary>
-    public static class AutofacInMemoryMessagingRegistrationExtensions
+    /// <param name="builder">The component registration builder.</param>
+    /// <returns>ContainerBuilder.</returns>
+    public static ContainerBuilder AddAutofacInMemoryMessaging(this ContainerBuilder builder)
     {
-        /// <summary>
-        ///     Adds in-memory messaging using Autofac.
-        /// </summary>
-        /// <param name="builder">The component registration builder.</param>
-        /// <returns>ContainerBuilder.</returns>
-        public static ContainerBuilder AddAutofacInMemoryMessaging(this ContainerBuilder builder)
-        {
-            builder.RegisterType<AutofacInMemoryMessageSender>().As<IMessageSender>();
+        builder.RegisterType<AutofacInMemoryMessageSender>().As<IMessageSender>();
 
-            return builder;
-        }
+        return builder;
     }
 }
