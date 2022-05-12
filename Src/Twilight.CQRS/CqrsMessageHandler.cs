@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
@@ -10,8 +9,6 @@ namespace Twilight.CQRS;
 public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandler<TMessage>
     where TMessage : class
 {
-    private const string DefaultAssemblyVersion = "1.0.0.0";
-
     private readonly IValidator<TMessage>? _validator;
 
     /// <summary>
@@ -27,20 +24,6 @@ public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandl
 
         Logger = logger;
     }
-
-    /// <summary>
-    ///     Gets the Open Telemetry activity source identifier.
-    /// </summary>
-    /// <value>The activity source identifier.</value>
-    internal string ActivitySourceName => typeof(CqrsMessageHandler<THandler, TMessage>).Namespace ?? nameof(CqrsMessageHandler<THandler, TMessage>);
-
-    /// <summary>
-    ///     Gets the assembly version.
-    /// </summary>
-    /// <value>The assembly version.</value>
-#pragma warning disable CA1822 // Mark members as a static field in a generic type is not shared among instances of different close constructed types.
-    internal string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? DefaultAssemblyVersion;
-#pragma warning restore CA1822 // Mark members as static
 
     /// <summary>
     ///     Gets the message handler logger.

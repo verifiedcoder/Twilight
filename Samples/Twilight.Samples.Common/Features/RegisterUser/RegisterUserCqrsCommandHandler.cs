@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Events;
@@ -27,15 +29,21 @@ public sealed class RegisterUserCqrsCommandHandler : CqrsCommandHandlerBase<Regi
             Surname = cqrsCommand.Params.Surname
         };
 
-        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-        var entityEntry = _context.Users.Add(userEntity);
+        EntityEntry<UserEntity> entityEntry;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        using (var activity = Activity.Current?.Source.StartActivity("Adding new user to database", ActivityKind.Server))
+        {
+            activity?.AddEvent(new ActivityEvent("Register User"));
+
+            entityEntry = _context.Users.Add(userEntity);
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
 
         var parameters = new UserRegisteredEventParameters(entityEntry.Entity.Id, cqrsCommand.Params.Forename, cqrsCommand.Params.Surname);
         var userRegisteredEvent = new CqrsEvent<UserRegisteredEventParameters>(parameters, cqrsCommand.CorrelationId, cqrsCommand.MessageId);
 
-        Logger.LogInformation("Handled Command, {CommandTypeName}.", cqrsCommand.GetType().FullName);
+        Logger.LogInformation("Handled CQRS Command, {CommandTypeName}.", cqrsCommand.GetType().FullName);
 
         await MessageSender.Publish(userRegisteredEvent, cancellationToken);
     }

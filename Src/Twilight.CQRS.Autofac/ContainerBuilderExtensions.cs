@@ -46,8 +46,6 @@ public static class ContainerBuilderExtensions
     /// <param name="assemblies">The assemblies to scan.</param>
     public static ContainerBuilder RegisterCqrs(this ContainerBuilder builder, IEnumerable<Assembly> assemblies)
     {
-        Guard.IsNotNull(assemblies, nameof(assemblies));
-
         var assemblyList = assemblies.ToList();
 
         if (!assemblyList.Any())
@@ -55,7 +53,7 @@ public static class ContainerBuilderExtensions
             return builder;
         }
 
-        assemblyList.ForEach(assembly => builder.RegisterCqrs(assembly));
+        assemblyList.ForEach(assembly => RegisterCqrs(builder, assembly));
 
         return builder;
     }
