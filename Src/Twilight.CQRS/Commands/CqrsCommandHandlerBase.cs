@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 using Twilight.CQRS.Messaging.Interfaces;
+// ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
 namespace Twilight.CQRS.Commands;
 
@@ -47,32 +48,30 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand> : CqrsMe
     {
         Guard.IsNotNull(command, nameof(command));
 
-        var activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
-
-        using var activity = activitySource.StartActivity($"Handle {command.GetType()}");
+        using var activity = Activity.Current?.Source.StartActivity($"Handle {command.GetType()}");
         {
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Pre command handling actions"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(OnBeforeHandling)}"));
 
                 await OnBeforeHandling(command, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Validate command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(ValidateMessage)}"));
 
                 await ValidateMessage(command, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Handle command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(HandleCommand)}"));
 
                 await HandleCommand(command, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Post command handling actions"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(OnAfterHandling)}"));
 
@@ -132,18 +131,16 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand, TRespons
     {
         Guard.IsNotNull(command, nameof(command));
 
-        var activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
-
-        using var activity = activitySource.StartActivity($"Handle {command.GetType()}");
+        using var activity = Activity.Current?.Source.StartActivity($"Handle {command.GetType()}");
         {
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("pre command handling actions"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(OnBeforeHandling)}"));
 
                 await OnBeforeHandling(command, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Validate command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(ValidateMessage)}"));
 
@@ -152,14 +149,14 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand, TRespons
 
             TResponse response;
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Handle command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(HandleCommand)}"));
 
                 response = await HandleCommand(command, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Post command handling actions"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(OnAfterHandling)}"));
 

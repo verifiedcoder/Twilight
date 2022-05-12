@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
+// ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
 namespace Twilight.CQRS.Events;
 
@@ -37,32 +38,30 @@ public abstract class CqrsEventHandlerBase<TEventHandler, TEvent> : CqrsMessageH
     {
         Guard.IsNotNull(@event, nameof(@event));
 
-        var activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
-
-        using var activity = activitySource.StartActivity($"Handle {@event.GetType()}");
+        using var activity = Activity.Current?.Source.StartActivity($"Handle {@event.GetType()}");
         {
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Pre event handling logic"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(OnBeforeHandling)}"));
 
                 await OnBeforeHandling(@event, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Validate event"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(ValidateMessage)}"));
 
                 await ValidateMessage(@event, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Handle event"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(HandleEvent)}"));
 
                 await HandleEvent(@event, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Post event handling logic"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(OnAfterHandling)}"));
 

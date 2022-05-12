@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
+// ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
 namespace Twilight.CQRS.Queries;
 
@@ -37,18 +38,16 @@ public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : C
     {
         Guard.IsNotNull(query, nameof(query));
 
-        var activitySource = new ActivitySource(ActivitySourceName, AssemblyVersion);
-
-        using var activity = activitySource.StartActivity($"Handle {query.GetType()}");
+        using var activity = Activity.Current?.Source.StartActivity($"Handle {query.GetType()}");
         {
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Pre query handling logic"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(OnBeforeHandling)}"));
 
                 await OnBeforeHandling(query, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Validate query"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(ValidateMessage)}"));
 
@@ -57,14 +56,14 @@ public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : C
 
             TResponse response;
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Handle query"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(HandleQuery)}"));
 
                 response = await HandleQuery(query, cancellationToken);
             }
 
-            using (var childSpan = activitySource.StartActivity(ActivityKind.Consumer))
+            using (var childSpan = Activity.Current?.Source.StartActivity("Post query handling logic"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(OnAfterHandling)}"));
 

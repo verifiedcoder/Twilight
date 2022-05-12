@@ -9,13 +9,27 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="C:\Users\virtu\.nuget\packages\microsoft.testplatform.testhost\17.1.0\build\netcoreapp2.1\x64\testhost.dll" />
+	  <Content Remove="C:\Users\virtu\.nuget\packages\microsoft.testplatform.testhost\17.1.0\build\netcoreapp2.1\x64\testhost.exe" />
+	  <Content Remove="C:\Users\virtu\.nuget\packages\xunitxml.testlogger\3.0.70\build\netstandard1.5\..\_common\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestAdapter.dll" />
+	  <Content Remove="C:\Users\virtu\.nuget\packages\xunitxml.testlogger\3.0.70\build\netstandard1.5\..\_common\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger.dll" />
+	  <Content Remove="C:\Users\virtu\.nuget\packages\xunitxml.testlogger\3.0.70\build\netstandard1.5\..\_common\Spekt.TestLogger.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="C:\Users\virtu\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.reporters.netcoreapp10.dll" />
+	  <None Remove="C:\Users\virtu\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.utility.netcoreapp10.dll" />
+	  <None Remove="C:\Users\virtu\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Autofac" Version="6.3.0" />
-		<PackageReference Include="FluentValidation" Version="10.3.6" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+		<PackageReference Include="FluentValidation" Version="11.0.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
 		<PackageReference Include="xunit" Version="2.4.1" />
-		<PackageReference Include="FluentAssertions" Version="6.3.0" />
-		<PackageReference Include="NSubstitute" Version="4.2.2" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+		<PackageReference Include="FluentAssertions" Version="6.6.0" />
+		<PackageReference Include="NSubstitute" Version="4.3.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>

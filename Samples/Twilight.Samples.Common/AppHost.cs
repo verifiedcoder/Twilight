@@ -16,15 +16,15 @@ public sealed class AppHost : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Started app host.");
+        _logger.LogInformation("Started {AppHost}.", nameof(AppHost));
 
         await _runner.Run();
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Stopped app host.");
+        _logger.LogInformation("Stopped {AppHost}.", nameof(AppHost));
 
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 }

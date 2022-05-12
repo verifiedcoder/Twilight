@@ -8,9 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="C:\Users\virtu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.61\build\..\lib\netstandard1.6\Dia2Lib.dll" />
+      <None Remove="C:\Users\virtu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.61\build\..\lib\netstandard1.6\OSExtensions.dll" />
+      <None Remove="C:\Users\virtu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.61\build\..\lib\netstandard1.6\TraceReloggerLib.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Autofac" Version="6.3.0" />
         <PackageReference Include="Benchmarkdotnet" Version="0.13.1" />
-        <PackageReference Include="FluentValidation" Version="10.3.6" />
+        <PackageReference Include="FluentValidation" Version="11.0.1" />
     </ItemGroup>
 
     <ItemGroup>

@@ -243,18 +243,6 @@
             <param name="logger">The logger.</param>
             <param name="validator">The message validator.</param>
         </member>
-        <member name="P:Twilight.CQRS.CqrsMessageHandler`2.ActivitySourceName">
-            <summary>
-                Gets the Open Telemetry activity source identifier.
-            </summary>
-            <value>The activity source identifier.</value>
-        </member>
-        <member name="P:Twilight.CQRS.CqrsMessageHandler`2.AssemblyVersion">
-            <summary>
-                Gets the assembly version.
-            </summary>
-            <value>The assembly version.</value>
-        </member>
         <member name="P:Twilight.CQRS.CqrsMessageHandler`2.Logger">
             <summary>
                 Gets the message handler logger.

@@ -13,8 +13,6 @@ It is not intended for this repository to be published as NuGet packages as supp
 - Microsoft Visual Studio 2022
 - .NET 6.0
 
-If using Visual Studio 2022, it is recommended that all relevant updates are applied.
-
 ## CQRS
 
 CQRS stands for Command Query Responsibility Segregation, i.e. keep actions that change data separate from actions that query data sources.
@@ -40,8 +38,6 @@ The current state of a domain entity is 'rebuilt' by replaying recorded events u
 ES is a non-trivial pattern that requires a deep understanding of many advanced topics and patterns to implement and therefore is not suitable for all business use-cases. It can lead to an overly complicated architecture and an excessive maintenance overhead.
 
 Further information on the use-case for ES: [https://microservices.io/patterns/data/event-sourcing.html](https://microservices.io/patterns/data/event-sourcing.html)
-
-Note: A future sample will expand upon the use of event sourcing.
 
 ## CQRS Components
 
@@ -85,15 +81,15 @@ The following dependency graph shows the careful planning of the relationships b
 
 The XML documentation for the public API can be used to generate full developer documentation for Twilight.
 
-You can use DocFX to generate the documentation. For more information, see [here](https://dotnet.github.io/docfx/).
+You can use DocFX to generate the documentation. For more information, see [here](https://dotnet.github.io/docfx/). If you run into issues, try pointing your docfx.json to your build assemblies, instead of the project files or source code.
 
-## Sample
+## The Sample
 
 The sample exists to show the mechanics of creating, sending and handling commands, queries and events.
 
 As an implementer, much of the structure of messages and handlers is up to you. Strive for as much simplicity as possible. All too often, applications are routinely over-engineered.
 
-The samples are stripped down to make them easy to follow and makes use of Open Telemetry to illustrate the path of a message through the system. Using activity identifiers, correlation and causation, you can easily build a full path and timeline of all system interactions
+The samples are stripped down to make them easy to follow and makes use of Open Telemetry to illustrate the path of a message through the system. Using activity identifiers, correlation and causation, you can easily build a full path and timeline of all system interactions.
 
 ## Naming Twilight
 

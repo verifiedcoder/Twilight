@@ -1,83 +1,85 @@
-﻿using System.Diagnostics;
+﻿using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
 using Twilight.Samples.Common;
 using Twilight.Samples.Common.Data;
+using Twilight.Samples.CQRS;
 
-namespace Twilight.Samples.CQRS;
+const string consoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
+const string appName = "Twilight.Samples.CQRS";
 
-public static class Program
+var serviceVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0.0";
+
+Log.Logger = new LoggerConfiguration().WriteTo.Console(outputTemplate: consoleOutputTemplate)
+                                      .MinimumLevel.Verbose()
+                                      .Enrich.WithProperty("ApplicationName", appName)
+                                      .CreateBootstrapLogger();
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOpenTelemetryTracing(tracerProviderBuilder
+     => tracerProviderBuilder.AddSqlClientInstrumentation(options =>
+                             {
+                                 options.EnableConnectionLevelAttributes = true;
+                                 options.SetDbStatementForStoredProcedure = true;
+                                 options.SetDbStatementForText = true;
+                                 options.RecordException = true;
+                                 options.Enrich = (activity, x, y) => activity.SetTag("db.type", "sql");
+                             })
+                             .AddSource("Twilight.CQRS", appName, "Twilight.CQRS.Messaging.InMemory.Autofac")
+                             .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("twilight-samples-cqrs")
+                                                                .AddAttributes(new[] { new KeyValuePair<string, object>("service.version", serviceVersion) }))
+                             .SetSampler(new AlwaysOnSampler())
+                             .AddConsoleExporter());
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+       .ConfigureContainer<ContainerBuilder>(containerBuilder => { containerBuilder.RegisterModule<AutofacModule>(); })
+       .UseSerilog((context, services, configuration)
+           => configuration.ReadFrom.Configuration(context.Configuration)
+                           .ReadFrom.Services(services)
+                           .MinimumLevel.Verbose()
+                           .Enrich.WithProperty("ApplicationName", appName)
+                           .WriteTo.Console(outputTemplate: consoleOutputTemplate))
+       .ConfigureServices(services =>
+       {
+           services.AddDbContext<SampleDataContext>(dbContextOptions =>
+           {
+               dbContextOptions.UseInMemoryDatabase("DataDb");
+               dbContextOptions.EnableSensitiveDataLogging();
+           });
+           services.AddDbContext<ViewDataContext>(dbContextOptions =>
+           {
+               dbContextOptions.UseInMemoryDatabase("ViewDb");
+               dbContextOptions.EnableSensitiveDataLogging();
+           });
+           services.AddHostedService<AppHost>();
+       });
+
+try
 {
-    private const string ConsoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
-    private const string AppName = "Twilight.Samples.CQRS";
+    Log.Information("Starting {AppName}", appName);
 
-    static Program()
-    {
-        // Configure Open Telemetry
-        Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-        Activity.ForceDefaultIdFormat = true;
-    }
+    await builder.Build().RunAsync();
 
-    public static async Task Main()
-    {
-        Log.Logger = new LoggerConfiguration().WriteTo.Console(outputTemplate: ConsoleOutputTemplate)
-                                              .MinimumLevel.Verbose()
-                                              .Enrich.WithProperty("ApplicationName", AppName)
-                                              .CreateBootstrapLogger();
-        // Add Open Telemetry
-        using var openTelemetry = Sdk.CreateTracerProviderBuilder()
-                                     .AddSource("Twilight.CQRS", "Twilight.Samples.CQRS", "Twilight.CQRS.Messaging.InMemory.Autofac")
-                                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("twilight-samples-cqrs"))
-                                     .AddConsoleExporter()
-                                     .Build();
+    Log.Information("Running {AppName}", appName);
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "{AppName} terminated unexpectedly. CqrsMessage: {ExceptionMessage}", appName, ex.Message);
 
-        Log.Information("Running {AppName}", AppName);
+    Environment.Exit(-1);
+}
+finally
+{
+    Log.Information("Stopping {AppName}", appName);
+    Log.CloseAndFlush();
 
-        try
-        {
-            await CreateHostBuilder().RunConsoleAsync();
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(ex, "{AppName} terminated unexpectedly. CqrsMessage: {ExceptionMessage}", AppName, ex.Message);
-
-            Environment.Exit(-1);
-        }
-        finally
-        {
-            Log.Information("Stopped {AppName}", AppName);
-            Log.CloseAndFlush();
-
-            Environment.Exit(0);
-        }
-    }
-
-    private static IHostBuilder CreateHostBuilder()
-        => new HostBuilder().UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                            .UseSerilog((context, services, configuration)
-                                            => configuration.ReadFrom.Configuration(context.Configuration)
-                                                            .ReadFrom.Services(services)
-                                                            .WriteTo.Console(outputTemplate: ConsoleOutputTemplate))
-                            .ConfigureServices(services =>
-                            {
-                                services.AddDbContext<SampleDataContext>(builder =>
-                                {
-                                    builder.UseInMemoryDatabase("DataDb");
-                                    builder.EnableSensitiveDataLogging();
-                                });
-                                services.AddDbContext<ViewDataContext>(builder =>
-                                {
-                                    builder.UseInMemoryDatabase("ViewDb");
-                                    builder.EnableSensitiveDataLogging();
-                                });
-                                services.AddHostedService<AppHost>();
-                            })
-                            .ConfigureContainer<ContainerBuilder>(builder => { builder.RegisterModule<AutofacModule>(); });
+    Environment.Exit(0);
 }

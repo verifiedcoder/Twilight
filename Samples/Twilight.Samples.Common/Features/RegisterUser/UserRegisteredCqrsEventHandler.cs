@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Events;
 using Twilight.Samples.Common.Data;
@@ -27,8 +28,13 @@ public sealed class UserRegisteredCqrsEventHandler : CqrsEventHandlerBase<UserRe
             RegistrationDate = DateTimeOffset.UtcNow
         };
 
-        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-        _dataContext.UsersView.Add(userViewEntity);
+        using (var activity = Activity.Current?.Source.StartActivity("Adding new user to users view", ActivityKind.Server))
+        {
+            activity?.AddEvent(new ActivityEvent("Add User to View"));
+
+            _dataContext.UsersView.Add(userViewEntity);
+        }
+
 
         await _dataContext.SaveChangesAsync(cancellationToken);
 
