@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Queries;
@@ -20,12 +20,13 @@ public class CqrsQuery<TResponse> : CqrsMessage, ICqrsQuery<TResponse>
     ///     Initializes a new instance of the <see cref="CqrsQuery{TResponse}" /> class.
     /// </summary>
     /// <param name="correlationId">The query correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this cqrsQuery to be produced.
+    ///     The causation identifier. Identifies the message that caused this query to be produced.
     ///     Optional.
     /// </param>
-    public CqrsQuery(string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public CqrsQuery(string correlationId, string? sessionId = null, string? causationId = null)
+        : base(correlationId, sessionId, causationId)
     {
     }
 }
@@ -50,12 +51,13 @@ public class CqrsQuery<TParameters, TResponse> : CqrsMessage, ICqrsQuery<TRespon
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="correlationId">The query correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this cqrsQuery to be produced.
+    ///     The causation identifier. Identifies the message that caused this query to be produced.
     ///     Optional.
     /// </param>
-    public CqrsQuery(TParameters parameters, string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public CqrsQuery(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
+        : base(correlationId, sessionId, causationId)
     {
         Guard.IsNotNull(parameters, nameof(parameters));
 

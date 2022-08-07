@@ -18,6 +18,12 @@ public interface ICqrsMessage
     string CorrelationId { get; }
 
     /// <summary>
+    ///     Gets the session identifier.
+    /// </summary>
+    /// <value>The session identifier.</value>
+    string? SessionId { get; }
+
+    /// <summary>
     ///     Gets the causation identifier.
     /// </summary>
     /// <remarks>Identifies the message (by that message's identifier) that caused a message instance to be produced.</remarks>

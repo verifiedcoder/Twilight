@@ -13,8 +13,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Autofac" Version="6.3.0" />
-		<PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
+		<PackageReference Include="Autofac" Version="6.4.0" />
+		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

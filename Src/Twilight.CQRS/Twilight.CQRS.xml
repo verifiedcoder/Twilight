@@ -17,11 +17,12 @@
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
         </member>
-        <member name="M:Twilight.CQRS.Commands.CqrsCommand.#ctor(System.String,System.String)">
+        <member name="M:Twilight.CQRS.Commands.CqrsCommand.#ctor(System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommand" /> class.
             </summary>
             <param name="correlationId">The command correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
                 The causation identifier. Identifies the message that caused this command to be produced.
                 Optional.
@@ -42,12 +43,13 @@
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
         </member>
-        <member name="M:Twilight.CQRS.Commands.CqrsCommand`1.#ctor(`0,System.String,System.String)">
+        <member name="M:Twilight.CQRS.Commands.CqrsCommand`1.#ctor(`0,System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommand`1" /> class.
             </summary>
             <param name="parameters">The typed command parameters.</param>
             <param name="correlationId">The command correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
                 The causation identifier. Identifies the message that caused this command to be produced.
                 Optional.
@@ -72,14 +74,15 @@
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
         </member>
-        <member name="M:Twilight.CQRS.Commands.CqrsCommand`2.#ctor(`0,System.String,System.String)">
+        <member name="M:Twilight.CQRS.Commands.CqrsCommand`2.#ctor(`0,System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommand`2" /> class.
             </summary>
             <param name="parameters">The parameters.</param>
-            <param name="correlationId">The cqrsCommand correlation identifier.</param>
+            <param name="correlationId">The command correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
-                The causation identifier. Identifies the message that caused this cqrsCommand to be produced.
+                The causation identifier. Identifies the message that caused this command to be produced.
                 Optional.
             </param>
         </member>
@@ -132,7 +135,7 @@
             <summary>
                 <para>
                     Represents the ability to process (handle) commands that return a scalar response. A command handler receives a
-                    command and directs the cqrsCommand for processing. This class cannot be instantiated.
+                    command and directs the command for processing. This class cannot be instantiated.
                 </para>
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessageHandler`2" />.</para>
                 <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1" />.</para>
@@ -214,11 +217,12 @@
         <member name="T:Twilight.CQRS.CqrsMessage">
             <inheritdoc />
         </member>
-        <member name="M:Twilight.CQRS.CqrsMessage.#ctor(System.String,System.String)">
+        <member name="M:Twilight.CQRS.CqrsMessage.#ctor(System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.CqrsMessage" /> class.
             </summary>
             <param name="correlationId">The message correlation identifier.</param>
+            <param name="sessionId">The session identifier for the session to which this message belongs.</param>
             <param name="causationId">
                 The causation identifier. Identifies the message that caused this message to be produced.
                 Optional.
@@ -228,6 +232,9 @@
             <inheritdoc />
         </member>
         <member name="P:Twilight.CQRS.CqrsMessage.CorrelationId">
+            <inheritdoc />
+        </member>
+        <member name="P:Twilight.CQRS.CqrsMessage.SessionId">
             <inheritdoc />
         </member>
         <member name="P:Twilight.CQRS.CqrsMessage.CausationId">
@@ -272,11 +279,12 @@
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsEvent" />
         </member>
-        <member name="M:Twilight.CQRS.Events.CqrsEvent.#ctor(System.String,System.String)">
+        <member name="M:Twilight.CQRS.Events.CqrsEvent.#ctor(System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.CqrsEvent" /> class.
             </summary>
             <param name="correlationId">The event correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
                 The causation identifier. Identifies the message that caused this event to be produced.
                 Optional.
@@ -297,12 +305,13 @@
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Events.CqrsEvent" />
         </member>
-        <member name="M:Twilight.CQRS.Events.CqrsEvent`1.#ctor(`0,System.String,System.String)">
+        <member name="M:Twilight.CQRS.Events.CqrsEvent`1.#ctor(`0,System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.CqrsEvent`1" /> class.
             </summary>
             <param name="parameters">The parameters.</param>
             <param name="correlationId">The event correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
                 The causation identifier. Identifies the message that caused this event to be produced.
                 Optional.
@@ -370,13 +379,14 @@
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsQuery`1" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.CqrsQuery`1.#ctor(System.String,System.String)">
+        <member name="M:Twilight.CQRS.Queries.CqrsQuery`1.#ctor(System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.CqrsQuery`1" /> class.
             </summary>
             <param name="correlationId">The query correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
-                The causation identifier. Identifies the message that caused this cqrsQuery to be produced.
+                The causation identifier. Identifies the message that caused this query to be produced.
                 Optional.
             </param>
         </member>
@@ -393,14 +403,15 @@
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsQuery`1" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.CqrsQuery`2.#ctor(`0,System.String,System.String)">
+        <member name="M:Twilight.CQRS.Queries.CqrsQuery`2.#ctor(`0,System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.CqrsQuery`2" /> class.
             </summary>
             <param name="parameters">The parameters.</param>
             <param name="correlationId">The query correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
-                The causation identifier. Identifies the message that caused this cqrsQuery to be produced.
+                The causation identifier. Identifies the message that caused this query to be produced.
                 Optional.
             </param>
         </member>
@@ -430,7 +441,7 @@
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.CqrsQueryHandlerBase`3" /> class.
             </summary>
             <param name="logger">The logger.</param>
-            <param name="validator">The cqrsQuery validator.</param>
+            <param name="validator">The query validator.</param>
         </member>
         <member name="M:Twilight.CQRS.Queries.CqrsQueryHandlerBase`3.Handle(`1,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -454,14 +465,15 @@
             <typeparam name="TPayload">The type of the payload.</typeparam>
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.QueryResponse`1.#ctor(`0,System.String,System.String)">
+        <member name="M:Twilight.CQRS.Queries.QueryResponse`1.#ctor(`0,System.String,System.String,System.String)">
             <summary>
                 Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.QueryResponse`1" /> class.
             </summary>
             <param name="payload">The payload.</param>
             <param name="correlationId">The message correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
-                The causation identifier. Identifies the cqrsQuery that caused this response to be produced.
+                The causation identifier. Identifies the query that caused this response to be produced.
                 Optional.
             </param>
         </member>

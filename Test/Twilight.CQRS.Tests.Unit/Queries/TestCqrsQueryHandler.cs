@@ -13,14 +13,14 @@ public class TestCqrsQueryHandler : CqrsQueryHandlerBase<TestCqrsQueryHandler, C
     {
     }
 
-    protected override async Task<QueryResponse<TestQueryResponse>> HandleQuery(CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>> cqrsQuery, CancellationToken cancellationToken = default)
+    protected override async Task<QueryResponse<TestQueryResponse>> HandleQuery(CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>> query, CancellationToken cancellationToken = default)
     {
         var payload = new TestQueryResponse
         {
             Value = "1"
         };
 
-        var response = new QueryResponse<TestQueryResponse>(payload, cqrsQuery.CorrelationId, cqrsQuery.MessageId);
+        var response = new QueryResponse<TestQueryResponse>(payload, query.CorrelationId, query.MessageId);
 
         return await Task.FromResult(response);
     }

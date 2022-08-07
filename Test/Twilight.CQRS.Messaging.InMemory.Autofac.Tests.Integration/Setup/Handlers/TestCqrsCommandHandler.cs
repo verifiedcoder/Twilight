@@ -17,6 +17,6 @@ internal sealed class TestCqrsCommandHandler : CqrsCommandHandlerBase<TestCqrsCo
         : base(messageSender, logger, validator)
         => _service = service;
 
-    public override async Task HandleCommand(CqrsCommand<TestParameters> cqrsCommand, CancellationToken cancellationToken = default)
-        => await _service.Receive(cqrsCommand.Params.Value);
+    public override async Task HandleCommand(CqrsCommand<TestParameters> command, CancellationToken cancellationToken = default)
+        => await _service.Receive(command.Params.Value);
 }

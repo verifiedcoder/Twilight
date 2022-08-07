@@ -15,11 +15,11 @@ internal sealed class TestCqrsQueryHandler : CqrsQueryHandlerBase<TestCqrsQueryH
         : base(logger, validator)
         => _service = service;
 
-    protected override async Task<QueryResponse<string>> HandleQuery(CqrsQuery<TestParameters, QueryResponse<string>> cqrsQuery, CancellationToken cancellationToken = default)
+    protected override async Task<QueryResponse<string>> HandleQuery(CqrsQuery<TestParameters, QueryResponse<string>> query, CancellationToken cancellationToken = default)
     {
-        await _service.Receive(cqrsQuery.Params.Value);
+        await _service.Receive(query.Params.Value);
 
-        var response = new QueryResponse<string>(nameof(TestCqrsQueryHandler), cqrsQuery.CorrelationId, cqrsQuery.MessageId);
+        var response = new QueryResponse<string>(nameof(TestCqrsQueryHandler), query.CorrelationId, query.MessageId);
 
         return response;
     }

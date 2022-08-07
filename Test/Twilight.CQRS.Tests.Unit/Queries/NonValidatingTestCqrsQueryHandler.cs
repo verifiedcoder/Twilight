@@ -12,9 +12,9 @@ internal class NonValidatingTestCqrsQueryHandler : CqrsQueryHandlerBase<NonValid
     {
     }
 
-    protected override async Task<QueryResponse<string>> HandleQuery(CqrsQuery<string, QueryResponse<string>> cqrsQuery, CancellationToken cancellationToken = default)
+    protected override async Task<QueryResponse<string>> HandleQuery(CqrsQuery<string, QueryResponse<string>> query, CancellationToken cancellationToken = default)
     {
-        var response = new QueryResponse<string>(string.Empty, cqrsQuery.CorrelationId, cqrsQuery.MessageId);
+        var response = new QueryResponse<string>(string.Empty, query.CorrelationId, query.MessageId);
 
         return await Task.FromResult(response);
     }

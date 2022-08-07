@@ -16,9 +16,9 @@ public sealed class TestCqrsCommandHandler : CqrsCommandHandlerBase<TestCqrsComm
     {
     }
 
-    public override async Task HandleCommand(CqrsCommand<TestParameters> cqrsCommand, CancellationToken cancellationToken = default)
+    public override async Task HandleCommand(CqrsCommand<TestParameters> command, CancellationToken cancellationToken = default)
     {
-        await MessageSender.Publish(new CqrsEvent<TestParameters>(cqrsCommand.Params, cqrsCommand.CorrelationId, cqrsCommand.MessageId), cancellationToken);
+        await MessageSender.Publish(new CqrsEvent<TestParameters>(command.Params, command.CorrelationId, command.MessageId), cancellationToken);
 
         await Task.CompletedTask;
     }

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 

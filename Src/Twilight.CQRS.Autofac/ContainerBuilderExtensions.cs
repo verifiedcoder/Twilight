@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Autofac;

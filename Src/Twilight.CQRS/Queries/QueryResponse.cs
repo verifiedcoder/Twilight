@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 
 namespace Twilight.CQRS.Queries;
 
@@ -16,12 +16,13 @@ public class QueryResponse<TPayload> : CqrsMessage
     /// </summary>
     /// <param name="payload">The payload.</param>
     /// <param name="correlationId">The message correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
-    ///     The causation identifier. Identifies the cqrsQuery that caused this response to be produced.
+    ///     The causation identifier. Identifies the query that caused this response to be produced.
     ///     Optional.
     /// </param>
-    public QueryResponse(TPayload payload, string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public QueryResponse(TPayload payload, string correlationId, string? sessionId = null, string? causationId = null)
+        : base(correlationId, sessionId, causationId)
     {
         Guard.IsNotNull(payload, nameof(payload));
 

@@ -12,9 +12,9 @@ internal sealed class SendCqrsCommandHandler : CqrsCommandHandlerBase<SendCqrsCo
     {
     }
 
-    public override async Task HandleCommand(CqrsCommand<MessageParameters> cqrsCommand, CancellationToken cancellationToken = default)
+    public override async Task HandleCommand(CqrsCommand<MessageParameters> command, CancellationToken cancellationToken = default)
     {
-        var @event = new SendCommandReceived(cqrsCommand.CorrelationId, cqrsCommand.MessageId);
+        var @event = new SendCommandReceived(command.CorrelationId, command.MessageId);
 
         await MessageSender.Publish(@event, cancellationToken);
     }
