@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Events;
@@ -21,12 +21,13 @@ public class CqrsEvent : CqrsMessage, ICqrsEvent
     ///     Initializes a new instance of the <see cref="CqrsEvent" /> class.
     /// </summary>
     /// <param name="correlationId">The event correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
     ///     The causation identifier. Identifies the message that caused this event to be produced.
     ///     Optional.
     /// </param>
-    public CqrsEvent(string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public CqrsEvent(string correlationId, string? sessionId = null, string? causationId = null)
+        : base(correlationId, sessionId, causationId)
     {
     }
 }
@@ -52,12 +53,13 @@ public class CqrsEvent<TParameters> : CqrsMessage, ICqrsEvent
     /// </summary>
     /// <param name="parameters">The parameters.</param>
     /// <param name="correlationId">The event correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
     ///     The causation identifier. Identifies the message that caused this event to be produced.
     ///     Optional.
     /// </param>
-    public CqrsEvent(TParameters parameters, string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public CqrsEvent(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
+        : base(correlationId, sessionId, causationId)
     {
         Guard.IsNotNull(parameters, nameof(parameters));
 

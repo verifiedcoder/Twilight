@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 using Twilight.CQRS.Messaging.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
@@ -92,7 +92,7 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand> : CqrsMe
 /// <summary>
 ///     <para>
 ///         Represents the ability to process (handle) commands that return a scalar response. A command handler receives a
-///         command and directs the cqrsCommand for processing. This class cannot be instantiated.
+///         command and directs the command for processing. This class cannot be instantiated.
 ///     </para>
 ///     <para>Implements <see cref="CqrsMessageHandler{THandler,TMessage}" />.</para>
 ///     <para>Implements <see cref="ICqrsCommandHandler{TCommand}" />.</para>

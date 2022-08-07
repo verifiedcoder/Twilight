@@ -11,10 +11,10 @@ internal sealed class SendCqrsQueryHandler : CqrsQueryHandlerBase<SendCqrsQueryH
     {
     }
 
-    protected override async Task<QueryResponse<QueryResponsePayload>> HandleQuery(CqrsQuery<MessageParameters, QueryResponse<QueryResponsePayload>> cqrsQuery, CancellationToken cancellationToken = default)
+    protected override async Task<QueryResponse<QueryResponsePayload>> HandleQuery(CqrsQuery<MessageParameters, QueryResponse<QueryResponsePayload>> query, CancellationToken cancellationToken = default)
     {
         var payload = new QueryResponsePayload("CqrsQuery Response");
-        var response = new QueryResponse<QueryResponsePayload>(payload, cqrsQuery.CorrelationId, cqrsQuery.MessageId);
+        var response = new QueryResponse<QueryResponsePayload>(payload, query.CorrelationId, query.MessageId);
 
         return await Task.FromResult(response);
     }

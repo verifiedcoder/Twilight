@@ -18,28 +18,28 @@ public sealed class GetUserByIdCqrsQueryHandler : CqrsQueryHandlerBase<GetUserBy
         : base(logger, validator)
         => _dataContext = dataContext;
 
-    protected override async Task<QueryResponse<GetUserByIdQueryResponsePayload>> HandleQuery(CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>> cqrsQuery, CancellationToken cancellationToken = default)
+    protected override async Task<QueryResponse<GetUserByIdQueryResponsePayload>> HandleQuery(CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>> query, CancellationToken cancellationToken = default)
     {
         UserViewEntity? userView;
 
         using (var activity = Activity.Current?.Source.StartActivity("Getting user from view", ActivityKind.Server))
         {
             activity?.AddEvent(new ActivityEvent("Get User by ID"));
-            activity?.SetTag(nameof(GetUserByIdQueryParameters.UserId), cqrsQuery.Params.UserId);
+            activity?.SetTag(nameof(GetUserByIdQueryParameters.UserId), query.Params.UserId);
 
-            userView = await _dataContext.UsersView.FindAsync(new object[] { cqrsQuery.Params.UserId }, cancellationToken);
+            userView = await _dataContext.UsersView.FindAsync(new object[] { query.Params.UserId }, cancellationToken);
         }
 
         if (userView == null)
 
         {
-            throw new HandlerException($"User with Id '{cqrsQuery.Params.UserId}' not found.");
+            throw new HandlerException($"User with Id '{query.Params.UserId}' not found.");
         }
 
         var payload = new GetUserByIdQueryResponsePayload(userView.Id, userView.Forename, userView.Surname);
-        var response = new QueryResponse<GetUserByIdQueryResponsePayload>(payload, cqrsQuery.CorrelationId, cqrsQuery.MessageId);
+        var response = new QueryResponse<GetUserByIdQueryResponsePayload>(payload, query.CorrelationId, null, query.MessageId);
 
-        Logger.LogInformation("Handled CQRS Query, {QueryTypeName}.", cqrsQuery.GetType().FullName);
+        Logger.LogInformation("Handled CQRS Query, {QueryTypeName}.", query.GetType().FullName);
 
         return await Task.FromResult(response);
     }

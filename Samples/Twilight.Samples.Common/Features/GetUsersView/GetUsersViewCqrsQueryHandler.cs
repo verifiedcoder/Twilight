@@ -19,7 +19,7 @@ public sealed class GetUsersViewCqrsQueryHandler : CqrsQueryHandlerBase<GetUsers
         : base(logger, validator)
         => _dataContext = dataContext;
 
-    protected override async Task<QueryResponse<GetUsersViewQueryResponsePayload>> HandleQuery(CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>> cqrsQuery, CancellationToken cancellationToken = default)
+    protected override async Task<QueryResponse<GetUsersViewQueryResponsePayload>> HandleQuery(CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>> query, CancellationToken cancellationToken = default)
     {
         List<UserViewEntity>? userViews;
 
@@ -27,7 +27,7 @@ public sealed class GetUsersViewCqrsQueryHandler : CqrsQueryHandlerBase<GetUsers
         {
             activity?.AddEvent(new ActivityEvent("Get All Users"));
 
-            userViews = await _dataContext.UsersView.Where(u => u.RegistrationDate >= cqrsQuery.Params.RegistrationDate)
+            userViews = await _dataContext.UsersView.Where(u => u.RegistrationDate >= query.Params.RegistrationDate)
                                           .OrderBy(v => v.RegistrationDate)
                                           .ToListAsync(cancellationToken);
         }
@@ -35,9 +35,9 @@ public sealed class GetUsersViewCqrsQueryHandler : CqrsQueryHandlerBase<GetUsers
         var usersView = userViews.Select(u => new UserView(u.Id, u.UserId, u.Forename, u.Surname, u.FullName, u.RegistrationDate));
 
         var payload = new GetUsersViewQueryResponsePayload(usersView);
-        var response = new QueryResponse<GetUsersViewQueryResponsePayload>(payload, cqrsQuery.CorrelationId, cqrsQuery.MessageId);
+        var response = new QueryResponse<GetUsersViewQueryResponsePayload>(payload, query.CorrelationId, null, query.MessageId);
 
-        Logger.LogInformation("Handled CQRS Query, {QueryTypeName}.", cqrsQuery.GetType().FullName);
+        Logger.LogInformation("Handled CQRS Query, {QueryTypeName}.", query.GetType().FullName);
 
         return await Task.FromResult(response);
     }

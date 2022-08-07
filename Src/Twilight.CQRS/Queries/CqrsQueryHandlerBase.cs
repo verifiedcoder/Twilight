@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
@@ -27,7 +27,7 @@ public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : C
     ///     Initializes a new instance of the <see cref="CqrsQueryHandlerBase{TQueryHandler,TQuery,TResponse}" /> class.
     /// </summary>
     /// <param name="logger">The logger.</param>
-    /// <param name="validator">The cqrsQuery validator.</param>
+    /// <param name="validator">The query validator.</param>
     protected CqrsQueryHandlerBase(ILogger<TQueryHandler> logger, IValidator<TQuery>? validator = default)
         : base(logger, validator)
     {

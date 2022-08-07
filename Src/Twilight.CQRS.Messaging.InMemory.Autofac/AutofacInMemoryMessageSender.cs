@@ -4,7 +4,7 @@ using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 using Twilight.CQRS.Messaging.Common;
 using Twilight.CQRS.Messaging.Interfaces;
@@ -47,21 +47,21 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
 
     /// <inheritdoc />
     /// <exception cref="MultipleCommandHandlersDefinedException">
-    ///     Thrown when more than one cqrsCommand handler is resolved from the container.
+    ///     Thrown when more than one command handler is resolved from the container.
     /// </exception>
-    /// <exception cref="HandlerNotFoundException">Thrown when a cqrsCommand handler cannot be resolved from the container.</exception>
+    /// <exception cref="HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
     /// <exception cref="MultipleCommandHandlersDefinedException">
-    ///     Thrown when more than one cqrsCommand handler with the same
+    ///     Thrown when more than one command handler with the same
     ///     definition is found.
     /// </exception>
-    public async Task Send<TCommand>(TCommand cqrsCommand, CancellationToken cancellationToken = default)
+    public async Task Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICqrsCommand
     {
-        Guard.IsNotNull(cqrsCommand, nameof(cqrsCommand));
+        Guard.IsNotNull(command, nameof(command));
 
         var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
-        using var activity = activitySource.StartActivity($"Send {cqrsCommand.GetType()}");
+        using var activity = activitySource.StartActivity($"Send {command.GetType()}");
         {
             await using var scope = _lifetimeScope.BeginLifetimeScope();
 
@@ -98,7 +98,7 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
 
                 default:
 
-                    await commandHandlers.First().Handle(cqrsCommand, cancellationToken);
+                    await commandHandlers.First().Handle(command, cancellationToken);
                     break;
             }
         }
@@ -106,22 +106,22 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
 
     /// <inheritdoc />
     /// <exception cref="MultipleCommandHandlersDefinedException">
-    ///     Thrown when more than one cqrsCommand handler is resolved from the container.
+    ///     Thrown when more than one command handler is resolved from the container.
     /// </exception>
     /// <exception cref="HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
-    public async Task<TResult> Send<TResult>(ICqrsCommand<TResult> cqrsCommand, CancellationToken cancellationToken = default)
+    public async Task<TResult> Send<TResult>(ICqrsCommand<TResult> command, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(cqrsCommand, nameof(cqrsCommand));
+        Guard.IsNotNull(command, nameof(command));
 
         var genericType = typeof(ICqrsCommandHandler<,>);
-        var closedGenericType = genericType.MakeGenericType(cqrsCommand.GetType(), typeof(TResult));
+        var closedGenericType = genericType.MakeGenericType(command.GetType(), typeof(TResult));
         var assemblyQualifiedName = closedGenericType.AssemblyQualifiedName ?? "Unknown Assembly";
 
         await using var scope = _lifetimeScope.BeginLifetimeScope();
 
         var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
-        using var activity = activitySource.StartActivity($"Send {cqrsCommand.GetType()}");
+        using var activity = activitySource.StartActivity($"Send {command.GetType()}");
         {
             object result;
 
@@ -137,10 +137,10 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
                 }
 
                 var handlerType = handler.GetType();
-                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] { cqrsCommand.GetType(), typeof(CancellationToken) })
+                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] { command.GetType(), typeof(CancellationToken) })
                                             ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
 
-                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] { cqrsCommand, cancellationToken }) ?? throw new InvalidOperationException();
+                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] { command, cancellationToken }) ?? throw new InvalidOperationException();
             }
             catch (DependencyResolutionException ex)
             {
@@ -156,19 +156,19 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
     /// <inheritdoc />
     /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
     /// <exception cref="InvalidOperationException">Thrown when a handler type cannot resolved the type's 'Handle' method.</exception>
-    public async Task<TResult> Send<TResult>(ICqrsQuery<TResult> cqrsQuery, CancellationToken cancellationToken = default)
+    public async Task<TResult> Send<TResult>(ICqrsQuery<TResult> query, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(cqrsQuery, nameof(cqrsQuery));
+        Guard.IsNotNull(query, nameof(query));
 
         var genericType = typeof(ICqrsQueryHandler<,>);
-        var closedGenericType = genericType.MakeGenericType(cqrsQuery.GetType(), typeof(TResult));
+        var closedGenericType = genericType.MakeGenericType(query.GetType(), typeof(TResult));
         var assemblyQualifiedName = closedGenericType.AssemblyQualifiedName ?? "Unknown Assembly";
 
         await using var scope = _lifetimeScope.BeginLifetimeScope();
 
         var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
-        using var activity = activitySource.StartActivity($"Send {cqrsQuery.GetType()}");
+        using var activity = activitySource.StartActivity($"Send {query.GetType()}");
         {
             object result;
 
@@ -184,10 +184,10 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
                 }
 
                 var handlerType = handler.GetType();
-                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] { cqrsQuery.GetType(), typeof(CancellationToken) })
+                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] { query.GetType(), typeof(CancellationToken) })
                                             ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
 
-                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] { cqrsQuery, cancellationToken }) ?? throw new InvalidOperationException();
+                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] { query, cancellationToken }) ?? throw new InvalidOperationException();
             }
             catch (DependencyResolutionException ex)
             {
@@ -220,7 +220,7 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
     }
 
     /// <inheritdoc />
-    /// <exception cref="HandlerNotFoundException">Thrown when a cqrsQuery handler cannot be resolved from the container.</exception>
+    /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
     public async Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : class, ICqrsEvent
     {

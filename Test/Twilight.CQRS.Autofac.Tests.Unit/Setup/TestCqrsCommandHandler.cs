@@ -15,6 +15,6 @@ internal sealed class TestCqrsCommandHandler : CqrsCommandHandlerBase<TestCqrsCo
     {
     }
 
-    public override async Task HandleCommand(CqrsCommand<TestParameters> cqrsCommand, CancellationToken cancellationToken = default)
+    public override async Task HandleCommand(CqrsCommand<TestParameters> command, CancellationToken cancellationToken = default)
         => await Task.CompletedTask;
 }

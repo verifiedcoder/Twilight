@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Commands;
@@ -20,12 +20,13 @@ public class CqrsCommand : CqrsMessage, ICqrsCommand
     ///     Initializes a new instance of the <see cref="CqrsCommand" /> class.
     /// </summary>
     /// <param name="correlationId">The command correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
     ///     The causation identifier. Identifies the message that caused this command to be produced.
     ///     Optional.
     /// </param>
-    public CqrsCommand(string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public CqrsCommand(string correlationId, string? causationId = null, string? sessionId = null)
+        : base(correlationId, sessionId, causationId)
     {
     }
 }
@@ -51,12 +52,13 @@ public class CqrsCommand<TParameters> : CqrsMessage, ICqrsCommand
     /// </summary>
     /// <param name="parameters">The typed command parameters.</param>
     /// <param name="correlationId">The command correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
     ///     The causation identifier. Identifies the message that caused this command to be produced.
     ///     Optional.
     /// </param>
-    public CqrsCommand(TParameters parameters, string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public CqrsCommand(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
+        : base(correlationId, sessionId, causationId)
     {
         Guard.IsNotNull(parameters, nameof(parameters));
 
@@ -89,13 +91,14 @@ public class CqrsCommand<TParameters, TResponse> : CqrsMessage, ICqrsCommand<TRe
     ///     Initializes a new instance of the <see cref="CqrsCommand{TParameters, TResponse}" /> class.
     /// </summary>
     /// <param name="parameters">The parameters.</param>
-    /// <param name="correlationId">The cqrsCommand correlation identifier.</param>
+    /// <param name="correlationId">The command correlation identifier.</param>
+    /// <param name="sessionId">The session identifier.</param>
     /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this cqrsCommand to be produced.
+    ///     The causation identifier. Identifies the message that caused this command to be produced.
     ///     Optional.
     /// </param>
-    public CqrsCommand(TParameters parameters, string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
+    public CqrsCommand(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
+        : base(correlationId, sessionId, causationId)
     {
         Guard.IsNotNull(parameters, nameof(parameters));
 

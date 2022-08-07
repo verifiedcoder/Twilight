@@ -15,6 +15,6 @@ internal sealed class MultipleHandlersOneHandler : CqrsCommandHandlerBase<Multip
     {
     }
 
-    public override Task HandleCommand(CqrsCommand<MultipleHandlersParameters> cqrsCommand, CancellationToken cancellationToken = default)
+    public override Task HandleCommand(CqrsCommand<MultipleHandlersParameters> command, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 }

@@ -21,12 +21,12 @@ public sealed class RegisterUserCqrsCommandHandler : CqrsCommandHandlerBase<Regi
         : base(messageSender, logger, validator)
         => _context = context;
 
-    public override async Task HandleCommand(CqrsCommand<RegisterUserCommandParameters> cqrsCommand, CancellationToken cancellationToken = default)
+    public override async Task HandleCommand(CqrsCommand<RegisterUserCommandParameters> command, CancellationToken cancellationToken = default)
     {
         var userEntity = new UserEntity
         {
-            Forename = cqrsCommand.Params.Forename,
-            Surname = cqrsCommand.Params.Surname
+            Forename = command.Params.Forename,
+            Surname = command.Params.Surname
         };
 
         EntityEntry<UserEntity> entityEntry;
@@ -40,10 +40,10 @@ public sealed class RegisterUserCqrsCommandHandler : CqrsCommandHandlerBase<Regi
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        var parameters = new UserRegisteredEventParameters(entityEntry.Entity.Id, cqrsCommand.Params.Forename, cqrsCommand.Params.Surname);
-        var userRegisteredEvent = new CqrsEvent<UserRegisteredEventParameters>(parameters, cqrsCommand.CorrelationId, cqrsCommand.MessageId);
+        var parameters = new UserRegisteredEventParameters(entityEntry.Entity.Id, command.Params.Forename, command.Params.Surname);
+        var userRegisteredEvent = new CqrsEvent<UserRegisteredEventParameters>(parameters, command.CorrelationId, null, command.MessageId);
 
-        Logger.LogInformation("Handled CQRS Command, {CommandTypeName}.", cqrsCommand.GetType().FullName);
+        Logger.LogInformation("Handled CQRS Command, {CommandTypeName}.", command.GetType().FullName);
 
         await MessageSender.Publish(userRegisteredEvent, cancellationToken);
     }

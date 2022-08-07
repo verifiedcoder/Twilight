@@ -89,6 +89,12 @@
             </summary>
             <value>The message correlation identifier.</value>
         </member>
+        <member name="P:Twilight.CQRS.Interfaces.ICqrsMessage.SessionId">
+            <summary>
+                Gets the session identifier.
+            </summary>
+            <value>The session identifier.</value>
+        </member>
         <member name="P:Twilight.CQRS.Interfaces.ICqrsMessage.CausationId">
             <summary>
                 Gets the causation identifier.

@@ -17,11 +17,11 @@ internal sealed class TestCqrsCommandWithResponseHandler : CqrsCommandHandlerBas
         : base(messageSender, logger, validator)
         => _service = service;
 
-    protected override async Task<CqrsCommandResponse<string>> HandleCommand(CqrsCommand<TestParameters, CqrsCommandResponse<string>> cqrsCommand, CancellationToken cancellationToken = default)
+    protected override async Task<CqrsCommandResponse<string>> HandleCommand(CqrsCommand<TestParameters, CqrsCommandResponse<string>> command, CancellationToken cancellationToken = default)
     {
-        await _service.Receive(cqrsCommand.Params.Value);
+        await _service.Receive(command.Params.Value);
 
-        var response = new CqrsCommandResponse<string>(nameof(TestCqrsCommandWithResponseHandler), cqrsCommand.CorrelationId, cqrsCommand.MessageId);
+        var response = new CqrsCommandResponse<string>(nameof(TestCqrsCommandWithResponseHandler), command.CorrelationId, command.MessageId);
 
         return response;
     }
