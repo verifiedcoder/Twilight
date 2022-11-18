@@ -14,7 +14,7 @@ public class HandlerNotFoundExceptionTests
     [Fact]
     public void ExceptionShouldConstructCorrectMessage()
         => _subject.Message.Should()
-                   .Be("No concrete handlers for type 'System.Guid, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e' could be found.");
+                   .Be("No concrete handlers for type 'System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e' could be found.");
 
     [Fact]
     public void SubjectShouldDeriveFromException()
