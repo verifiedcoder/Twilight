@@ -10,19 +10,31 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        dotnet-version: ['7.x.x' ]
+        
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.x.x
-    - name: Restore dependencies
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Display dotnet version
+      run: dotnet --version
+    - name: Restore Dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --output buildOutput
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet build --configuration Release --no-restore --output buildOutput
+    - name: Run Tests
+      run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" --no-restore
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v2
+
+      with:
+        name: dotnet-results-${{ matrix.dotnet-version }}
+        path: TestResults-${{ matrix.dotnet-version }}
+      if: ${{ always() }}
 
     - name: Generate SBOM
       run: |
@@ -30,7 +42,7 @@ jobs:
         chmod +x $RUNNER_TEMP/sbom-tool
         $RUNNER_TEMP/sbom-tool generate -b ./buildOutput -bc . -pn Twilight -pv 1.0.0 -ps VerifiedCoder -nsb https://github.com/verifiedcoder/Twilight -V Verbose
 
-    - name: Upload a Build Artifact
+    - name: Upload Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         path: buildOutput
