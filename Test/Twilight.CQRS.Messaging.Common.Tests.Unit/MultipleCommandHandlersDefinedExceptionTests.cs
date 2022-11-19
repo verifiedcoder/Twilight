@@ -14,7 +14,7 @@ public class MultipleCommandHandlersDefinedExceptionTests
     [Fact]
     public void ExceptionShouldConstructCorrectMessage()
         => _subject.Message.Should()
-                   .Be("Multiple command handlers for type 'System.Guid, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, " +
+                   .Be("Multiple command handlers for type 'System.Guid, System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, " +
                        "PublicKeyToken=7cec85d7bea7798e' were found. Only one handler can exist for a command.");
 
     [Fact]
