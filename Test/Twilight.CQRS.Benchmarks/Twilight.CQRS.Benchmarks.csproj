@@ -16,8 +16,8 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="6.5.0" />
-        <PackageReference Include="Benchmarkdotnet" Version="0.13.2" />
-        <PackageReference Include="FluentValidation" Version="11.3.0" />
+        <PackageReference Include="Benchmarkdotnet" Version="0.13.4" />
+        <PackageReference Include="FluentValidation" Version="11.4.0" />
     </ItemGroup>
 
     <ItemGroup>
