@@ -13,7 +13,7 @@ public interface ICqrsCommandHandler<in TCommand> : ICqrsMessageHandler<TCommand
     /// <param name="command">The command.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous command handler operation.</returns>
-    Task Handle(TCommand command, CancellationToken cancellationToken);
+    Task Handle(TCommand command, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
