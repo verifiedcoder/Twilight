@@ -11,7 +11,7 @@ It is not intended for this repository to be published as NuGet packages as supp
 ### Requirements
 
 - Microsoft Visual Studio 2022
-- .NET 6.0
+- .NET 7.0
 
 ## CQRS
 
@@ -111,6 +111,4 @@ We all learn from the teachings and example of others and this project is no exc
 
 Twilight incorporates [Open Telemetry](https://opentelemetry.io/). A console exporter has been added to the sample so you can see the data.
 
-You can use correlation, causation and message identifiers in tandem with the Open Telemetry activity and parent identifiers to build a robust activity logging infrastructure.
-
-At this point, Open Telemetry integration with Twilight CQRS should be considered experimental.
+At this point, Open Telemetry integration with Twilight CQRS should be considered (very) experimental.
