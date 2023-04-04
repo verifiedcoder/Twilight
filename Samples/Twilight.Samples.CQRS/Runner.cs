@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using FluentValidation;
-using Microsoft.Extensions.Logging;
+﻿using FluentValidation;
+using Serilog;
+using System.Diagnostics;
 using Taikandi;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Messaging.Interfaces;
@@ -14,16 +14,12 @@ namespace Twilight.Samples.CQRS;
 
 internal sealed class Runner : IRunner
 {
-    private readonly ILogger<Runner> _logger;
     private readonly IMessageSender _messageSender;
 
-    public Runner(IMessageSender messageSender, ILogger<Runner> logger)
-    {
-        _messageSender = messageSender;
-        _logger = logger;
-    }
+    public Runner(IMessageSender messageSender)
+        => _messageSender = messageSender;
 
-    public async Task Run()
+        public async Task Run()
     {
         await RegisterUser();
         await GetRegisteredUser();
@@ -53,7 +49,7 @@ internal sealed class Runner : IRunner
 
             var response = await _messageSender.Send(query);
 
-            _logger.LogInformation("Query response: {@GetRegisteredUserResponse}", response);
+            Log.Information("Query response: {@GetRegisteredUserResponse}", response);
         }
     }
 
@@ -67,7 +63,7 @@ internal sealed class Runner : IRunner
 
             var response = await _messageSender.Send(query);
 
-            _logger.LogInformation("Query response: {@GetUsersViewResponse}", response);
+            Log.Information("Query response: {@GetUsersViewResponse}", response);
         }
     }
 
@@ -86,11 +82,11 @@ internal sealed class Runner : IRunner
             }
             catch (ValidationException validationException)
             {
-                _logger.LogError("Query validation failed:");
+                Log.Error("Query validation failed:");
 
                 foreach (var validationError in validationException.Errors)
                 {
-                    _logger.LogError(" - {ValidationError}", validationError);
+                    Log.Error(" - {ValidationError}", validationError);
                 }
             }
         }
