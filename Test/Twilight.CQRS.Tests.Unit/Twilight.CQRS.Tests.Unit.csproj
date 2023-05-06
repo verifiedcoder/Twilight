@@ -9,25 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="C:\Users\virtu\.nuget\packages\microsoft.testplatform.testhost\17.1.0\build\netcoreapp2.1\x64\Microsoft.TestPlatform.PlatformAbstractions.dll" />
-	  <Content Remove="C:\Users\virtu\.nuget\packages\microsoft.testplatform.testhost\17.1.0\build\netcoreapp2.1\x64\testhost.dll" />
-	  <Content Remove="C:\Users\virtu\.nuget\packages\microsoft.testplatform.testhost\17.1.0\build\netcoreapp2.1\x64\testhost.exe" />
-	  <Content Remove="C:\Users\virtu\.nuget\packages\xunitxml.testlogger\3.0.70\build\netstandard1.5\..\_common\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestAdapter.dll" />
-	  <Content Remove="C:\Users\virtu\.nuget\packages\xunitxml.testlogger\3.0.70\build\netstandard1.5\..\_common\Microsoft.VisualStudio.TestPlatform.Extension.Xunit.Xml.TestLogger.dll" />
-	  <Content Remove="C:\Users\virtu\.nuget\packages\xunitxml.testlogger\3.0.70\build\netstandard1.5\..\_common\Spekt.TestLogger.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="C:\Users\virtu\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.reporters.netcoreapp10.dll" />
-	  <None Remove="C:\Users\virtu\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.utility.netcoreapp10.dll" />
-	  <None Remove="C:\Users\virtu\.nuget\packages\xunit.runner.visualstudio\2.4.5\build\netcoreapp3.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
 		<PackageReference Include="xunit" Version="2.4.2" />
-		<PackageReference Include="FluentAssertions" Version="6.10.0" />
-		<PackageReference Include="FluentValidation" Version="11.5.1" />
+		<PackageReference Include="FluentAssertions" Version="6.11.0" />
+		<PackageReference Include="FluentValidation" Version="11.5.2" />
 		<PackageReference Include="NSubstitute" Version="5.0.0" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
 			<PrivateAssets>all</PrivateAssets>
