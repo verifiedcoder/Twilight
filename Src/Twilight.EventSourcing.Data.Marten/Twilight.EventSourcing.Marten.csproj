@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <LangVersion>11.0</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Marten" Version="6.0.0" />
+    </ItemGroup>
+
+    <!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>Twilight.EventSourcing.Data.Marten.xml</DocumentationFile>
+    </PropertyGroup>-->
+
+    <ItemGroup>
+        <ProjectReference Include="..\Twilight.EventSourcing.Data.Interfaces\Twilight.EventSourcing.Data.Interfaces.csproj" />
+        <ProjectReference Include="..\Twilight.EventSourcing.Data\Twilight.EventSourcing.Data.csproj" />
+        <ProjectReference Include="..\Twilight.EventSourcing\Twilight.EventSourcing.csproj" />
+    </ItemGroup>
+
+</Project>
