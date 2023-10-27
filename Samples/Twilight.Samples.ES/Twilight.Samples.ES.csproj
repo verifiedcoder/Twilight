@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="7.0.1" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="FluentValidation" Version="11.5.2" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.5" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="7.0.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.4.0" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.4.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.14" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.3" />
+        <PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
+        <PackageReference Include="Serilog" Version="2.12.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Src\Twilight.CQRS.Autofac\Twilight.CQRS.Autofac.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.CQRS.Interfaces\Twilight.CQRS.Interfaces.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.CQRS.Messaging.Common\Twilight.CQRS.Messaging.Common.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.CQRS.Messaging.InMemory.Autofac\Twilight.CQRS.Messaging.InMemory.Autofac.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.CQRS.Messaging.Interfaces\Twilight.CQRS.Messaging.Interfaces.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.CQRS\Twilight.CQRS.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.EventSourcing.Data.Marten\Twilight.EventSourcing.Marten.csproj" />
+        <ProjectReference Include="..\..\Src\Twilight.EventSourcing\Twilight.EventSourcing.csproj" />
+    </ItemGroup>
+
+</Project>
