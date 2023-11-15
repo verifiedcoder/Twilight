@@ -5,7 +5,6 @@
 ///     <para>Implements <see cref="Exception" />.</para>
 /// </summary>
 /// <seealso cref="Exception" />
-[Serializable]
 public sealed class HandlerNotFoundException : Exception
 {
     /// <summary>

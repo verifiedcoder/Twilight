@@ -10,17 +10,12 @@ using Twilight.Samples.Common.Data.Entities;
 
 namespace Twilight.Samples.Common.Features.RegisterUser;
 
-public sealed class RegisterUserCqrsCommandHandler : CqrsCommandHandlerBase<RegisterUserCqrsCommandHandler, CqrsCommand<RegisterUserCommandParameters>>
+public sealed class RegisterUserCqrsCommandHandler(SampleDataContext context,
+                                                   IMessageSender messageSender,
+                                                   ILogger<RegisterUserCqrsCommandHandler> logger,
+                                                   IValidator<CqrsCommand<RegisterUserCommandParameters>> validator)
+    : CqrsCommandHandlerBase<RegisterUserCqrsCommandHandler, CqrsCommand<RegisterUserCommandParameters>>(messageSender, logger, validator)
 {
-    private readonly SampleDataContext _context;
-
-    public RegisterUserCqrsCommandHandler(SampleDataContext context,
-                                          IMessageSender messageSender,
-                                          ILogger<RegisterUserCqrsCommandHandler> logger,
-                                          IValidator<CqrsCommand<RegisterUserCommandParameters>> validator)
-        : base(messageSender, logger, validator)
-        => _context = context;
-
     public override async Task HandleCommand(CqrsCommand<RegisterUserCommandParameters> command, CancellationToken cancellationToken = default)
     {
         var userEntity = new UserEntity
@@ -35,9 +30,9 @@ public sealed class RegisterUserCqrsCommandHandler : CqrsCommandHandlerBase<Regi
         {
             activity?.AddEvent(new ActivityEvent("Register User"));
 
-            entityEntry = _context.Users.Add(userEntity);
+            entityEntry = context.Users.Add(userEntity);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         var parameters = new UserRegisteredEventParameters(entityEntry.Entity.Id, command.Params.Forename, command.Params.Surname);

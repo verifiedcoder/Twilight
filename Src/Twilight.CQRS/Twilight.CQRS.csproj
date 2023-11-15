@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<LangVersion>11.0</LangVersion>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>12.0</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile>Twilight.CQRS.xml</DocumentationFile>
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DocumentationFile>Twilight.CQRS.xml</DocumentationFile>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="FluentValidation" Version="11.8.0" />
-		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
-		<PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.8.0" />
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
+        <PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Twilight.CQRS.Interfaces\Twilight.CQRS.Interfaces.csproj" />
-		<ProjectReference Include="..\Twilight.CQRS.Messaging.Interfaces\Twilight.CQRS.Messaging.Interfaces.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Twilight.CQRS.Interfaces\Twilight.CQRS.Interfaces.csproj" />
+        <ProjectReference Include="..\Twilight.CQRS.Messaging.Interfaces\Twilight.CQRS.Messaging.Interfaces.csproj" />
+    </ItemGroup>
 
 </Project>

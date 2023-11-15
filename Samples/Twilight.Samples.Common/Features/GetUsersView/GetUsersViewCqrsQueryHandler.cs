@@ -9,16 +9,11 @@ using Twilight.Samples.Common.Views;
 
 namespace Twilight.Samples.Common.Features.GetUsersView;
 
-public sealed class GetUsersViewCqrsQueryHandler : CqrsQueryHandlerBase<GetUsersViewCqrsQueryHandler, CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>, QueryResponse<GetUsersViewQueryResponsePayload>>
+public sealed class GetUsersViewCqrsQueryHandler(ViewDataContext dataContext,
+                                                 ILogger<GetUsersViewCqrsQueryHandler> logger,
+                                                 IValidator<CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>> validator)
+    : CqrsQueryHandlerBase<GetUsersViewCqrsQueryHandler, CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>, QueryResponse<GetUsersViewQueryResponsePayload>>(logger, validator)
 {
-    private readonly ViewDataContext _dataContext;
-
-    public GetUsersViewCqrsQueryHandler(ViewDataContext dataContext,
-                                        ILogger<GetUsersViewCqrsQueryHandler> logger,
-                                        IValidator<CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>> validator)
-        : base(logger, validator)
-        => _dataContext = dataContext;
-
     protected override async Task<QueryResponse<GetUsersViewQueryResponsePayload>> HandleQuery(CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>> query, CancellationToken cancellationToken = default)
     {
         List<UserViewEntity>? userViews;
@@ -27,7 +22,7 @@ public sealed class GetUsersViewCqrsQueryHandler : CqrsQueryHandlerBase<GetUsers
         {
             activity?.AddEvent(new ActivityEvent("Get All Users"));
 
-            userViews = await _dataContext.UsersView.Where(u => u.RegistrationDate >= query.Params.RegistrationDate)
+            userViews = await dataContext.UsersView.Where(u => u.RegistrationDate >= query.Params.RegistrationDate)
                                           .OrderBy(v => v.RegistrationDate)
                                           .ToListAsync(cancellationToken);
         }

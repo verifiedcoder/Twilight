@@ -47,7 +47,7 @@ public sealed class AutofacDependencyResolutionExceptionTests : IAsyncLifetime
         var command = new CqrsCommand<MultipleHandlersParameters>(parameters, Constants.CorrelationId);
 
         // Act
-        Func<Task> subjectResult = async () => { await _subject.Send(command, CancellationToken.None); };
+        var subjectResult = async () => { await _subject.Send(command, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<HandlerNotFoundException>();

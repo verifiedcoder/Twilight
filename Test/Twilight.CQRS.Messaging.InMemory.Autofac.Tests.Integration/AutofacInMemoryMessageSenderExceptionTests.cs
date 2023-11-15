@@ -19,7 +19,7 @@ public sealed class AutofacInMemoryMessageSenderExceptionTests : IntegrationTest
         var command = new CqrsCommand(Constants.CorrelationId);
 
         // Act
-        Func<Task> subjectResult = async () => { await Subject.Send(command, CancellationToken.None); };
+        var subjectResult = async () => { await Subject.Send(command, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()
@@ -34,7 +34,7 @@ public sealed class AutofacInMemoryMessageSenderExceptionTests : IntegrationTest
         var command = new CqrsCommand<MultipleHandlersParameters>(parameters, Constants.CorrelationId);
 
         // Act
-        Func<Task> subjectResult = async () => { await Subject.Send(command, CancellationToken.None); };
+        var subjectResult = async () => { await Subject.Send(command, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<MultipleCommandHandlersDefinedException>()
@@ -48,7 +48,7 @@ public sealed class AutofacInMemoryMessageSenderExceptionTests : IntegrationTest
         var @event = new CqrsEvent<string>(string.Empty, Constants.CorrelationId, Constants.CausationId);
 
         // Act
-        Func<Task> subjectResult = async () => { await Subject.Publish(@event, CancellationToken.None); };
+        var subjectResult = async () => { await Subject.Publish(@event, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()

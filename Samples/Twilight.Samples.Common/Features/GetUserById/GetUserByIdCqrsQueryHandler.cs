@@ -8,16 +8,11 @@ using Twilight.Samples.Common.Data.Entities;
 
 namespace Twilight.Samples.Common.Features.GetUserById;
 
-public sealed class GetUserByIdCqrsQueryHandler : CqrsQueryHandlerBase<GetUserByIdCqrsQueryHandler, CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>, QueryResponse<GetUserByIdQueryResponsePayload>>
+public sealed class GetUserByIdCqrsQueryHandler(ViewDataContext dataContext,
+                                                ILogger<GetUserByIdCqrsQueryHandler> logger,
+                                                IValidator<CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>> validator)
+    : CqrsQueryHandlerBase<GetUserByIdCqrsQueryHandler, CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>, QueryResponse<GetUserByIdQueryResponsePayload>>(logger, validator)
 {
-    private readonly ViewDataContext _dataContext;
-
-    public GetUserByIdCqrsQueryHandler(ViewDataContext dataContext,
-                                       ILogger<GetUserByIdCqrsQueryHandler> logger,
-                                       IValidator<CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>> validator)
-        : base(logger, validator)
-        => _dataContext = dataContext;
-
     protected override async Task<QueryResponse<GetUserByIdQueryResponsePayload>> HandleQuery(CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>> query, CancellationToken cancellationToken = default)
     {
         UserViewEntity? userView;
@@ -27,7 +22,7 @@ public sealed class GetUserByIdCqrsQueryHandler : CqrsQueryHandlerBase<GetUserBy
             activity?.AddEvent(new ActivityEvent("Get User by ID"));
             activity?.SetTag(nameof(GetUserByIdQueryParameters.UserId), query.Params.UserId);
 
-            userView = await _dataContext.UsersView.FindAsync(new object[] { query.Params.UserId }, cancellationToken);
+            userView = await dataContext.UsersView.FindAsync(new object[] { query.Params.UserId }, cancellationToken);
         }
 
         if (userView == null)

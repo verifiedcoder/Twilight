@@ -2,8 +2,5 @@
 
 public sealed class TestQueryResponse
 {
-    public TestQueryResponse()
-        => Value = string.Empty;
-
-    public string Value { get; init; }
+    public string Value { get; init; } = string.Empty;
 }
