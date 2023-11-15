@@ -42,7 +42,7 @@ public sealed class QueryHandlerTests
         var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
 
         // Act
-        Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
+        var subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().NotThrowAsync<ValidationException>();
@@ -55,7 +55,7 @@ public sealed class QueryHandlerTests
         var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(string.Empty), Constants.CorrelationId);
 
         // Act
-        Func<Task> subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
+        var subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<ValidationException>()

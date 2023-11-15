@@ -7,11 +7,9 @@ namespace Twilight.CQRS.Autofac.Tests.Unit;
 
 public sealed class CqrsRegistrationExtensionsTests
 {
-    private readonly ContainerBuilder _builder;
+    private readonly ContainerBuilder _builder = new();
 
     // Setup
-    public CqrsRegistrationExtensionsTests()
-        => _builder = new ContainerBuilder();
 
     [Fact]
     public void CallingRegisterForCqrsWithNullAssembliesDoesNotThrow()

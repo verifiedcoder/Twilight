@@ -7,16 +7,11 @@ using Twilight.Samples.Common.Data.Entities;
 
 namespace Twilight.Samples.Common.Features.RegisterUser;
 
-public sealed class UserRegisteredCqrsEventHandler : CqrsEventHandlerBase<UserRegisteredCqrsEventHandler, CqrsEvent<UserRegisteredEventParameters>>
+public sealed class UserRegisteredCqrsEventHandler(ViewDataContext dataContext,
+                                                   ILogger<UserRegisteredCqrsEventHandler> logger,
+                                                   IValidator<CqrsEvent<UserRegisteredEventParameters>> validator)
+    : CqrsEventHandlerBase<UserRegisteredCqrsEventHandler, CqrsEvent<UserRegisteredEventParameters>>(logger, validator)
 {
-    private readonly ViewDataContext _dataContext;
-
-    public UserRegisteredCqrsEventHandler(ViewDataContext dataContext,
-                                          ILogger<UserRegisteredCqrsEventHandler> logger,
-                                          IValidator<CqrsEvent<UserRegisteredEventParameters>> validator)
-        : base(logger, validator)
-        => _dataContext = dataContext;
-
     public override async Task HandleEvent(CqrsEvent<UserRegisteredEventParameters> cqrsEvent, CancellationToken cancellationToken = default)
     {
         var userViewEntity = new UserViewEntity
@@ -32,11 +27,11 @@ public sealed class UserRegisteredCqrsEventHandler : CqrsEventHandlerBase<UserRe
         {
             activity?.AddEvent(new ActivityEvent("Add User to View"));
 
-            _dataContext.UsersView.Add(userViewEntity);
+            dataContext.UsersView.Add(userViewEntity);
         }
 
 
-        await _dataContext.SaveChangesAsync(cancellationToken);
+        await dataContext.SaveChangesAsync(cancellationToken);
 
         Logger.LogInformation("User Registered Handler: Handled Event, {EventTypeName}.", cqrsEvent.GetType().FullName);
     }

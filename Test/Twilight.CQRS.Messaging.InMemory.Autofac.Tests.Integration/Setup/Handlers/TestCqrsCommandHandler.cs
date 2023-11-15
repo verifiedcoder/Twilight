@@ -6,17 +6,12 @@ using Twilight.CQRS.Tests.Common;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers;
 
-internal sealed class TestCqrsCommandHandler : CqrsCommandHandlerBase<TestCqrsCommandHandler, CqrsCommand<TestParameters>>
+internal sealed class TestCqrsCommandHandler(ITestService service,
+                                             IMessageSender messageSender,
+                                             ILogger<TestCqrsCommandHandler> logger,
+                                             IValidator<CqrsCommand<TestParameters>> validator)
+    : CqrsCommandHandlerBase<TestCqrsCommandHandler, CqrsCommand<TestParameters>>(messageSender, logger, validator)
 {
-    private readonly ITestService _service;
-
-    public TestCqrsCommandHandler(ITestService service,
-                                  IMessageSender messageSender,
-                                  ILogger<TestCqrsCommandHandler> logger,
-                                  IValidator<CqrsCommand<TestParameters>> validator)
-        : base(messageSender, logger, validator)
-        => _service = service;
-
     public override async Task HandleCommand(CqrsCommand<TestParameters> command, CancellationToken cancellationToken = default)
-        => await _service.Receive(command.Params.Value);
+        => await service.Receive(command.Params.Value);
 }

@@ -1,12 +1,11 @@
 ﻿namespace Twilight.CQRS.Tests.Common;
 
-public sealed class TestParameters
+public sealed class TestParameters(string value)
 {
     public TestParameters()
-        => Value = "test";
+        : this("test")
+    {
+    }
 
-    public TestParameters(string value)
-        => Value = value;
-
-    public string Value { get; }
+    public string Value { get; } = value;
 }

@@ -99,7 +99,7 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
         var typeRef = typeof(ICqrsCommandHandler<CqrsCommand<string>>).AssemblyQualifiedName;
 
         // Act
-        Func<Task> subjectResult = async () => { await Subject.Send(command, CancellationToken.None); };
+        var subjectResult = async () => { await Subject.Send(command, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()
@@ -114,7 +114,7 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
         var typeRef = typeof(ICqrsEventHandler<CqrsEvent<string>>).AssemblyQualifiedName;
 
         // Act
-        Func<Task> subjectResult = async () => { await Subject.Publish(@event, CancellationToken.None); };
+        var subjectResult = async () => { await Subject.Publish(@event, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()
@@ -129,7 +129,7 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
         var typeRef = typeof(ICqrsQueryHandler<CqrsQuery<object, QueryResponse<string>>, QueryResponse<string>>).AssemblyQualifiedName;
 
         // Act
-        Func<Task> subjectResult = async () => { await Subject.Send(query, CancellationToken.None); };
+        var subjectResult = async () => { await Subject.Send(query, CancellationToken.None); };
 
         // Assert
         await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()

@@ -5,16 +5,10 @@ using Twilight.CQRS.Tests.Common;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers;
 
-internal sealed class TestCqrsEventHandler : CqrsEventHandlerBase<TestCqrsEventHandler, CqrsEvent<TestParameters>>
+internal sealed class TestCqrsEventHandler(ITestService service,
+                                           ILogger<TestCqrsEventHandler> logger,
+                                           IValidator<CqrsEvent<TestParameters>> validator) : CqrsEventHandlerBase<TestCqrsEventHandler, CqrsEvent<TestParameters>>(logger, validator)
 {
-    private readonly ITestService _service;
-
-    public TestCqrsEventHandler(ITestService service,
-                                ILogger<TestCqrsEventHandler> logger,
-                                IValidator<CqrsEvent<TestParameters>> validator)
-        : base(logger, validator)
-        => _service = service;
-
     public override async Task HandleEvent(CqrsEvent<TestParameters> cqrsEvent, CancellationToken cancellationToken = default)
-        => await _service.Receive(cqrsEvent.Params.Value);
+        => await service.Receive(cqrsEvent.Params.Value);
 }

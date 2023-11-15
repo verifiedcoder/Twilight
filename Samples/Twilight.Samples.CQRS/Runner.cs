@@ -12,14 +12,9 @@ using Twilight.Samples.Common.Features.RegisterUser;
 
 namespace Twilight.Samples.CQRS;
 
-internal sealed class Runner : IRunner
+internal sealed class Runner(IMessageSender messageSender) : IRunner
 {
-    private readonly IMessageSender _messageSender;
-
-    public Runner(IMessageSender messageSender)
-        => _messageSender = messageSender;
-
-        public async Task Run()
+    public async Task Run()
     {
         await RegisterUser();
         await GetRegisteredUser();
@@ -35,7 +30,7 @@ internal sealed class Runner : IRunner
             var parameters = new RegisterUserCommandParameters("Bilbo", "Baggins");
             var command = new CqrsCommand<RegisterUserCommandParameters>(parameters, id);
 
-            await _messageSender.Send(command);
+            await messageSender.Send(command);
         }
     }
 
@@ -47,7 +42,7 @@ internal sealed class Runner : IRunner
             var parameters = new GetUserByIdQueryParameters(1);
             var query = new CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>(parameters, id);
 
-            var response = await _messageSender.Send(query);
+            var response = await messageSender.Send(query);
 
             Log.Information("Query response: {@GetRegisteredUserResponse}", response);
         }
@@ -61,7 +56,7 @@ internal sealed class Runner : IRunner
             var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(-1));
             var query = new CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, id);
 
-            var response = await _messageSender.Send(query);
+            var response = await messageSender.Send(query);
 
             Log.Information("Query response: {@GetUsersViewResponse}", response);
         }
@@ -78,7 +73,7 @@ internal sealed class Runner : IRunner
             try
             {
                 // No point assigning the response as this call has been engineered to throw a ValidationException
-                await _messageSender.Send(query);
+                await messageSender.Send(query);
             }
             catch (ValidationException validationException)
             {
