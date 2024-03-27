@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Diagnostics;
-
-namespace Twilight.CQRS.Commands;
+﻿namespace Twilight.CQRS.Commands;
 
 /// <summary>
 ///     <para>Represents an encapsulated response from a command handler.</para>
@@ -37,11 +35,7 @@ public class CqrsCommandResponse<TPayload> : CqrsMessage
     /// </param>
     public CqrsCommandResponse(TPayload payload, string correlationId, string? causationId = null)
         : base(correlationId, causationId)
-    {
-        Guard.IsNotNull(payload, nameof(payload));
-
-        Payload = payload;
-    }
+        => Payload = payload;
 
     /// <summary>
     ///     Gets the typed query response payload.

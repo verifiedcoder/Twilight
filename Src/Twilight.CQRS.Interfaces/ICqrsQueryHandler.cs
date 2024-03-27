@@ -1,4 +1,6 @@
-﻿namespace Twilight.CQRS.Interfaces;
+﻿using FluentResults;
+
+namespace Twilight.CQRS.Interfaces;
 
 /// <summary>
 ///     Represents a query message handler.
@@ -17,5 +19,5 @@ public interface ICqrsQueryHandler<in TQuery, TResponse> : ICqrsMessageHandler<T
     ///     <para>A task that represents the asynchronous query handler operation.</para>
     ///     <para>The task result contains the query execution response.</para>
     /// </returns>
-    Task<TResponse> Handle(TQuery query, CancellationToken cancellationToken = default);
+    Task<Result<TResponse>> Handle(TQuery query, CancellationToken cancellationToken = default);
 }

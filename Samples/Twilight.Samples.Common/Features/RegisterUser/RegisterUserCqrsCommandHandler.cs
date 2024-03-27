@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using FluentResults;
+using System.Diagnostics;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ public sealed class RegisterUserCqrsCommandHandler(SampleDataContext context,
                                                    IValidator<CqrsCommand<RegisterUserCommandParameters>> validator)
     : CqrsCommandHandlerBase<RegisterUserCqrsCommandHandler, CqrsCommand<RegisterUserCommandParameters>>(messageSender, logger, validator)
 {
-    public override async Task HandleCommand(CqrsCommand<RegisterUserCommandParameters> command, CancellationToken cancellationToken = default)
+    public override async Task<Result> HandleCommand(CqrsCommand<RegisterUserCommandParameters> command, CancellationToken cancellationToken = default)
     {
         var userEntity = new UserEntity
         {
@@ -41,5 +42,7 @@ public sealed class RegisterUserCqrsCommandHandler(SampleDataContext context,
         Logger.LogInformation("Handled CQRS Command, {CommandTypeName}.", command.GetType().FullName);
 
         await MessageSender.Publish(userRegisteredEvent, cancellationToken);
+
+        return Result.Ok();
     }
 }

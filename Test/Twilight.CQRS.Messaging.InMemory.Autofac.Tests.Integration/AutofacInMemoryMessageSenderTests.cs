@@ -2,10 +2,7 @@
 using NSubstitute;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Events;
-using Twilight.CQRS.Interfaces;
-using Twilight.CQRS.Messaging.Common;
 using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
-using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers;
 using Twilight.CQRS.Queries;
 using Twilight.CQRS.Tests.Common;
 using Xunit;
@@ -34,13 +31,13 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
         var command = new CqrsCommand<TestParameters, CqrsCommandResponse<string>>(new TestParameters(nameof(MessageSenderCallsCorrectHandlerForCommandWithResponse)), Constants.CorrelationId);
 
         // Act
-        var response = await Subject.Send(command, CancellationToken.None);
+        var result = await Subject.Send(command, CancellationToken.None);
 
         // Assert
         await Verifier.Received(1).Receive(Arg.Is(command.Params.Value));
 
-        response.Payload.Should().NotBeNull();
-        response.Payload.Should().Be(nameof(TestCqrsCommandWithResponseHandler));
+        result.Value.Should().NotBeNull();
+        result.Value.CorrelationId.Should().Be(Constants.CorrelationId);
     }
 
     [Fact]
@@ -82,13 +79,13 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
         var query = new CqrsQuery<TestParameters, QueryResponse<string>>(new TestParameters(nameof(MessageSenderCallsCorrectHandlerForQuery)), Constants.CorrelationId);
 
         // Act
-        var response = await Subject.Send(query, CancellationToken.None);
+        var result = await Subject.Send(query, CancellationToken.None);
 
         // Assert
         await Verifier.Received(1).Receive(Arg.Is(query.Params.Value));
 
-        response.Payload.Should().NotBeNull();
-        response.Payload.Should().Be(nameof(TestCqrsQueryHandler));
+        result.Value.Should().NotBeNull();
+        result.Value.CorrelationId.Should().Be(Constants.CorrelationId);
     }
 
     [Fact]
@@ -96,14 +93,13 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
     {
         // Arrange
         var command = new CqrsCommand<string>(string.Empty, Constants.CorrelationId, Constants.CausationId);
-        var typeRef = typeof(ICqrsCommandHandler<CqrsCommand<string>>).AssemblyQualifiedName;
 
         // Act
-        var subjectResult = async () => { await Subject.Send(command, CancellationToken.None); };
+        var result = await Subject.Send(command, CancellationToken.None);
 
         // Assert
-        await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()
-                           .WithMessage($"No concrete handlers for type '{typeRef}' could be found.");
+        result.IsSuccess.Should().BeFalse();
+        result.Errors[0].Message.Should().Be("No handler cold be found for this request.");
     }
 
     [Fact]
@@ -111,14 +107,13 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
     {
         // Arrange
         var @event = new CqrsEvent<string>(string.Empty, Constants.CorrelationId, Constants.CausationId);
-        var typeRef = typeof(ICqrsEventHandler<CqrsEvent<string>>).AssemblyQualifiedName;
 
         // Act
-        var subjectResult = async () => { await Subject.Publish(@event, CancellationToken.None); };
+        var result = await Subject.Publish(@event, CancellationToken.None);
 
         // Assert
-        await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()
-                           .WithMessage($"No concrete handlers for type '{typeRef}' could be found.");
+        result.IsSuccess.Should().BeFalse();
+        result.Errors[0].Message.Should().Be("No handler cold be found for this request.");
     }
 
     [Fact]
@@ -126,13 +121,12 @@ public sealed class AutofacInMemoryMessageSenderTests : IntegrationTestBase
     {
         // Arrange
         var query = new CqrsQuery<object, QueryResponse<string>>(string.Empty, Constants.CorrelationId);
-        var typeRef = typeof(ICqrsQueryHandler<CqrsQuery<object, QueryResponse<string>>, QueryResponse<string>>).AssemblyQualifiedName;
 
         // Act
-        var subjectResult = async () => { await Subject.Send(query, CancellationToken.None); };
+        var result = await Subject.Send(query, CancellationToken.None);
 
         // Assert
-        await subjectResult.Should().ThrowAsync<HandlerNotFoundException>()
-                           .WithMessage($"No concrete handlers for type '{typeRef}' could be found.");
+        result.IsSuccess.Should().BeFalse();
+        result.Errors[0].Message.Should().Be("No handler cold be found for this request.");
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using FluentAssertions;
+using FluentResults;
 using NSubstitute;
 using Twilight.CQRS.Messaging.Interfaces;
 using Xunit;
@@ -13,6 +14,8 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     protected IntegrationTestBase()
     {
         Verifier = Substitute.For<IVerifier>();
+
+        Verifier.Receive(Arg.Any<string>()).Returns(Result.Ok());
 
         var builder = new ContainerBuilder();
         var testService = new TestService(Verifier).As<ITestService>();

@@ -21,8 +21,8 @@ public static class ContainerBuilderExtensions
     /// <param name="typeNameEndings">The file endings to match against.</param>
     public static void RegisterAssemblyTypes(this ContainerBuilder builder, Assembly assembly, string[] typeNameEndings)
     {
-        Guard.IsNotNull(assembly, nameof(assembly));
-        Guard.IsNotNull(typeNameEndings, nameof(typeNameEndings));
+        Guard.IsNotNull(assembly);
+        Guard.IsNotNull(typeNameEndings);
 
         if (!typeNameEndings.Any())
         {
@@ -65,7 +65,7 @@ public static class ContainerBuilderExtensions
     /// <param name="assembly">The assembly to scan.</param>
     public static ContainerBuilder RegisterCqrs(this ContainerBuilder builder, Assembly assembly)
     {
-        Guard.IsNotNull(assembly, nameof(assembly));
+        Guard.IsNotNull(assembly);
 
         builder.RegisterAssemblyTypes(assembly)
                .AsClosedTypesOf(typeof(ICqrsCommandHandler<>));
@@ -79,7 +79,7 @@ public static class ContainerBuilderExtensions
         builder.RegisterAssemblyTypes(assembly)
                .AsClosedTypesOf(typeof(ICqrsEventHandler<>));
 
-        builder.RegisterAssemblyTypes(assembly, new[] { "validator" });
+        builder.RegisterAssemblyTypes(assembly, ["validator"]);
 
         return builder;
     }

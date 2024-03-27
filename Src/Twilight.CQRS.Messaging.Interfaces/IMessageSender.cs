@@ -1,4 +1,5 @@
-﻿using Twilight.CQRS.Interfaces;
+﻿using FluentResults;
+using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Messaging.Interfaces;
 
@@ -14,7 +15,7 @@ public interface IMessageSender
     /// <param name="command">Instance of the command.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>A Task that completes when the handler finished processing.</returns>
-    Task Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+    Task<Result> Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICqrsCommand;
 
     /// <summary>
@@ -28,7 +29,7 @@ public interface IMessageSender
     /// <param name="command">Instance of the command.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>A Task that resolves to a result of the command handler.</returns>
-    Task<TResponse> Send<TResponse>(ICqrsCommand<TResponse> command, CancellationToken cancellationToken = default);
+    Task<Result<TResponse>> Send<TResponse>(ICqrsCommand<TResponse> command, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Runs the query handler registered for the given query type.
@@ -41,7 +42,7 @@ public interface IMessageSender
     /// <param name="query">Instance of the query.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>A Task that resolves to a result of the query handler.</returns>
-    Task<TResponse> Send<TResponse>(ICqrsQuery<TResponse> query, CancellationToken cancellationToken = default);
+    Task<Result<TResponse>> Send<TResponse>(ICqrsQuery<TResponse> query, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Runs all registered event handlers for the specified events.
@@ -49,7 +50,7 @@ public interface IMessageSender
     /// <param name="events">The domain events.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>Task that completes when all handlers finish processing.</returns>
-    Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
+    Task<Result> Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
         where TEvent : class, ICqrsEvent;
 
     /// <summary>
@@ -59,6 +60,6 @@ public interface IMessageSender
     /// <param name="event">Instance of the event.</param>
     /// <param name="cancellationToken">Task cancellation token.</param>
     /// <returns>A Task that completes when all handlers finish processing.</returns>
-    Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
+    Task<Result> Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : class, ICqrsEvent;
 }

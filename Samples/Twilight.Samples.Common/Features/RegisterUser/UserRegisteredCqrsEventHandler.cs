@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using FluentResults;
+using System.Diagnostics;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Events;
@@ -12,7 +13,7 @@ public sealed class UserRegisteredCqrsEventHandler(ViewDataContext dataContext,
                                                    IValidator<CqrsEvent<UserRegisteredEventParameters>> validator)
     : CqrsEventHandlerBase<UserRegisteredCqrsEventHandler, CqrsEvent<UserRegisteredEventParameters>>(logger, validator)
 {
-    public override async Task HandleEvent(CqrsEvent<UserRegisteredEventParameters> cqrsEvent, CancellationToken cancellationToken = default)
+    public override async Task<Result> HandleEvent(CqrsEvent<UserRegisteredEventParameters> cqrsEvent, CancellationToken cancellationToken = default)
     {
         var userViewEntity = new UserViewEntity
         {
@@ -34,5 +35,7 @@ public sealed class UserRegisteredCqrsEventHandler(ViewDataContext dataContext,
         await dataContext.SaveChangesAsync(cancellationToken);
 
         Logger.LogInformation("User Registered Handler: Handled Event, {EventTypeName}.", cqrsEvent.GetType().FullName);
+
+        return Result.Ok();
     }
 }

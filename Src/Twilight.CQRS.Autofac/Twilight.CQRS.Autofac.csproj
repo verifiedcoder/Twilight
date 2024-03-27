@@ -13,8 +13,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="7.1.0" />
+        <PackageReference Include="Autofac" Version="8.0.0" />
         <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
+        <PackageReference Include="FluentResults" Version="3.15.2" />
     </ItemGroup>
 
     <ItemGroup>

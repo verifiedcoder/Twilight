@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FluentResults;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Messaging.Interfaces;
@@ -12,7 +13,7 @@ internal sealed class TestCqrsCommandWithResponseHandler(IMessageSender messageS
                                                          IValidator<CqrsCommand<TestParameters, CqrsCommandResponse<string>>> validator)
     : CqrsCommandHandlerBase<TestCqrsCommandWithResponseHandler, CqrsCommand<TestParameters, CqrsCommandResponse<string>>, CqrsCommandResponse<string>>(messageSender, logger, validator)
 {
-    protected override async Task<CqrsCommandResponse<string>> HandleCommand(CqrsCommand<TestParameters, CqrsCommandResponse<string>> command, CancellationToken cancellationToken = default)
+    protected override async Task<Result<CqrsCommandResponse<string>>> HandleCommand(CqrsCommand<TestParameters, CqrsCommandResponse<string>> command, CancellationToken cancellationToken = default)
     {
         await service.Receive(command.Params.Value);
 

@@ -1,18 +1,13 @@
-﻿using FluentValidation;
+﻿using FluentResults;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Events;
 
 namespace Twilight.CQRS.Benchmarks.Events;
 
-internal sealed class SendCqrsEventHandler : CqrsEventHandlerBase<SendCqrsEventHandler, CqrsEvent<MessageParameters>>
+internal sealed class SendCqrsEventHandler(
+    ILogger<SendCqrsEventHandler> logger, 
+    IValidator<CqrsEvent<MessageParameters>>? validator = null) : CqrsEventHandlerBase<SendCqrsEventHandler, CqrsEvent<MessageParameters>>(logger, validator)
 {
-    public SendCqrsEventHandler(ILogger<SendCqrsEventHandler> logger, IValidator<CqrsEvent<MessageParameters>>? validator = null)
-        : base(logger, validator)
-    {
-    }
-
-    public override async Task HandleEvent(CqrsEvent<MessageParameters> cqrsEvent, CancellationToken cancellationToken = default)
-    {
-        await Task.CompletedTask;
-    }
+    public override async Task<Result> HandleEvent(CqrsEvent<MessageParameters> cqrsEvent, CancellationToken cancellationToken = default) => await Task.FromResult(Result.Ok());
 }

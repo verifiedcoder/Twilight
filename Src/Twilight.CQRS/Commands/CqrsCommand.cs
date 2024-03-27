@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Diagnostics;
-using Twilight.CQRS.Interfaces;
+﻿using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Commands;
 
@@ -59,11 +58,7 @@ public class CqrsCommand<TParameters> : CqrsMessage, ICqrsCommand
     /// </param>
     public CqrsCommand(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
         : base(correlationId, sessionId, causationId)
-    {
-        Guard.IsNotNull(parameters, nameof(parameters));
-
-        Params = parameters;
-    }
+        => Params = parameters;
 
     /// <summary>
     ///     Gets the typed command parameters.
@@ -74,7 +69,7 @@ public class CqrsCommand<TParameters> : CqrsMessage, ICqrsCommand
 
 /// <summary>
 ///     <para>
-///         Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+///         Represents a result and does not change the observable state of the system (i.e. is free of side effects).
 ///     </para>
 ///     <para>Implements <see cref="CqrsMessage" />.</para>
 ///     <para>Implements <see cref="ICqrsCommand" />.</para>
@@ -99,11 +94,7 @@ public class CqrsCommand<TParameters, TResponse> : CqrsMessage, ICqrsCommand<TRe
     /// </param>
     public CqrsCommand(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
         : base(correlationId, sessionId, causationId)
-    {
-        Guard.IsNotNull(parameters, nameof(parameters));
-
-        Params = parameters;
-    }
+        => Params = parameters;
 
     /// <summary>
     ///     Gets the typed command parameters.

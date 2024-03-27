@@ -3,12 +3,7 @@ using Twilight.Samples.Common.Data.Entities;
 
 namespace Twilight.Samples.Common.Data;
 
-public sealed class SampleDataContext : DbContext
+public sealed class SampleDataContext(DbContextOptions<SampleDataContext> options) : DbContext(options)
 {
-    public SampleDataContext(DbContextOptions<SampleDataContext> options)
-        : base(options)
-    {
-    }
-
-    public DbSet<UserEntity> Users { get; set; } = null!;
+    public DbSet<UserEntity> Users { get; init; } = null!;
 }
