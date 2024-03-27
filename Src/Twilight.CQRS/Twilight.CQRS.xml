@@ -64,7 +64,7 @@
         <member name="T:Twilight.CQRS.Commands.CqrsCommand`2">
             <summary>
                 <para>
-                    Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+                    Represents a result and does not change the observable state of the system (i.e. is free of side effects).
                 </para>
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
                 <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />.</para>
@@ -356,21 +356,10 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns>A task that represents the asynchronous handle event operation.</returns>
         </member>
-        <member name="T:Twilight.CQRS.Exceptions.HandlerException">
-            <summary>
-                Exception thrown when a handler encounters and issue.
-            </summary>
-        </member>
-        <member name="M:Twilight.CQRS.Exceptions.HandlerException.#ctor(System.String)">
-            <summary>
-                Initializes a new instance of <see cref="T:Twilight.CQRS.Exceptions.HandlerException" />.
-            </summary>
-            <param name="message">The exception message.</param>
-        </member>
         <member name="T:Twilight.CQRS.Queries.CqrsQuery`1">
             <summary>
                 <para>
-                    Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+                    Represents a result and does not change the observable state of the system (i.e. is free of side effects).
                 </para>
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
                 <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsQuery`1" />.</para>
@@ -393,7 +382,7 @@
         <member name="T:Twilight.CQRS.Queries.CqrsQuery`2">
             <summary>
                 <para>
-                    Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+                    Represents a result and does not change the observable state of the system (i.e. is free of side effects).
                 </para>
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
                 <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsQuery`1" />.</para>

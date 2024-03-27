@@ -1,4 +1,6 @@
-﻿namespace Twilight.CQRS.Interfaces;
+﻿using FluentResults;
+
+namespace Twilight.CQRS.Interfaces;
 
 /// <summary>
 ///     Represents a means of handling a command in order to broker a result.
@@ -13,7 +15,7 @@ public interface ICqrsCommandHandler<in TCommand> : ICqrsMessageHandler<TCommand
     /// <param name="command">The command.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous command handler operation.</returns>
-    Task Handle(TCommand command, CancellationToken cancellationToken = default);
+    Task<Result> Handle(TCommand command, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -23,6 +25,7 @@ public interface ICqrsCommandHandler<in TCommand> : ICqrsMessageHandler<TCommand
 /// <typeparam name="TResponse">The type of the response.</typeparam>
 public interface ICqrsCommandHandler<in TCommand, TResponse> : ICqrsMessageHandler<TCommand>
     where TCommand : class, ICqrsCommand<TResponse>
+    where TResponse : class
 {
     /// <summary>
     ///     Handles the command.
@@ -33,5 +36,5 @@ public interface ICqrsCommandHandler<in TCommand, TResponse> : ICqrsMessageHandl
     ///     <para>A task that represents the asynchronous command handler operation.</para>
     ///     <para>The task result contains the command execution response.</para>
     /// </returns>
-    Task<TResponse> Handle(TCommand command, CancellationToken cancellationToken = default);
+    Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken = default);
 }

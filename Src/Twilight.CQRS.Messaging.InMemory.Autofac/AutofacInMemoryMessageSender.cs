@@ -5,8 +5,8 @@ using Autofac.Core;
 using Autofac.Core.Registration;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
+using FluentResults;
 using Twilight.CQRS.Interfaces;
-using Twilight.CQRS.Messaging.Common;
 using Twilight.CQRS.Messaging.Interfaces;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac;
@@ -34,8 +34,8 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
     /// <param name="logger">The logger.</param>
     public AutofacInMemoryMessageSender(ILifetimeScope lifetimeScope, ILogger<AutofacInMemoryMessageSender> logger)
     {
-        Guard.IsNotNull(lifetimeScope, nameof(lifetimeScope));
-        Guard.IsNotNull(logger, nameof(logger));
+        Guard.IsNotNull(lifetimeScope);
+        Guard.IsNotNull(logger);
 
         _lifetimeScope = lifetimeScope;
         _logger = logger;
@@ -46,18 +46,18 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
     private static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? DefaultAssemblyVersion;
 
     /// <inheritdoc />
-    /// <exception cref="MultipleCommandHandlersDefinedException">
-    ///     Thrown when more than one command handler is resolved from the container.
-    /// </exception>
-    /// <exception cref="HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
-    /// <exception cref="MultipleCommandHandlersDefinedException">
-    ///     Thrown when more than one command handler with the same
-    ///     definition is found.
-    /// </exception>
-    public async Task Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICqrsCommand
     {
-        Guard.IsNotNull(command, nameof(command));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(command);
+        });
+
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
 
         var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
@@ -75,9 +75,9 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
             }
             catch (DependencyResolutionException ex)
             {
-                _logger.LogCritical(ex, "Dependency Resolution Exception");
+                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
 
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
             }
 
             var commandHandlers = (handlers ?? Array.Empty<ICqrsCommandHandler<TCommand>>()).ToList();
@@ -86,32 +86,38 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
             {
                 case 0:
 
-                    _logger.LogCritical("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                    _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
 
-                    throw new HandlerNotFoundException(assemblyQualifiedName);
+                    return Result.Fail("No handler cold be found for this request.");
 
                 case > 1:
 
                     _logger.LogCritical("Multiple handlers found in {AssemblyQualifiedName}.", assemblyQualifiedName);
 
-                    throw new MultipleCommandHandlersDefinedException(assemblyQualifiedName);
+                    return Result.Fail("Multiple handlers found. A command may only have one handler.");
 
                 default:
 
-                    await commandHandlers.First().Handle(command, cancellationToken);
+                    await commandHandlers[0].Handle(command, cancellationToken);
                     break;
             }
         }
+
+        return Result.Ok();
     }
 
     /// <inheritdoc />
-    /// <exception cref="MultipleCommandHandlersDefinedException">
-    ///     Thrown when more than one command handler is resolved from the container.
-    /// </exception>
-    /// <exception cref="HandlerNotFoundException">Thrown when a command handler cannot be resolved from the container.</exception>
-    public async Task<TResult> Send<TResult>(ICqrsCommand<TResult> command, CancellationToken cancellationToken = default)
+    public async Task<Result<TResult>> Send<TResult>(ICqrsCommand<TResult> command, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(command, nameof(command));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(command);
+        });
+
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
 
         var genericType = typeof(ICqrsCommandHandler<,>);
         var closedGenericType = genericType.MakeGenericType(command.GetType(), typeof(TResult));
@@ -129,36 +135,50 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
             {
                 var handlerExists = _lifetimeScope.TryResolve(closedGenericType, out var handler);
 
-                if (!handlerExists || handler == null)
+                if (!handlerExists)
                 {
-                    _logger.LogCritical("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                    _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
 
-                    throw new HandlerNotFoundException(assemblyQualifiedName);
+                    return Result.Fail("No handler cold be found for this request.");
                 }
 
-                var handlerType = handler.GetType();
-                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] { command.GetType(), typeof(CancellationToken) })
+                var handlerType = handler!.GetType();
+                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", [command.GetType(), typeof(CancellationToken)])
                                             ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
 
-                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] { command, cancellationToken }) ?? throw new InvalidOperationException();
+                var resultTask = (Task<Result<TResult>>)handlerTypeRuntimeMethod.Invoke(handler, [command, cancellationToken])!;
+
+                result = await resultTask;
             }
             catch (DependencyResolutionException ex)
             {
-                _logger.LogCritical(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
 
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogCritical(ex, $"Could not execute handler for '{assemblyQualifiedName}'.");
+
+                return Result.Fail("Failed to execute handler.");
             }
 
-            return await (Task<TResult>)result;
+            return (Result<TResult>)result;
         }
     }
 
     /// <inheritdoc />
-    /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
-    /// <exception cref="InvalidOperationException">Thrown when a handler type cannot resolved the type's 'Handle' method.</exception>
-    public async Task<TResult> Send<TResult>(ICqrsQuery<TResult> query, CancellationToken cancellationToken = default)
+    public async Task<Result<TResult>> Send<TResult>(ICqrsQuery<TResult> query, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(query, nameof(query));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(query);
+        });
+
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
 
         var genericType = typeof(ICqrsQueryHandler<,>);
         var closedGenericType = genericType.MakeGenericType(query.GetType(), typeof(TResult));
@@ -176,54 +196,65 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
             {
                 var handlerExists = _lifetimeScope.TryResolve(closedGenericType, out var handler);
 
-                if (!handlerExists || handler == null)
+                if (!handlerExists)
                 {
-                    _logger.LogCritical("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                    _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
 
-                    throw new HandlerNotFoundException(assemblyQualifiedName);
+                    return Result.Fail("No handler cold be found for this request.");
                 }
 
-                var handlerType = handler.GetType();
-                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", new[] { query.GetType(), typeof(CancellationToken) })
+                var handlerType = handler!.GetType();
+                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", [query.GetType(), typeof(CancellationToken)])
                                             ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
 
-                result = handlerTypeRuntimeMethod.Invoke(handler, new object[] { query, cancellationToken }) ?? throw new InvalidOperationException();
+                var resultTask = (Task<Result<TResult>>)handlerTypeRuntimeMethod.Invoke(handler, [query, cancellationToken])!;
+
+                result = await resultTask;
             }
             catch (DependencyResolutionException ex)
             {
-                _logger.LogCritical(ex, "Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
 
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
             }
 
-            return await (Task<TResult>)result;
+            return (Result<TResult>)result;
         }
     }
 
     /// <inheritdoc />
-    public async Task Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
+    public async Task<Result> Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
         where TEvent : class, ICqrsEvent
     {
-        Guard.IsNotNull(events, nameof(events));
+        var eventsList = events as TEvent[] ?? events.ToArray();
 
-        var enumerable = events as TEvent[] ?? events.ToArray();
-
-        if (!enumerable.Length.Equals(0))
+        if (!eventsList.Length.Equals(0))
         {
             _logger.LogWarning("No events received for publishing when at least one event was expected. Check calls to publish.");
         }
 
-        foreach (var @event in enumerable)
+        foreach (var @event in eventsList)
         {
             await Publish(@event, cancellationToken);
         }
+
+        return Result.Ok();
     }
 
     /// <inheritdoc />
-    /// <exception cref="HandlerNotFoundException">Thrown when a query handler cannot be resolved from the container.</exception>
-    public async Task Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
+    public async Task<Result> Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : class, ICqrsEvent
     {
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(@event);
+        });
+
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
+
         var activitySource = new ActivitySource(Namespace, AssemblyVersion);
 
         using var activity = activitySource.StartActivity($"Publish {@event.GetType()}");
@@ -241,22 +272,22 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
             }
             catch (ComponentNotRegisteredException ex)
             {
-                _logger.LogCritical(ex, "A component is not registered in the DI container. Check your component is registered.");
+                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be found.");
 
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                return Result.Fail("A component is not registered in the DI container. Check your component is registered.");
             }
             catch (DependencyResolutionException ex)
             {
-                _logger.LogCritical(ex, "Failed to resolve dependency from the DI container. Check your component is registered.");
+                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
 
-                throw new HandlerNotFoundException(assemblyQualifiedName, ex);
+                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
             }
 
             if (!handlers.Any())
             {
-                _logger.LogCritical("Handler not found in {AssemblyQualifiedName}.", assemblyQualifiedName);
+                _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
 
-                throw new HandlerNotFoundException(assemblyQualifiedName);
+                return Result.Fail("No handler cold be found for this request.");
             }
 
             var tasks = new List<Task>(handlers.Count());
@@ -265,5 +296,7 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
 
             await Task.WhenAll(tasks);
         }
+
+        return Result.Ok();
     }
 }

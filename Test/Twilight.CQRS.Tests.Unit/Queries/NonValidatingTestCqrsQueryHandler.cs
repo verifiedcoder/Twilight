@@ -1,21 +1,18 @@
-﻿using FluentValidation;
+﻿using FluentResults;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Queries;
 
 namespace Twilight.CQRS.Tests.Unit.Queries;
 
-internal class NonValidatingTestCqrsQueryHandler : CqrsQueryHandlerBase<NonValidatingTestCqrsQueryHandler, CqrsQuery<string, QueryResponse<string>>, QueryResponse<string>>
+internal sealed class NonValidatingTestCqrsQueryHandler(
+    ILogger<NonValidatingTestCqrsQueryHandler> logger,
+    IValidator<CqrsQuery<string, QueryResponse<string>>>? validator = default) : CqrsQueryHandlerBase<NonValidatingTestCqrsQueryHandler, CqrsQuery<string, QueryResponse<string>>, QueryResponse<string>>(logger, validator)
 {
-    public NonValidatingTestCqrsQueryHandler(ILogger<NonValidatingTestCqrsQueryHandler> logger,
-                                             IValidator<CqrsQuery<string, QueryResponse<string>>>? validator = default)
-        : base(logger, validator)
-    {
-    }
-
-    protected override async Task<QueryResponse<string>> HandleQuery(CqrsQuery<string, QueryResponse<string>> query, CancellationToken cancellationToken = default)
+    protected override async Task<Result<QueryResponse<string>>> HandleQuery(CqrsQuery<string, QueryResponse<string>> query, CancellationToken cancellationToken = default)
     {
         var response = new QueryResponse<string>(string.Empty, query.CorrelationId, query.MessageId);
 
-        return await Task.FromResult(response);
+        return await Task.FromResult(Result.Ok(response));
     }
 }

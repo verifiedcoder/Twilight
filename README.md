@@ -69,6 +69,13 @@ A handler is required to act as a middleman between messages and the intended de
 
 There can only be one handler for a specific command or query. Unlike commands and queries, events can be consumed by multiple handlers (a powerful capability of CQRS).
 
+## Use of Result Pattern
+The Results pattern is a design pattern used to encapsulate the outcome of an operation, whether it succeeds or fails, along with additional contextual information. It promotes cleaner and more predictable code by separating the handling of successful and failed outcomes.
+
+Twilight uses [FluentResults](https://github.com/altmann/FluentResults), a popular NuGet package that implements the Results pattern in C#. It provides a rich set of classes and methods for working with results and is widely used in C# applications for robust error handling and outcome management.
+
+This pattern fosters cleaner, more maintainable code by separating the logic for handling success and failure outcomes, improving code readability, and facilitating better error reporting and debugging.
+
 ## Architecture
 
 Twilight CQRS is broken into discrete areas of functionality in order to best separate concerns. It allows the implementer to use as much or as little of the code as possible without attaching unwanted dependencies.
@@ -110,5 +117,3 @@ We all learn from the teachings and example of others and this project is no exc
 ## Note
 
 Twilight incorporates [Open Telemetry](https://opentelemetry.io/). A console exporter has been added to the sample so you can see the data.
-
-At this point, Open Telemetry integration with Twilight CQRS should be considered (very) experimental.

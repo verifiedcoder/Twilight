@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
+using FluentResults;
 using Twilight.CQRS.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
@@ -34,9 +35,19 @@ public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : C
     }
 
     /// <inheritdoc />
-    public async Task<TResponse> Handle(TQuery query, CancellationToken cancellationToken = default)
+    public async Task<Result<TResponse>> Handle(TQuery query, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(query, nameof(query));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(query);
+        });
+
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
+
+        Result<TResponse> queryResult;
 
         using var activity = Activity.Current?.Source.StartActivity($"Handle {query.GetType()}");
         {
@@ -44,34 +55,54 @@ public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : C
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(OnBeforeHandling)}"));
 
-                await OnBeforeHandling(query, cancellationToken);
+                var result = await OnBeforeHandling(query, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Validate query"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(ValidateMessage)}"));
 
-                await ValidateMessage(query, cancellationToken);
-            }
+                var result = await ValidateMessage(query, cancellationToken);
 
-            TResponse response;
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
+            }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Handle query"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(HandleQuery)}"));
 
-                response = await HandleQuery(query, cancellationToken);
+                var result = await HandleQuery(query, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
+
+                queryResult = result;
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Post query handling logic"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(OnAfterHandling)}"));
 
-                await OnAfterHandling(query, cancellationToken);
-            }
+                var result = await OnAfterHandling(query, cancellationToken);
 
-            return response;
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
+            }
         }
+
+        return queryResult;
     }
 
     /// <summary>
@@ -83,5 +114,5 @@ public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : C
     ///     <para>A task that represents the asynchronous query handler operation.</para>
     ///     <para>The task result contains the query execution response.</para>
     /// </returns>
-    protected abstract Task<TResponse> HandleQuery(TQuery query, CancellationToken cancellationToken = default);
+    protected abstract Task<Result<TResponse>> HandleQuery(TQuery query, CancellationToken cancellationToken = default);
 }

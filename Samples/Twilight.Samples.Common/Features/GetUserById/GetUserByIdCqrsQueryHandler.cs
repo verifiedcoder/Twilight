@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using FluentResults;
+using System.Diagnostics;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
-using Twilight.CQRS.Exceptions;
 using Twilight.CQRS.Queries;
 using Twilight.Samples.Common.Data;
 using Twilight.Samples.Common.Data.Entities;
@@ -13,7 +13,7 @@ public sealed class GetUserByIdCqrsQueryHandler(ViewDataContext dataContext,
                                                 IValidator<CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>> validator)
     : CqrsQueryHandlerBase<GetUserByIdCqrsQueryHandler, CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>, QueryResponse<GetUserByIdQueryResponsePayload>>(logger, validator)
 {
-    protected override async Task<QueryResponse<GetUserByIdQueryResponsePayload>> HandleQuery(CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>> query, CancellationToken cancellationToken = default)
+    protected override async Task<Result<QueryResponse<GetUserByIdQueryResponsePayload>>> HandleQuery(CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>> query, CancellationToken cancellationToken = default)
     {
         UserViewEntity? userView;
 
@@ -22,20 +22,19 @@ public sealed class GetUserByIdCqrsQueryHandler(ViewDataContext dataContext,
             activity?.AddEvent(new ActivityEvent("Get User by ID"));
             activity?.SetTag(nameof(GetUserByIdQueryParameters.UserId), query.Params.UserId);
 
-            userView = await dataContext.UsersView.FindAsync(new object[] { query.Params.UserId }, cancellationToken);
+            userView = await dataContext.UsersView.FindAsync([query.Params.UserId], cancellationToken);
         }
 
         if (userView == null)
-
         {
-            throw new HandlerException($"User with Id '{query.Params.UserId}' not found.");
+            return Result.Fail($"User with Id '{query.Params.UserId}' not found.");
         }
-
+        
         var payload = new GetUserByIdQueryResponsePayload(userView.Id, userView.Forename, userView.Surname);
         var response = new QueryResponse<GetUserByIdQueryResponsePayload>(payload, query.CorrelationId, null, query.MessageId);
 
         Logger.LogInformation("Handled CQRS Query, {QueryTypeName}.", query.GetType().FullName);
 
-        return await Task.FromResult(response);
+        return await Task.FromResult(Result.Ok(response));
     }
 }

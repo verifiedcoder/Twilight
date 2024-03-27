@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Twilight.CQRS.Commands;
-using Twilight.CQRS.Messaging.Common;
 using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Parameters;
 using Twilight.CQRS.Messaging.Interfaces;
 using Twilight.CQRS.Tests.Common;
@@ -11,13 +10,13 @@ using Xunit;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration;
 
-public sealed class AutofacDependencyResolutionExceptionTests : IAsyncLifetime
+public sealed class AutofacDependencyResolutionFailureTests : IAsyncLifetime
 {
     private static IContainer? _container;
 
     private readonly IMessageSender _subject;
 
-    public AutofacDependencyResolutionExceptionTests()
+    public AutofacDependencyResolutionFailureTests()
     {
         var builder = new ContainerBuilder();
 
@@ -47,9 +46,9 @@ public sealed class AutofacDependencyResolutionExceptionTests : IAsyncLifetime
         var command = new CqrsCommand<MultipleHandlersParameters>(parameters, Constants.CorrelationId);
 
         // Act
-        var subjectResult = async () => { await _subject.Send(command, CancellationToken.None); };
+        var result = await _subject.Send(command, CancellationToken.None);
 
         // Assert
-        await subjectResult.Should().ThrowAsync<HandlerNotFoundException>();
+        result.IsSuccess.Should().Be(false);
     }
 }

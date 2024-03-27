@@ -3,12 +3,7 @@ using Twilight.Samples.Common.Data.Entities;
 
 namespace Twilight.Samples.Common.Data;
 
-public sealed class ViewDataContext : DbContext
+public sealed class ViewDataContext(DbContextOptions<ViewDataContext> options) : DbContext(options)
 {
-    public ViewDataContext(DbContextOptions<ViewDataContext> options)
-        : base(options)
-    {
-    }
-
-    public DbSet<UserViewEntity> UsersView { get; set; } = null!;
+    public DbSet<UserViewEntity> UsersView { get; init; } = null!;
 }

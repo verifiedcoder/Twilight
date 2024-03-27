@@ -1,11 +1,10 @@
-﻿using CommunityToolkit.Diagnostics;
-using Twilight.CQRS.Interfaces;
+﻿using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Queries;
 
 /// <summary>
 ///     <para>
-///         Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+///         Represents a result and does not change the observable state of the system (i.e. is free of side effects).
 ///     </para>
 ///     <para>Implements <see cref="CqrsMessage" />.</para>
 ///     <para>Implements <see cref="ICqrsQuery{TResponse}" />.</para>
@@ -33,7 +32,7 @@ public class CqrsQuery<TResponse> : CqrsMessage, ICqrsQuery<TResponse>
 
 /// <summary>
 ///     <para>
-///         Represents a result and does not change the observable state of the system (i.e. is free of side-effects).
+///         Represents a result and does not change the observable state of the system (i.e. is free of side effects).
 ///     </para>
 ///     <para>Implements <see cref="CqrsMessage" />.</para>
 ///     <para>Implements <see cref="ICqrsQuery{TResponse}" />.</para>
@@ -58,11 +57,7 @@ public class CqrsQuery<TParameters, TResponse> : CqrsMessage, ICqrsQuery<TRespon
     /// </param>
     public CqrsQuery(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
         : base(correlationId, sessionId, causationId)
-    {
-        Guard.IsNotNull(parameters, nameof(parameters));
-
-        Params = parameters;
-    }
+        => Params = parameters;
 
     /// <summary>
     ///     Gets the typed query parameters.

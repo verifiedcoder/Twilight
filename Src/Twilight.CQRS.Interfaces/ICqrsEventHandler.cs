@@ -1,4 +1,6 @@
-﻿namespace Twilight.CQRS.Interfaces;
+﻿using FluentResults;
+
+namespace Twilight.CQRS.Interfaces;
 
 /// <summary>
 ///     Represents a means of handling an event in order to broker a result.
@@ -13,5 +15,5 @@ public interface ICqrsEventHandler<in TEvent> : ICqrsMessageHandler<TEvent>
     /// <param name="event">The event.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous event handler operation.</returns>
-    Task Handle(TEvent @event, CancellationToken cancellationToken = default);
+    Task<Result> Handle(TEvent @event, CancellationToken cancellationToken = default);
 }

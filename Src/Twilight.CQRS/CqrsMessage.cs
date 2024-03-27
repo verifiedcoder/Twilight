@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Diagnostics;
-using Taikandi;
+﻿using Taikandi;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS;
@@ -18,8 +17,6 @@ public abstract class CqrsMessage : ICqrsMessage
     /// </param>
     protected CqrsMessage(string correlationId, string? sessionId = null, string? causationId = null)
     {
-        Guard.IsNotEmpty(correlationId, nameof(correlationId));
-
         MessageId = SequentialGuid.NewGuid().ToString();
         CausationId = causationId;
         SessionId = sessionId;

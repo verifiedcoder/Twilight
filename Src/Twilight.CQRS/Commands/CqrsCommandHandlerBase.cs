@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
+using FluentResults;
+using FluentValidation;
 using Twilight.CQRS.Interfaces;
 using Twilight.CQRS.Messaging.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
@@ -32,7 +33,7 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand> : CqrsMe
     protected CqrsCommandHandlerBase(IMessageSender messageSender, ILogger<TCommandHandler> logger, IValidator<TCommand>? validator = default)
         : base(logger, validator)
     {
-        Guard.IsNotNull(messageSender, nameof(messageSender));
+        Guard.IsNotNull(messageSender);
 
         MessageSender = messageSender;
     }
@@ -44,40 +45,70 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand> : CqrsMe
     protected IMessageSender MessageSender { get; }
 
     /// <inheritdoc />
-    public async Task Handle(TCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> Handle(TCommand command, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(command, nameof(command));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(command);
+        });
 
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
+        
         using var activity = Activity.Current?.Source.StartActivity($"Handle {command.GetType()}");
         {
             using (var childSpan = Activity.Current?.Source.StartActivity("Pre command handling actions"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(OnBeforeHandling)}"));
 
-                await OnBeforeHandling(command, cancellationToken);
+                var result = await OnBeforeHandling(command, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Validate command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(ValidateMessage)}"));
 
-                await ValidateMessage(command, cancellationToken);
+                var result = await ValidateMessage(command, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Handle command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(HandleCommand)}"));
 
-                await HandleCommand(command, cancellationToken);
+                var result = await HandleCommand(command, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Post command handling actions"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand>)}.{nameof(OnAfterHandling)}"));
 
-                await OnAfterHandling(command, cancellationToken);
+                var result = await OnAfterHandling(command, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
         }
+
+        return Result.Ok();
     }
 
     /// <summary>
@@ -86,7 +117,7 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand> : CqrsMe
     /// <param name="command">The command.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous handle command operation.</returns>
-    public abstract Task HandleCommand(TCommand command, CancellationToken cancellationToken = default);
+    public abstract Task<Result> HandleCommand(TCommand command, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -104,7 +135,7 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand> : CqrsMe
 /// <seealso cref="ICqrsCommandHandler{TCommand}" />
 public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse> : CqrsMessageHandler<TCommandHandler, TCommand>, ICqrsCommandHandler<TCommand, TResponse>
     where TCommand : class, ICqrsCommand<TResponse>
-    where TResponse : class, ICqrsMessage
+    where TResponse : class,ICqrsMessage
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="CqrsCommandHandlerBase{TCommandHandler,TCommand}" /> class.
@@ -114,11 +145,7 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand, TRespons
     /// <param name="validator">The command validator.</param>
     protected CqrsCommandHandlerBase(IMessageSender messageSender, ILogger<TCommandHandler> logger, IValidator<TCommand>? validator = default)
         : base(logger, validator)
-    {
-        Guard.IsNotNull(messageSender, nameof(messageSender));
-
-        MessageSender = messageSender;
-    }
+        => MessageSender = messageSender;
 
     /// <summary>
     ///     Gets the message sender.
@@ -127,9 +154,19 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand, TRespons
     protected IMessageSender MessageSender { get; }
 
     /// <inheritdoc />
-    public async Task<TResponse> Handle(TCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(command, nameof(command));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(command);
+        });
+
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
+
+        Result<TResponse> commandResult;
 
         using var activity = Activity.Current?.Source.StartActivity($"Handle {command.GetType()}");
         {
@@ -137,34 +174,54 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand, TRespons
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(OnBeforeHandling)}"));
 
-                await OnBeforeHandling(command, cancellationToken);
+                var result = await OnBeforeHandling(command, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Validate command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(ValidateMessage)}"));
 
-                await ValidateMessage(command, cancellationToken);
-            }
+                var result = await ValidateMessage(command, cancellationToken);
 
-            TResponse response;
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
+            }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Handle command"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(HandleCommand)}"));
 
-                response = await HandleCommand(command, cancellationToken);
+                var result = await HandleCommand(command, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
+
+                commandResult = result;
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Post command handling actions"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsCommandHandlerBase<TCommandHandler, TCommand, TResponse>)}.{nameof(OnAfterHandling)}"));
 
-                await OnAfterHandling(command, cancellationToken);
-            }
+                var result = await OnAfterHandling(command, cancellationToken);
 
-            return response;
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
+            }
         }
+
+        return commandResult;
     }
 
     /// <summary>
@@ -176,5 +233,5 @@ public abstract class CqrsCommandHandlerBase<TCommandHandler, TCommand, TRespons
     ///     <para>A task that represents the asynchronous command handler operation.</para>
     ///     <para>The task result contains the command execution response.</para>
     /// </returns>
-    protected abstract Task<TResponse> HandleCommand(TCommand command, CancellationToken cancellationToken = default);
+    protected abstract Task<Result<TResponse>> HandleCommand(TCommand command, CancellationToken cancellationToken = default);
 }

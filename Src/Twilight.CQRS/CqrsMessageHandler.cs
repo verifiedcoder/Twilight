@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
+using FluentResults;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS;
@@ -18,8 +19,6 @@ public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandl
     /// <param name="validator">The message validator.</param>
     protected CqrsMessageHandler(ILogger<THandler> logger, IValidator<TMessage>? validator = default)
     {
-        Guard.IsNotNull(logger, nameof(logger));
-
         _validator = validator;
 
         Logger = logger;
@@ -32,31 +31,46 @@ public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandl
     protected ILogger<THandler> Logger { get; }
 
     /// <inheritdoc />
-    public virtual async Task OnBeforeHandling(TMessage message, CancellationToken cancellationToken = default)
-    {
-        Guard.IsNotNull(message, nameof(message));
-
-        await Task.CompletedTask;
-    }
+    public virtual async Task<Result> OnBeforeHandling(TMessage message, CancellationToken cancellationToken = default)
+        => await Task.FromResult(Result.Try(() =>
+        {
+            Guard.IsNotNull(message);
+        }));
 
     /// <inheritdoc />
-    public virtual async Task ValidateMessage(TMessage message, CancellationToken cancellationToken = default)
+    public virtual async Task<Result> ValidateMessage(TMessage message, CancellationToken cancellationToken = default)
     {
         if (_validator == default)
         {
-            return;
+            return Result.Ok();
         }
 
-        Guard.IsNotNull(message, nameof(message));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(message);
+        });
 
-        await _validator.ValidateAndThrowAsync(message, cancellationToken);
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
+
+        try
+        {
+            await _validator.ValidateAndThrowAsync(message, cancellationToken);
+
+            return Result.Ok();
+        }
+        catch (ValidationException ex)
+        {
+            return Result.Fail(ex.Message);
+        }
     }
 
     /// <inheritdoc />
-    public virtual async Task OnAfterHandling(TMessage message, CancellationToken cancellationToken = default)
-    {
-        Guard.IsNotNull(message, nameof(message));
-
-        await Task.CompletedTask;
-    }
+    public virtual async Task<Result> OnAfterHandling(TMessage message, CancellationToken cancellationToken = default)
+        => await Task.FromResult(Result.Try(() =>
+        {
+            Guard.IsNotNull(message);
+        }));
 }

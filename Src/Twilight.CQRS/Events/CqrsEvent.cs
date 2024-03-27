@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Diagnostics;
-using Twilight.CQRS.Interfaces;
+﻿using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Events;
 
@@ -60,11 +59,7 @@ public class CqrsEvent<TParameters> : CqrsMessage, ICqrsEvent
     /// </param>
     public CqrsEvent(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
         : base(correlationId, sessionId, causationId)
-    {
-        Guard.IsNotNull(parameters, nameof(parameters));
-
-        Params = parameters;
-    }
+        => Params = parameters;
 
     /// <summary>
     ///     Gets the typed event parameters.

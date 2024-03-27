@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using FluentResults;
+using System.Diagnostics;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +15,7 @@ public sealed class GetUsersViewCqrsQueryHandler(ViewDataContext dataContext,
                                                  IValidator<CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>> validator)
     : CqrsQueryHandlerBase<GetUsersViewCqrsQueryHandler, CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>, QueryResponse<GetUsersViewQueryResponsePayload>>(logger, validator)
 {
-    protected override async Task<QueryResponse<GetUsersViewQueryResponsePayload>> HandleQuery(CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>> query, CancellationToken cancellationToken = default)
+    protected override async Task<Result<QueryResponse<GetUsersViewQueryResponsePayload>>> HandleQuery(CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>> query, CancellationToken cancellationToken = default)
     {
         List<UserViewEntity>? userViews;
 
@@ -34,6 +35,6 @@ public sealed class GetUsersViewCqrsQueryHandler(ViewDataContext dataContext,
 
         Logger.LogInformation("Handled CQRS Query, {QueryTypeName}.", query.GetType().FullName);
 
-        return await Task.FromResult(response);
+        return await Task.FromResult(Result.Ok(response));
     }
 }

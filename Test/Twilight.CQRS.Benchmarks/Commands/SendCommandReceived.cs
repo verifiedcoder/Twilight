@@ -2,10 +2,4 @@
 
 namespace Twilight.CQRS.Benchmarks.Commands;
 
-internal sealed class SendCommandReceived : CqrsEvent
-{
-    public SendCommandReceived(string correlationId, string? causationId = null)
-        : base(correlationId, causationId)
-    {
-    }
-}
+internal sealed class SendCommandReceived(string correlationId, string? causationId = null) : CqrsEvent(correlationId, causationId);

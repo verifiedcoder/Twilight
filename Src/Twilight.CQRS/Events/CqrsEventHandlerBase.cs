@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
+using FluentResults;
 using Twilight.CQRS.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
@@ -34,9 +35,19 @@ public abstract class CqrsEventHandlerBase<TEventHandler, TEvent> : CqrsMessageH
     }
 
     /// <inheritdoc />
-    public async Task Handle(TEvent @event, CancellationToken cancellationToken = default)
+    public async Task<Result> Handle(TEvent @event, CancellationToken cancellationToken = default)
     {
-        Guard.IsNotNull(@event, nameof(@event));
+        var guardResult = Result.Try(() =>
+        {
+            Guard.IsNotNull(@event);
+        });
+
+        if (guardResult.IsFailed)
+        {
+            return guardResult;
+        }
+
+        Result eventResult;
 
         using var activity = Activity.Current?.Source.StartActivity($"Handle {@event.GetType()}");
         {
@@ -44,30 +55,54 @@ public abstract class CqrsEventHandlerBase<TEventHandler, TEvent> : CqrsMessageH
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(OnBeforeHandling)}"));
 
-                await OnBeforeHandling(@event, cancellationToken);
+                var result = await OnBeforeHandling(@event, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Validate event"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(ValidateMessage)}"));
 
-                await ValidateMessage(@event, cancellationToken);
+                var result = await ValidateMessage(@event, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Handle event"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(HandleEvent)}"));
 
-                await HandleEvent(@event, cancellationToken);
+                var result = await HandleEvent(@event, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
+
+                eventResult = result;
             }
 
             using (var childSpan = Activity.Current?.Source.StartActivity("Post event handling logic"))
             {
                 childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(OnAfterHandling)}"));
 
-                await OnAfterHandling(@event, cancellationToken);
+                var result = await OnAfterHandling(@event, cancellationToken);
+
+                if (!result.IsSuccess)
+                {
+                    return result;
+                }
             }
         }
+
+        return eventResult;
     }
 
     /// <summary>
@@ -76,5 +111,5 @@ public abstract class CqrsEventHandlerBase<TEventHandler, TEvent> : CqrsMessageH
     /// <param name="event">The event.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous handle event operation.</returns>
-    public abstract Task HandleEvent(TEvent @event, CancellationToken cancellationToken = default);
+    public abstract Task<Result> HandleEvent(TEvent @event, CancellationToken cancellationToken = default);
 }

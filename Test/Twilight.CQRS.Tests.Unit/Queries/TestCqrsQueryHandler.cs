@@ -1,19 +1,16 @@
-﻿using FluentValidation;
+﻿using FluentResults;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Queries;
 using Twilight.CQRS.Tests.Common;
 
 namespace Twilight.CQRS.Tests.Unit.Queries;
 
-public class TestCqrsQueryHandler : CqrsQueryHandlerBase<TestCqrsQueryHandler, CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>, QueryResponse<TestQueryResponse>>
+public sealed class TestCqrsQueryHandler(
+    ILogger<TestCqrsQueryHandler> logger,
+    IValidator<CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>> validator) : CqrsQueryHandlerBase<TestCqrsQueryHandler, CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>, QueryResponse<TestQueryResponse>>(logger, validator)
 {
-    public TestCqrsQueryHandler(ILogger<TestCqrsQueryHandler> logger,
-                                IValidator<CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>> validator)
-        : base(logger, validator)
-    {
-    }
-
-    protected override async Task<QueryResponse<TestQueryResponse>> HandleQuery(CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>> query, CancellationToken cancellationToken = default)
+    protected override async Task<Result<QueryResponse<TestQueryResponse>>> HandleQuery(CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>> query, CancellationToken cancellationToken = default)
     {
         var payload = new TestQueryResponse
         {
@@ -22,6 +19,6 @@ public class TestCqrsQueryHandler : CqrsQueryHandlerBase<TestCqrsQueryHandler, C
 
         var response = new QueryResponse<TestQueryResponse>(payload, query.CorrelationId, query.MessageId);
 
-        return await Task.FromResult(response);
+        return await Task.FromResult(Result.Ok(response));
     }
 }
