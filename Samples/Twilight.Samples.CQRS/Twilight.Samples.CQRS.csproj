@@ -12,17 +12,17 @@
     <ItemGroup>
         <PackageReference Include="Autofac" Version="8.0.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="9.0.0" />
-        <PackageReference Include="FluentValidation" Version="11.9.0" />
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.7.0" />
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.1" />
+        <PackageReference Include="FluentValidation" Version="11.9.1" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.8.1" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.8.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.8.1" />
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.3" />
         <PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
         <PackageReference Include="Serilog" Version="3.1.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.5" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="8.0.0" />
