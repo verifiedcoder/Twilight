@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Serilog;
+﻿using Serilog;
 using System.Diagnostics;
 using Taikandi;
 using Twilight.CQRS.Commands;
@@ -70,18 +69,15 @@ internal sealed class Runner(IMessageSender messageSender) : IRunner
             var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(+1));
             var query = new CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, id);
 
-            try
-            {
-                // No point assigning the response as this call has been engineered to throw a ValidationException
-                await messageSender.Send(query);
-            }
-            catch (ValidationException validationException)
+            var response = await messageSender.Send(query);
+
+            if (response.IsFailed)
             {
                 Log.Error("Query validation failed:");
 
-                foreach (var validationError in validationException.Errors)
+                foreach (var error in response.Errors)
                 {
-                    Log.Error(" - {ValidationError}", validationError);
+                    Log.Error(" - {ValidationError}", error);
                 }
             }
         }
