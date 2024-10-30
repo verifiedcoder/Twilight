@@ -13,9 +13,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentResults" Version="3.15.2" />
-        <PackageReference Include="FluentValidation" Version="11.9.1" />
-        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
+        <PackageReference Include="FluentResults" Version="3.16.0" />
+        <PackageReference Include="FluentValidation" Version="11.10.0" />
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.3.2" />
         <PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
     </ItemGroup>
 
