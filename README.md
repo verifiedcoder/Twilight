@@ -1,6 +1,6 @@
 # Twilight
 
-See the [LICENSE](LICENSE) file for legal guidance on using the code in this repository. The MIT lcense was dropped as that could expose the author to potential software patent abuse by external consumers of this code.
+See the [LICENSE](LICENSE) file for legal guidance on using the code in this repository. The MIT license was dropped as that could expose the author to potential software patent abuse by external consumers of this code.
 
 ## Introduction
 
@@ -11,7 +11,7 @@ It is not intended for this repository to be published as NuGet packages as supp
 ### Requirements
 
 - Microsoft Visual Studio 2022
-- .NET 7.0
+- .NET 9.0
 
 ## CQRS
 
