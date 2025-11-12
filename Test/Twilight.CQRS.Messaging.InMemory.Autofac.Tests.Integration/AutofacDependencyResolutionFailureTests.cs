@@ -1,12 +1,10 @@
 ﻿using Autofac;
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Twilight.CQRS.Commands;
-using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Parameters;
+using Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
 using Twilight.CQRS.Messaging.Interfaces;
 using Twilight.CQRS.Tests.Common;
-using Xunit;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration;
 
@@ -39,7 +37,7 @@ public sealed class AutofacDependencyResolutionFailureTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task MessageSenderThrowsWhenDependencyResolutionFails()
+    public async Task MessageSender_ThrowsWhenDependencyResolutionFails()
     {
         // Arrange
         var parameters = new MultipleHandlersParameters();
@@ -49,6 +47,6 @@ public sealed class AutofacDependencyResolutionFailureTests : IAsyncLifetime
         var result = await _subject.Send(command, CancellationToken.None);
 
         // Assert
-        result.IsSuccess.Should().Be(false);
+        result.IsSuccess.ShouldBe(false);
     }
 }

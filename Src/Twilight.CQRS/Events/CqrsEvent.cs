@@ -12,24 +12,18 @@ namespace Twilight.CQRS.Events;
 ///     <para>Implements <see cref="CqrsMessage" />.</para>
 ///     <para>Implements <see cref="ICqrsEvent" />.</para>
 /// </summary>
+/// <param name="correlationId">The event correlation identifier.</param>
+/// <param name="sessionId">The session identifier.</param>
+/// <param name="causationId">
+///     The causation identifier. Identifies the message that caused this event to be produced.
+///     Optional.
+/// </param>
 /// <seealso cref="CqrsMessage" />
 /// <seealso cref="ICqrsEvent" />
-public class CqrsEvent : CqrsMessage, ICqrsEvent
-{
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsEvent" /> class.
-    /// </summary>
-    /// <param name="correlationId">The event correlation identifier.</param>
-    /// <param name="sessionId">The session identifier.</param>
-    /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this event to be produced.
-    ///     Optional.
-    /// </param>
-    public CqrsEvent(string correlationId, string? sessionId = null, string? causationId = null)
-        : base(correlationId, sessionId, causationId)
-    {
-    }
-}
+public class CqrsEvent(
+    string correlationId, 
+    string? sessionId = null, 
+    string? causationId = null) : CqrsMessage(correlationId, sessionId, causationId), ICqrsEvent;
 
 /// <summary>
 ///     <para>
@@ -42,28 +36,25 @@ public class CqrsEvent : CqrsMessage, ICqrsEvent
 ///     <para>Implements <see cref="ICqrsEvent" />.</para>
 /// </summary>
 /// <typeparam name="TParameters">The type of the parameters.</typeparam>
+/// <param name="parameters">The parameters.</param>
+/// <param name="correlationId">The event correlation identifier.</param>
+/// <param name="sessionId">The session identifier.</param>
+/// <param name="causationId">
+///     The causation identifier. Identifies the message that caused this event to be produced.
+///     Optional.
+/// </param>
 /// <seealso cref="CqrsMessage" />
 /// <seealso cref="CqrsEvent" />
-public class CqrsEvent<TParameters> : CqrsMessage, ICqrsEvent
+public class CqrsEvent<TParameters>(
+    TParameters parameters, 
+    string correlationId, 
+    string? sessionId = null, 
+    string? causationId = null) : CqrsMessage(correlationId, sessionId, causationId), ICqrsEvent
     where TParameters : class
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsEvent{TParameters}" /> class.
-    /// </summary>
-    /// <param name="parameters">The parameters.</param>
-    /// <param name="correlationId">The event correlation identifier.</param>
-    /// <param name="sessionId">The session identifier.</param>
-    /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this event to be produced.
-    ///     Optional.
-    /// </param>
-    public CqrsEvent(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
-        : base(correlationId, sessionId, causationId)
-        => Params = parameters;
-
     /// <summary>
     ///     Gets the typed event parameters.
     /// </summary>
     /// <value>The parameters.</value>
-    public TParameters Params { get; }
+    public TParameters Params { get; } = parameters;
 }

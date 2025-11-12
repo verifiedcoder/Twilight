@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using FluentValidation;
+﻿using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.Logging;
-using CommunityToolkit.Diagnostics;
-using FluentResults;
+using System.Diagnostics;
 using Twilight.CQRS.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
@@ -19,91 +17,56 @@ namespace Twilight.CQRS.Queries;
 /// <typeparam name="TQuery">The type of the query.</typeparam>
 /// <typeparam name="TResponse">The type of the query response.</typeparam>
 /// <typeparam name="TQueryHandler">The type of the query handler.</typeparam>
+/// <param name="logger">The logger.</param>
+/// <param name="validator">The query validator.</param>
 /// <seealso cref="CqrsMessageHandler{THandler,TMessage}" />
 /// <seealso cref="ICqrsQueryHandler{TQuery,TResponse}" />
-public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : CqrsMessageHandler<TQueryHandler, TQuery>, ICqrsQueryHandler<TQuery, TResponse>
+public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>(
+    ILogger<CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>> logger, 
+    IValidator<TQuery>? validator = null) : CqrsMessageHandler<TQueryHandler, TQuery>(logger, validator), ICqrsQueryHandler<TQuery, TResponse>
     where TQuery : class, ICqrsQuery<TResponse>
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsQueryHandlerBase{TQueryHandler,TQuery,TResponse}" /> class.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="validator">The query validator.</param>
-    protected CqrsQueryHandlerBase(ILogger<TQueryHandler> logger, IValidator<TQuery>? validator = default)
-        : base(logger, validator)
-    {
-    }
-
     /// <inheritdoc />
     public async Task<Result<TResponse>> Handle(TQuery query, CancellationToken cancellationToken = default)
     {
-        var guardResult = Result.Try(() =>
-        {
-            Guard.IsNotNull(query);
-        });
+        var guardResult = Result.Try(() => Guard.IsNotNull(query));
 
         if (guardResult.IsFailed)
         {
             return guardResult;
         }
 
-        Result<TResponse> queryResult;
+        using var activity = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity($"Handle {query.GetType()}") : null;
 
-        using var activity = Activity.Current?.Source.StartActivity($"Handle {query.GetType()}");
+        var preHandlingResult = await ExecutePreHandlingAsync(query, cancellationToken);
+
+        if (!preHandlingResult.IsSuccess)
         {
-            using (var childSpan = Activity.Current?.Source.StartActivity("Pre query handling logic"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(OnBeforeHandling)}"));
-
-                var result = await OnBeforeHandling(query, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-            }
-
-            using (var childSpan = Activity.Current?.Source.StartActivity("Validate query"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(ValidateMessage)}"));
-
-                var result = await ValidateMessage(query, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-            }
-
-            using (var childSpan = Activity.Current?.Source.StartActivity("Handle query"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(HandleQuery)}"));
-
-                var result = await HandleQuery(query, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-
-                queryResult = result;
-            }
-
-            using (var childSpan = Activity.Current?.Source.StartActivity("Post query handling logic"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse>)}.{nameof(OnAfterHandling)}"));
-
-                var result = await OnAfterHandling(query, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-            }
+            return preHandlingResult;
         }
 
-        return queryResult;
+        var validationResult = await ExecuteValidationAsync(query, cancellationToken);
+
+        if (!validationResult.IsSuccess)
+        {
+            return validationResult;
+        }
+
+        var queryResult = await ExecuteHandleQueryAsync(query, cancellationToken);
+
+        if (!queryResult.IsSuccess)
+        {
+            return queryResult;
+        }
+
+        var postHandlingResult = await ExecutePostHandlingAsync(query, cancellationToken);
+
+        return postHandlingResult.IsSuccess
+            ? queryResult
+            : postHandlingResult;
     }
+
+    private static bool ShouldCreateActivity() => Activity.Current?.Source.HasListeners() ?? false;
 
     /// <summary>
     ///     Handles the query.
@@ -115,4 +78,40 @@ public abstract class CqrsQueryHandlerBase<TQueryHandler, TQuery, TResponse> : C
     ///     <para>The task result contains the query execution response.</para>
     /// </returns>
     protected abstract Task<Result<TResponse>> HandleQuery(TQuery query, CancellationToken cancellationToken = default);
+
+    private async Task<Result<TResponse>> ExecutePreHandlingAsync(TQuery query, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Pre query handling logic") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<,,>)}.{nameof(OnBeforeHandling)}"));
+
+        return await OnBeforeHandling(query, cancellationToken);
+    }
+
+    private async Task<Result<TResponse>> ExecuteValidationAsync(TQuery query, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Validate query") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<,,>)}.{nameof(ValidateMessage)}"));
+
+        return await ValidateMessage(query, cancellationToken);
+    }
+
+    private async Task<Result<TResponse>> ExecuteHandleQueryAsync(TQuery query, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Handle query") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<,,>)}.{nameof(HandleQuery)}"));
+
+        return await HandleQuery(query, cancellationToken);
+    }
+
+    private async Task<Result<TResponse>> ExecutePostHandlingAsync(TQuery query, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Post query handling logic") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsQueryHandlerBase<,,>)}.{nameof(OnAfterHandling)}"));
+
+        return await OnAfterHandling(query, cancellationToken);
+    }
 }

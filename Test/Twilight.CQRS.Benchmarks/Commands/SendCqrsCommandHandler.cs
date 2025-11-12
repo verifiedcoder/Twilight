@@ -1,11 +1,15 @@
-﻿using FluentResults;
-using FluentValidation;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
+using Twilight.CQRS.Events;
 using Twilight.CQRS.Messaging.Interfaces;
 
 namespace Twilight.CQRS.Benchmarks.Commands;
 
+internal sealed class SendCqrsCommand(MessageParameters parameters, string correlationId, string? causationId = null) : CqrsCommand<MessageParameters>(parameters, correlationId, causationId);
+
+internal sealed class SendCommandReceived(string correlationId, string? causationId = null) : CqrsEvent(correlationId, causationId);
+
+[UsedImplicitly]
 internal sealed class SendCqrsCommandHandler(
     IMessageSender messageSender, 
     ILogger<SendCqrsCommandHandler> logger, 
@@ -15,7 +19,7 @@ internal sealed class SendCqrsCommandHandler(
     {
         var @event = new SendCommandReceived(command.CorrelationId, command.MessageId);
 
-        await MessageSender.Publish(@event, cancellationToken);
+        await MessageSender.Publish(@event, cancellationToken).ConfigureAwait(false);
 
         return Result.Ok();
     }

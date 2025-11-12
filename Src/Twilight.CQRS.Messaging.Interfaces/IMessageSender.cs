@@ -1,5 +1,4 @@
-﻿using FluentResults;
-using Twilight.CQRS.Interfaces;
+﻿using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS.Messaging.Interfaces;
 

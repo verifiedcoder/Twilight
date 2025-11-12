@@ -1,9 +1,9 @@
-﻿using FluentValidation;
-using Twilight.CQRS.Events;
+﻿using Twilight.CQRS.Events;
 
-namespace Twilight.Samples.Common.Features.RegisterUser;
+namespace Twilight.Samples.Common.Features.UserManagement.RegisterUser;
 
-public sealed class UserRegisteredEventValidator : AbstractValidator<CqrsEvent<UserRegisteredEventParameters>>
+[UsedImplicitly]
+public sealed class UserRegisteredEventValidator : AbstractValidator<CqrsEvent<UserRegisteredParameters>>
 {
     public UserRegisteredEventValidator()
     {

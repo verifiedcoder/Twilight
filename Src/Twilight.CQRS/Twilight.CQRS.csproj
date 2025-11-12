@@ -1,27 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <LangVersion>12.0</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>14.0</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>Twilight.CQRS.xml</DocumentationFile>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>Twilight.CQRS.xml</DocumentationFile>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="FluentResults" Version="3.16.0" />
-        <PackageReference Include="FluentValidation" Version="12.0.0" />
-        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
-        <PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentResults" Version="4.0.0" />
+		<PackageReference Include="FluentValidation" Version="12.1.0" />
+		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
+		<PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
+		<PackageReference Include="SequentialGuidGenerator" Version="1.1.0" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Twilight.CQRS.Interfaces\Twilight.CQRS.Interfaces.csproj" />
-        <ProjectReference Include="..\Twilight.CQRS.Messaging.Interfaces\Twilight.CQRS.Messaging.Interfaces.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Twilight.CQRS.Interfaces\Twilight.CQRS.Interfaces.csproj" />
+		<ProjectReference Include="..\Twilight.CQRS.Messaging.Interfaces\Twilight.CQRS.Messaging.Interfaces.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="FluentResults" />
+		<Using Include="FluentValidation" />
+		<Using Include="JetBrains.Annotations" />
+	</ItemGroup>
 
 </Project>

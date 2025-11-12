@@ -1,6 +1,4 @@
-﻿using FluentResults;
-
-namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
+﻿namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
 
 internal sealed class TestService(IVerifier verifier) : ITestService
 {

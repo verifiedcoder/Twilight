@@ -7,56 +7,61 @@ using Twilight.CQRS.Messaging.Interfaces;
 
 namespace Twilight.CQRS.Benchmarks;
 
+// Do not seal this class
 [MemoryDiagnoser]
 [KeepBenchmarkFiles]
 public class InMemoryBenchmarks
 {
-    private readonly IMessageSender _messageSender;
+    private IMessageSender _messageSender = null!;
 
-    public InMemoryBenchmarks()
+    [GlobalSetup]
+    public void Setup()
     {
         var builder = new ContainerBuilder();
-
+        
         builder.RegisterModule<AutofacModule>();
-
+        
         var container = builder.Build();
-
+        
         _messageSender = container.Resolve<IMessageSender>();
     }
 
-    [Benchmark(Description = nameof(SendCommand))]
-    public void SendCommand()
+    [Benchmark(Description = "Send 1000 Commands")]
+    [Arguments(1000)]
+    public async Task SendCommands(int count)
     {
-        for (var i = 0; i < 5000; i++)
+        for (var i = 0; i < count; i++)
         {
             var parameters = new MessageParameters("CqrsCommand");
             var command = new SendCqrsCommand(parameters, Guid.NewGuid().ToString());
-
-            _messageSender.Send(command);
+            
+            await _messageSender.Send(command).ConfigureAwait(false);
         }
     }
 
-    [Benchmark(Description = nameof(SendQuery))]
-    public void SendQuery()
+    [Benchmark(Description = "Send 1000 Queries")]
+    [Arguments(1000)]
+    public async Task SendQueries(int count)
     {
-        for (var i = 0; i < 5000; i++)
+        for (var i = 0; i < count; i++)
         {
             var parameters = new MessageParameters("CqrsQuery");
             var query = new SendCqrsQuery(parameters, Guid.NewGuid().ToString());
-
-            _ = _messageSender.Send(query);
+            
+            await _messageSender.Send(query).ConfigureAwait(false);
         }
     }
 
-    [Benchmark(Description = nameof(PublishEvent))]
-    public void PublishEvent()
+    [Benchmark(Description = "Publish 1000 Events")]
+    [Arguments(1000)]
+    public async Task PublishEvents(int count)
     {
-        for (var i = 0; i < 10000; i++)
+        for (var i = 0; i < count; i++)
         {
             var parameters = new MessageParameters("CqrsEvent");
             var @event = new SendCqrsEvent(parameters, Guid.NewGuid().ToString());
-
-            _messageSender.Publish(@event);
+            
+            await _messageSender.Publish(@event).ConfigureAwait(false);
         }
     }
 }

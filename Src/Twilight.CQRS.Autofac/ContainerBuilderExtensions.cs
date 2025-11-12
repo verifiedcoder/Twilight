@@ -24,7 +24,7 @@ public static class ContainerBuilderExtensions
         Guard.IsNotNull(assembly);
         Guard.IsNotNull(typeNameEndings);
 
-        if (!typeNameEndings.Any())
+        if (typeNameEndings.Length == 0)
         {
             return;
         }
@@ -48,7 +48,7 @@ public static class ContainerBuilderExtensions
     {
         var assemblyList = assemblies.ToList();
 
-        if (!assemblyList.Any())
+        if (assemblyList.Count == 0)
         {
             return builder;
         }

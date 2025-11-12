@@ -11,24 +11,18 @@ namespace Twilight.CQRS.Commands;
 ///     <para>Implements <see cref="CqrsMessage" />.</para>
 ///     <para>Implements <see cref="ICqrsCommand" />.</para>
 /// </summary>
+/// <param name="correlationId">The command correlation identifier.</param>
+/// <param name="causationId">
+///     The causation identifier. Identifies the message that caused this command to be produced.
+///     Optional.
+/// </param>
+/// <param name="sessionId">The session identifier.</param>
 /// <seealso cref="CqrsMessage" />
 /// <seealso cref="ICqrsCommand" />
-public class CqrsCommand : CqrsMessage, ICqrsCommand
-{
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsCommand" /> class.
-    /// </summary>
-    /// <param name="correlationId">The command correlation identifier.</param>
-    /// <param name="sessionId">The session identifier.</param>
-    /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this command to be produced.
-    ///     Optional.
-    /// </param>
-    public CqrsCommand(string correlationId, string? causationId = null, string? sessionId = null)
-        : base(correlationId, sessionId, causationId)
-    {
-    }
-}
+public class CqrsCommand(
+    string correlationId,
+    string? causationId = null, 
+    string? sessionId = null) : CqrsMessage(correlationId, sessionId, causationId), ICqrsCommand;
 
 /// <summary>
 ///     <para>
@@ -41,30 +35,27 @@ public class CqrsCommand : CqrsMessage, ICqrsCommand
 ///     <para>Implements <see cref="ICqrsCommand" />.</para>
 /// </summary>
 /// <typeparam name="TParameters">The type of the parameters.</typeparam>
+/// <param name="parameters">The typed command parameters.</param>
+/// <param name="correlationId">The command correlation identifier.</param>
+/// <param name="sessionId">The session identifier.</param>
+/// <param name="causationId">
+///     The causation identifier. Identifies the message that caused this command to be produced.
+///     Optional.
+/// </param>
 /// <seealso cref="CqrsMessage" />
 /// <seealso cref="ICqrsCommand" />
-public class CqrsCommand<TParameters> : CqrsMessage, ICqrsCommand
+public class CqrsCommand<TParameters>(
+    TParameters parameters,
+    string correlationId, 
+    string? sessionId = null, 
+    string? causationId = null) : CqrsMessage(correlationId, sessionId, causationId), ICqrsCommand
     where TParameters : class
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsCommand{TParameters}" /> class.
-    /// </summary>
-    /// <param name="parameters">The typed command parameters.</param>
-    /// <param name="correlationId">The command correlation identifier.</param>
-    /// <param name="sessionId">The session identifier.</param>
-    /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this command to be produced.
-    ///     Optional.
-    /// </param>
-    public CqrsCommand(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
-        : base(correlationId, sessionId, causationId)
-        => Params = parameters;
-
     /// <summary>
     ///     Gets the typed command parameters.
     /// </summary>
     /// <value>The parameters.</value>
-    public TParameters Params { get; }
+    public TParameters Params { get; } = parameters;
 }
 
 /// <summary>
@@ -72,33 +63,30 @@ public class CqrsCommand<TParameters> : CqrsMessage, ICqrsCommand
 ///         Represents a result and does not change the observable state of the system (i.e. is free of side effects).
 ///     </para>
 ///     <para>Implements <see cref="CqrsMessage" />.</para>
-///     <para>Implements <see cref="ICqrsCommand" />.</para>
+///     <para>Implements <see cref="ICqrsCommand{TResponse}" />.</para>
 /// </summary>
 /// <typeparam name="TParameters">The type of the parameters.</typeparam>
 /// <typeparam name="TResponse">The type of the response.</typeparam>
+/// <param name="parameters">The parameters.</param>
+/// <param name="correlationId">The command correlation identifier.</param>
+/// <param name="sessionId">The session identifier.</param>
+/// <param name="causationId">
+///     The causation identifier. Identifies the message that caused this command to be produced.
+///     Optional.
+/// </param>
 /// <seealso cref="CqrsMessage" />
-/// <seealso cref="ICqrsCommand" />
-public class CqrsCommand<TParameters, TResponse> : CqrsMessage, ICqrsCommand<TResponse>
+/// <seealso cref="ICqrsCommand{TResponse}" />
+public class CqrsCommand<TParameters, TResponse>(
+    TParameters parameters,
+    string correlationId,
+    string? sessionId = null,
+    string? causationId = null) : CqrsMessage(correlationId, sessionId, causationId), ICqrsCommand<TResponse>
     where TParameters : class
     where TResponse : class
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsCommand{TParameters, TResponse}" /> class.
-    /// </summary>
-    /// <param name="parameters">The parameters.</param>
-    /// <param name="correlationId">The command correlation identifier.</param>
-    /// <param name="sessionId">The session identifier.</param>
-    /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this command to be produced.
-    ///     Optional.
-    /// </param>
-    public CqrsCommand(TParameters parameters, string correlationId, string? sessionId = null, string? causationId = null)
-        : base(correlationId, sessionId, causationId)
-        => Params = parameters;
-
-    /// <summary>
     ///     Gets the typed command parameters.
     /// </summary>
     /// <value>The parameters.</value>
-    public TParameters Params { get; }
+    public TParameters Params { get; } = parameters;
 }

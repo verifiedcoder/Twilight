@@ -12,7 +12,6 @@ internal class AutofacModule : Module
     {
         builder.RegisterCqrs(ThisAssembly);
         builder.AddAutofacInMemoryMessaging();
-
         builder.RegisterGeneric(typeof(NullLogger<>)).As(typeof(ILogger<>)).SingleInstance();
     }
 }

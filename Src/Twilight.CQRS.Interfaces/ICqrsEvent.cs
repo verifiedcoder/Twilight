@@ -5,6 +5,4 @@
 ///     <para>Implements <see cref="ICqrsMessage" />.</para>
 /// </summary>
 /// <seealso cref="ICqrsMessage" />
-public interface ICqrsEvent : ICqrsMessage
-{
-}
+public interface ICqrsEvent : ICqrsMessage;

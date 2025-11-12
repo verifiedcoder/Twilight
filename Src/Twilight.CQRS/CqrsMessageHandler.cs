@@ -1,38 +1,26 @@
-﻿using FluentValidation;
+﻿using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.Logging;
-using CommunityToolkit.Diagnostics;
-using FluentResults;
 using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS;
 
 /// <inheritdoc />
-public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandler<TMessage>
+/// <param name="logger">The logger.</param>
+/// <param name="validator">The message validator.</param>
+public abstract class CqrsMessageHandler<THandler, TMessage>(
+    ILogger<CqrsMessageHandler<THandler, TMessage>> logger, 
+    IValidator<TMessage>? validator = null) : ICqrsMessageHandler<TMessage>
     where TMessage : class
 {
-    private readonly IValidator<TMessage>? _validator;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsMessageHandler{THandler,TMessage}" /> class.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="validator">The message validator.</param>
-    protected CqrsMessageHandler(ILogger<THandler> logger, IValidator<TMessage>? validator = default)
-    {
-        _validator = validator;
-
-        Logger = logger;
-    }
-
     /// <summary>
     ///     Gets the message handler logger.
     /// </summary>
     /// <value>The logger.</value>
-    protected ILogger<THandler> Logger { get; }
+    protected ILogger<CqrsMessageHandler<THandler, TMessage>> Logger { get; } = logger;
 
     /// <inheritdoc />
-    public virtual async Task<Result> OnBeforeHandling(TMessage message, CancellationToken cancellationToken = default)
-        => await Task.FromResult(Result.Try(() =>
+    public virtual Task<Result> OnBeforeHandling(TMessage message, CancellationToken cancellationToken = default)
+        => Task.FromResult(Result.Try(() =>
         {
             Guard.IsNotNull(message);
         }));
@@ -40,7 +28,7 @@ public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandl
     /// <inheritdoc />
     public virtual async Task<Result> ValidateMessage(TMessage message, CancellationToken cancellationToken = default)
     {
-        if (_validator == default)
+        if (validator is null)
         {
             return Result.Ok();
         }
@@ -57,7 +45,7 @@ public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandl
 
         try
         {
-            await _validator.ValidateAndThrowAsync(message, cancellationToken);
+            await validator.ValidateAndThrowAsync(message, cancellationToken);
 
             return Result.Ok();
         }
@@ -68,8 +56,8 @@ public abstract class CqrsMessageHandler<THandler, TMessage> : ICqrsMessageHandl
     }
 
     /// <inheritdoc />
-    public virtual async Task<Result> OnAfterHandling(TMessage message, CancellationToken cancellationToken = default)
-        => await Task.FromResult(Result.Try(() =>
+    public virtual Task<Result> OnAfterHandling(TMessage message, CancellationToken cancellationToken = default)
+        => Task.FromResult(Result.Try(() =>
         {
             Guard.IsNotNull(message);
         }));
