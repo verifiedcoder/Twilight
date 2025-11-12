@@ -1,6 +1,4 @@
-﻿using FluentResults;
-using FluentValidation;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Events;
 using Twilight.CQRS.Messaging.Interfaces;

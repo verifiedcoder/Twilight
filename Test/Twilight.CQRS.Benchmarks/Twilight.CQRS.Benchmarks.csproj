@@ -2,22 +2,28 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
-        <LangVersion>12.0</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>14.0</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="8.3.0" />
-        <PackageReference Include="Benchmarkdotnet" Version="0.15.2" />
-        <PackageReference Include="FluentValidation" Version="12.0.0" />
+        <PackageReference Include="Autofac" Version="8.4.0" />
+        <PackageReference Include="Benchmarkdotnet" Version="0.15.6" />
+        <PackageReference Include="FluentValidation" Version="12.1.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\Src\Twilight.CQRS\Twilight.CQRS.csproj" />
         <ProjectReference Include="..\..\Src\Twilight.CQRS.Autofac\Twilight.CQRS.Autofac.csproj" />
         <ProjectReference Include="..\..\Src\Twilight.CQRS.Messaging.InMemory.Autofac\Twilight.CQRS.Messaging.InMemory.Autofac.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Using Include="FluentResults" />
+      <Using Include="FluentValidation" />
+      <Using Include="JetBrains.Annotations" />
     </ItemGroup>
 
 </Project>

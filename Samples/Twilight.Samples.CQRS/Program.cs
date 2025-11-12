@@ -13,9 +13,10 @@ using Twilight.Samples.Common.Data;
 using Twilight.Samples.CQRS;
 
 const string consoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
+const string applicationName = nameof(DiagnosticsConfig.ApplicationName);
 
 Log.Logger = new LoggerConfiguration().MinimumLevel.Verbose()
-                                      .Enrich.WithProperty("ApplicationName", DiagnosticsConfig.ServiceName)
+                                      .Enrich.WithProperty(nameof(DiagnosticsConfig.ApplicationName), applicationName)
                                       .WriteTo.Console(outputTemplate: consoleOutputTemplate)
                                       .CreateBootstrapLogger();
 
@@ -24,11 +25,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenTelemetry()
        .WithTracing(tracerProviderBuilder
             => tracerProviderBuilder.AddSource(DiagnosticsConfig.ActivitySource.Name)
-                                    .ConfigureResource(resource => resource.AddService(DiagnosticsConfig.ServiceName))
+                                    .ConfigureResource(resource => resource.AddService(applicationName))
                                     .AddAspNetCoreInstrumentation()
                                     .AddConsoleExporter())
        .WithMetrics(metricsProviderBuilder
-            => metricsProviderBuilder.ConfigureResource(resource => resource.AddService(DiagnosticsConfig.ServiceName))
+            => metricsProviderBuilder.ConfigureResource(resource => resource.AddService(applicationName))
                                      .AddAspNetCoreInstrumentation()
                                      .AddConsoleExporter());
 
@@ -38,7 +39,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
            => configuration.ReadFrom.Configuration(context.Configuration)
                            .ReadFrom.Services(services)
                            .MinimumLevel.Verbose()
-                           .Enrich.WithProperty("ApplicationName", DiagnosticsConfig.ServiceName)
+                           .Enrich.WithProperty(nameof(DiagnosticsConfig.ApplicationName), applicationName)
                            .WriteTo.Console(outputTemplate: consoleOutputTemplate))
        .ConfigureServices(services =>
        {
@@ -57,22 +58,23 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
 
 try
 {
-    Log.Information("Starting {AppName}", DiagnosticsConfig.ServiceName);
+    Log.Information("Starting {AppName}", applicationName);
 
     await builder.Build().RunAsync();
 
-    Log.Information("Running {AppName}", DiagnosticsConfig.ServiceName);
+    Log.Information("Running {AppName}", applicationName);
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "{AppName} terminated unexpectedly. Message: {ExceptionMessage}", DiagnosticsConfig.ServiceName, ex.Message);
+    Log.Fatal(ex, "{AppName} terminated unexpectedly. Message: {ExceptionMessage}", applicationName, ex.Message);
 
     Environment.Exit(-1);
 }
 finally
 {
-    Log.Information("Stopping {AppName}", DiagnosticsConfig.ServiceName);
-    Log.CloseAndFlush();
+    Log.Information("Stopping {AppName}", applicationName);
+    
+    await Log.CloseAndFlushAsync();
 
     Environment.Exit(0);
 }

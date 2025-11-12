@@ -1,24 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <LangVersion>12.0</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>14.0</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
         <PackageReference Include="xunit" Version="2.9.3" />
-        <PackageReference Include="FluentAssertions" Version="8.4.0" />
-        <PackageReference Include="FluentValidation" Version="12.0.0" />
+        <PackageReference Include="FluentValidation" Version="12.1.0" />
         <PackageReference Include="NSubstitute" Version="5.3.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.1">
+        <PackageReference Include="Shouldly" Version="4.3.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="XunitXml.TestLogger" Version="6.1.0" />
+        <PackageReference Include="XunitXml.TestLogger" Version="7.0.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,5 +26,14 @@
         <ProjectReference Include="..\Twilight.CQRS.Tests.Common\Twilight.CQRS.Tests.Common.csproj" />
         <ProjectReference Include="..\..\Src\Twilight.CQRS\Twilight.CQRS.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<Using Include="FluentResults" />
+		<Using Include="FluentValidation" />
+		<Using Include="JetBrains.Annotations" />
+		<Using Include="NSubstitute" />
+		<Using Include="Shouldly" />
+		<Using Include="Xunit" />
+	</ItemGroup>
 
 </Project>

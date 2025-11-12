@@ -17,10 +17,14 @@
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.#ctor(Autofac.ILifetimeScope,Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender})">
             <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender" /> class.
+                <para>
+                    Provides a means of dispatching messages. This implementation uses Autofac to resolve a registered message
+                    handler from the container and call that handler, passing any appropriate message. This class cannot be
+                    inherited.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.Messaging.Interfaces.IMessageSender" />.</para>
             </summary>
-            <param name="lifetimeScope">The Autofac lifetime scope.</param>
-            <param name="logger">The logger.</param>
+            <seealso cref="T:Twilight.CQRS.Messaging.Interfaces.IMessageSender" />
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Send``1(``0,System.Threading.CancellationToken)">
             <inheritdoc />

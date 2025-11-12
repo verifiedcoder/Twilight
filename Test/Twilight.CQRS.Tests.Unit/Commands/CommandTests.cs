@@ -1,7 +1,5 @@
-﻿using FluentAssertions;
-using Twilight.CQRS.Commands;
+﻿using Twilight.CQRS.Commands;
 using Twilight.CQRS.Tests.Common;
-using Xunit;
 
 namespace Twilight.CQRS.Tests.Unit.Commands;
 
@@ -9,84 +7,83 @@ public sealed class CommandTests
 {
     private readonly TestParameters _params = new();
 
-    // Setup
-
     [Fact]
-    public void CommandWithoutParametersShouldAssignCausationId()
+    public void Command_WithoutParameters_ShouldAssignCausationId()
     {
         // arrange / Act
         var subject = new CqrsCommand(Constants.CorrelationId, Constants.CausationId);
 
         // Assert
-        subject.CausationId.Should().Be(Constants.CausationId);
+        subject.CausationId.ShouldBe(Constants.CausationId);
     }
 
     [Fact]
-    public void CommandWithoutParametersShouldAssignCorrelationId()
+    public void Command_WithoutParameters_ShouldAssignCorrelationId()
     {
         // Arrange / Act
         var subject = new CqrsCommand(Constants.CorrelationId, Constants.CausationId);
 
         //Assert
-        subject.CorrelationId.Should().Be(Constants.CorrelationId);
+        subject.CorrelationId.ShouldBe(Constants.CorrelationId);
     }
 
     [Fact]
-    public void CommandWithParametersShouldAssignCausationId()
+    public void Command_WithParameters_ShouldAssignCausationId()
     {
         // Arrange / Act
         var subject = new CqrsCommand<TestParameters>(_params, Constants.CorrelationId, null, Constants.CausationId);
 
         // Assert
-        subject.CausationId.Should().Be(Constants.CausationId);
+        subject.CausationId.ShouldBe(Constants.CausationId);
     }
 
     [Fact]
-    public void CommandWithParametersShouldAssignCorrelationId()
+    public void Command_WithParameters_ShouldAssignCorrelationId()
     {
         // Arrange / Act
         var subject = new CqrsCommand<TestParameters>(_params, Constants.CorrelationId, null, Constants.CausationId);
 
         // Assert
-        subject.CorrelationId.Should().Be(Constants.CorrelationId);
+        subject.CorrelationId.ShouldBe(Constants.CorrelationId);
     }
 
     [Fact]
-    public void CommandWithParametersShouldAssignMessageId()
+    public void Command_WithParameters_ShouldAssignMessageId()
     {
         // Arrange / Act
         var subject = new CqrsCommand<TestParameters>(_params, Constants.CorrelationId, null, Constants.CausationId);
 
-        subject.MessageId.Should().NotBeEmpty();
+        subject.MessageId.ShouldNotBeEmpty();
     }
 
     [Fact]
-    public void CommandWithParametersShouldAssignParameters()
+    public void Command_WithParameters_ShouldAssignParameters()
     {
         // Arrange / Act
         var subject = new CqrsCommand<TestParameters>(_params, Constants.CorrelationId, null, Constants.CausationId);
 
         // Assert
-        subject.Params.Should().NotBeNull();
-        subject.Params.Should().BeEquivalentTo(_params);
+        subject.Params.ShouldNotBeNull();
+        subject.Params.ShouldBeEquivalentTo(_params);
     }
 
     [Fact]
-    public void CommandWithParametersAssignsSessionId()
+    public void Command_WithParameters_AssignsSessionId()
     {
         // Arrange / Act
         var subject = new CqrsCommand<TestParameters>(_params, Constants.CorrelationId, Constants.SessionId, Constants.CausationId);
 
         //Assert
-        subject.SessionId.Should().Be(Constants.SessionId);
+        subject.SessionId.ShouldBe(Constants.SessionId);
     }
+    
     [Fact]
-    public void CommandWithoutParametersAssignsSessionId()
+    public void Command_WithoutParameters_AssignsSessionId()
     {
         // Arrange / Act
         var subject = new CqrsCommand(Constants.CorrelationId, Constants.CausationId, Constants.SessionId);
 
         //Assert
-        subject.SessionId.Should().Be(Constants.SessionId);
+        subject.SessionId.ShouldBe(Constants.SessionId);
     }
 }

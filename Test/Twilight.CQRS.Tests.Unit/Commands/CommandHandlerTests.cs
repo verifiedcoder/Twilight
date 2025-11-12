@@ -1,11 +1,8 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+﻿using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Events;
 using Twilight.CQRS.Messaging.Interfaces;
 using Twilight.CQRS.Tests.Common;
-using Xunit;
 
 namespace Twilight.CQRS.Tests.Unit.Commands;
 
@@ -27,7 +24,7 @@ public sealed class CommandHandlerTests
     }
 
     [Fact]
-    public async Task HandlerShouldPublishEventWhenHandling()
+    public async Task Handler_ShouldPublishEvent_WhenHandling()
     {
         // Arrange
         var testCommand = new CqrsCommand<TestParameters>(new TestParameters(), Constants.CorrelationId);

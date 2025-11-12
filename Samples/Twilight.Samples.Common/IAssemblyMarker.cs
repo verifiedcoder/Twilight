@@ -1,5 +1,3 @@
 ﻿namespace Twilight.Samples.Common;
 
-public interface IAssemblyMarker
-{
-}
+public interface IAssemblyMarker;

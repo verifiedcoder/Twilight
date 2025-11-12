@@ -1,9 +1,5 @@
 ﻿using Autofac;
-using FluentAssertions;
-using FluentResults;
-using NSubstitute;
 using Twilight.CQRS.Messaging.Interfaces;
-using Xunit;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup;
 
@@ -18,7 +14,9 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         Verifier.Receive(Arg.Any<string>()).Returns(Result.Ok());
 
         var builder = new ContainerBuilder();
-        var testService = new TestService(Verifier).As<ITestService>();
+        
+        // Explicit variable type is required for service resolution.
+        ITestService testService = new TestService(Verifier);
 
         builder.RegisterModule<IntegrationTestModule>();
         builder.RegisterInstance(testService);

@@ -20,7 +20,3 @@ sources:
     
 languages: 'C_SHARP'
 
-# Justification: No point checking ConfigureAwait() as .Net 6 has no context
-modules:
-  - name: AwaitExpressionEustEndWithConfigureAwait
-    enables: false

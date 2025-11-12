@@ -1,17 +1,16 @@
-﻿using FluentResults;
-using FluentValidation;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Messaging.Interfaces;
 using Twilight.CQRS.Tests.Common;
 
 namespace Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.Setup.Handlers;
 
-internal sealed class TestCqrsCommandWithResponseHandler(IMessageSender messageSender,
-                                                         ITestService service,
-                                                         ILogger<TestCqrsCommandWithResponseHandler> logger,
-                                                         IValidator<CqrsCommand<TestParameters, CqrsCommandResponse<string>>> validator)
-    : CqrsCommandHandlerBase<TestCqrsCommandWithResponseHandler, CqrsCommand<TestParameters, CqrsCommandResponse<string>>, CqrsCommandResponse<string>>(messageSender, logger, validator)
+[UsedImplicitly]
+internal sealed class TestCqrsCommandWithResponseHandler(
+    IMessageSender messageSender,
+    ITestService service,
+    ILogger<TestCqrsCommandWithResponseHandler> logger,
+    IValidator<CqrsCommand<TestParameters, CqrsCommandResponse<string>>> validator) : CqrsCommandHandlerBase<TestCqrsCommandWithResponseHandler, CqrsCommand<TestParameters, CqrsCommandResponse<string>>, CqrsCommandResponse<string>>(messageSender, logger, validator)
 {
     protected override async Task<Result<CqrsCommandResponse<string>>> HandleCommand(CqrsCommand<TestParameters, CqrsCommandResponse<string>> command, CancellationToken cancellationToken = default)
     {

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Twilight.CQRS.Commands;
+﻿using Twilight.CQRS.Commands;
 using Twilight.CQRS.Tests.Common;
 
 namespace Twilight.CQRS.Tests.Unit;

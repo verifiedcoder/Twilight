@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
-using Microsoft.Extensions.Logging;
 using CommunityToolkit.Diagnostics;
-using FluentResults;
+using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Reflection;
 using Twilight.CQRS.Interfaces;
 using Twilight.CQRS.Messaging.Interfaces;
 
@@ -20,217 +20,115 @@ namespace Twilight.CQRS.Messaging.InMemory.Autofac;
 ///     <para>Implements <see cref="IMessageSender" />.</para>
 /// </summary>
 /// <seealso cref="IMessageSender" />
-public sealed class AutofacInMemoryMessageSender : IMessageSender
+public sealed class AutofacInMemoryMessageSender(
+    ILifetimeScope lifetimeScope,
+    ILogger<AutofacInMemoryMessageSender> logger) : IMessageSender
 {
     private const string DefaultAssemblyVersion = "1.0.0.0";
-
-    private readonly ILifetimeScope _lifetimeScope;
-    private readonly ILogger<AutofacInMemoryMessageSender> _logger;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="AutofacInMemoryMessageSender" /> class.
-    /// </summary>
-    /// <param name="lifetimeScope">The Autofac lifetime scope.</param>
-    /// <param name="logger">The logger.</param>
-    public AutofacInMemoryMessageSender(ILifetimeScope lifetimeScope, ILogger<AutofacInMemoryMessageSender> logger)
-    {
-        Guard.IsNotNull(lifetimeScope);
-        Guard.IsNotNull(logger);
-
-        _lifetimeScope = lifetimeScope;
-        _logger = logger;
-    }
 
     private static string Namespace => typeof(AutofacInMemoryMessageSender).Namespace ?? nameof(AutofacInMemoryMessageSender);
 
     private static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? DefaultAssemblyVersion;
 
+    private static readonly ActivitySource ActivitySource = new(Namespace, AssemblyVersion);
+
+    // Cache for reflection MethodInfo objects to avoid repeated lookups
+    private static readonly ConcurrentDictionary<(Type HandlerType, Type MessageType), MethodInfo> MethodCache = new();
+
+    // Cache for closed generic types to avoid repeated MakeGenericType calls
+    private static readonly ConcurrentDictionary<(Type GenericType, Type MessageType, Type? ResultType), Type> TypeCache = new();
+
     /// <inheritdoc />
     public async Task<Result> Send<TCommand>(TCommand command, CancellationToken cancellationToken = default)
         where TCommand : class, ICqrsCommand
     {
-        var guardResult = Result.Try(() =>
-        {
-            Guard.IsNotNull(command);
-        });
-
+        var guardResult = ValidateNotNull(command);
+        
         if (guardResult.IsFailed)
         {
             return guardResult;
         }
 
-        var activitySource = new ActivitySource(Namespace, AssemblyVersion);
+        using var activity = CreateActivity($"Send {command.GetType()}");
 
-        using var activity = activitySource.StartActivity($"Send {command.GetType()}");
+        var assemblyQualifiedName = typeof(ICqrsCommandHandler<TCommand>).AssemblyQualifiedName ?? "Unknown Assembly";
+
+        var handlersResult = TryResolveCommandHandlers<TCommand>(assemblyQualifiedName);
+        
+        if (handlersResult.IsFailed)
         {
-            await using var scope = _lifetimeScope.BeginLifetimeScope();
-
-            var assemblyQualifiedName = typeof(ICqrsCommandHandler<TCommand>).AssemblyQualifiedName ?? "Unknown Assembly";
-
-            IEnumerable<ICqrsCommandHandler<TCommand>>? handlers;
-
-            try
-            {
-                _lifetimeScope.TryResolve(out handlers);
-            }
-            catch (DependencyResolutionException ex)
-            {
-                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
-
-                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
-            }
-
-            var commandHandlers = (handlers ?? Array.Empty<ICqrsCommandHandler<TCommand>>()).ToList();
-
-            switch (commandHandlers.Count)
-            {
-                case 0:
-
-                    _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
-
-                    return Result.Fail("No handler cold be found for this request.");
-
-                case > 1:
-
-                    _logger.LogCritical("Multiple handlers found in {AssemblyQualifiedName}.", assemblyQualifiedName);
-
-                    return Result.Fail("Multiple handlers found. A command may only have one handler.");
-
-                default:
-
-                    await commandHandlers[0].Handle(command, cancellationToken);
-                    break;
-            }
+            return Result.Fail(handlersResult.Errors); // Convert Result<T> to Result
         }
 
+        var commandHandlers = handlersResult.Value.ToList();
+
+        var validationResult = ValidateCommandHandlerCount(commandHandlers.Count, assemblyQualifiedName);
+        
+        if (validationResult.IsFailed)
+        {
+            return validationResult;
+        }
+
+        await commandHandlers[0].Handle(command, cancellationToken);
+        
         return Result.Ok();
     }
 
     /// <inheritdoc />
     public async Task<Result<TResult>> Send<TResult>(ICqrsCommand<TResult> command, CancellationToken cancellationToken = default)
     {
-        var guardResult = Result.Try(() =>
-        {
-            Guard.IsNotNull(command);
-        });
-
+        var guardResult = ValidateNotNull(command);
+        
         if (guardResult.IsFailed)
         {
             return guardResult;
         }
 
+        var commandType = command.GetType();
         var genericType = typeof(ICqrsCommandHandler<,>);
-        var closedGenericType = genericType.MakeGenericType(command.GetType(), typeof(TResult));
+
+        var closedGenericType = TypeCache.GetOrAdd((genericType, commandType, typeof(TResult)), key =>
+            key.GenericType.MakeGenericType(key.MessageType, key.ResultType!));
+
         var assemblyQualifiedName = closedGenericType.AssemblyQualifiedName ?? "Unknown Assembly";
 
-        await using var scope = _lifetimeScope.BeginLifetimeScope();
+        using var activity = CreateActivity($"Send {commandType}");
 
-        var activitySource = new ActivitySource(Namespace, AssemblyVersion);
-
-        using var activity = activitySource.StartActivity($"Send {command.GetType()}");
-        {
-            object result;
-
-            try
-            {
-                var handlerExists = _lifetimeScope.TryResolve(closedGenericType, out var handler);
-
-                if (!handlerExists)
-                {
-                    _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
-
-                    return Result.Fail("No handler cold be found for this request.");
-                }
-
-                var handlerType = handler!.GetType();
-                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", [command.GetType(), typeof(CancellationToken)])
-                                            ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
-
-                var resultTask = (Task<Result<TResult>>)handlerTypeRuntimeMethod.Invoke(handler, [command, cancellationToken])!;
-
-                result = await resultTask;
-            }
-            catch (DependencyResolutionException ex)
-            {
-                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
-
-                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.LogCritical(ex, $"Could not execute handler for '{assemblyQualifiedName}'.");
-
-                return Result.Fail("Failed to execute handler.");
-            }
-
-            return (Result<TResult>)result;
-        }
+        return await ExecuteHandlerWithResult<TResult>(closedGenericType, command, assemblyQualifiedName, cancellationToken);
     }
 
     /// <inheritdoc />
     public async Task<Result<TResult>> Send<TResult>(ICqrsQuery<TResult> query, CancellationToken cancellationToken = default)
     {
-        var guardResult = Result.Try(() =>
-        {
-            Guard.IsNotNull(query);
-        });
-
+        var guardResult = ValidateNotNull(query);
+        
         if (guardResult.IsFailed)
         {
             return guardResult;
         }
 
+        var queryType = query.GetType();
         var genericType = typeof(ICqrsQueryHandler<,>);
-        var closedGenericType = genericType.MakeGenericType(query.GetType(), typeof(TResult));
+
+        var closedGenericType = TypeCache.GetOrAdd((genericType, queryType, typeof(TResult)), key =>
+            key.GenericType.MakeGenericType(key.MessageType, key.ResultType!));
+
         var assemblyQualifiedName = closedGenericType.AssemblyQualifiedName ?? "Unknown Assembly";
 
-        await using var scope = _lifetimeScope.BeginLifetimeScope();
+        using var activity = CreateActivity($"Send {queryType}");
 
-        var activitySource = new ActivitySource(Namespace, AssemblyVersion);
-
-        using var activity = activitySource.StartActivity($"Send {query.GetType()}");
-        {
-            object result;
-
-            try
-            {
-                var handlerExists = _lifetimeScope.TryResolve(closedGenericType, out var handler);
-
-                if (!handlerExists)
-                {
-                    _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
-
-                    return Result.Fail("No handler cold be found for this request.");
-                }
-
-                var handlerType = handler!.GetType();
-                var handlerTypeRuntimeMethod = handlerType.GetRuntimeMethod("Handle", [query.GetType(), typeof(CancellationToken)])
-                                            ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {handlerType}.");
-
-                var resultTask = (Task<Result<TResult>>)handlerTypeRuntimeMethod.Invoke(handler, [query, cancellationToken])!;
-
-                result = await resultTask;
-            }
-            catch (DependencyResolutionException ex)
-            {
-                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
-
-                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
-            }
-
-            return (Result<TResult>)result;
-        }
+        return await ExecuteHandlerWithResult<TResult>(closedGenericType, query, assemblyQualifiedName, cancellationToken);
     }
 
     /// <inheritdoc />
     public async Task<Result> Publish<TEvent>(IEnumerable<TEvent> events, CancellationToken cancellationToken = default)
         where TEvent : class, ICqrsEvent
     {
-        var eventsList = events as TEvent[] ?? events.ToArray();
+        TEvent[] eventsList = [.. events];
 
-        if (!eventsList.Length.Equals(0))
+        if (eventsList.Length == 0)
         {
-            _logger.LogWarning("No events received for publishing when at least one event was expected. Check calls to publish.");
+            logger.LogNoEventsReceived();
         }
 
         foreach (var @event in eventsList)
@@ -245,58 +143,160 @@ public sealed class AutofacInMemoryMessageSender : IMessageSender
     public async Task<Result> Publish<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : class, ICqrsEvent
     {
-        var guardResult = Result.Try(() =>
-        {
-            Guard.IsNotNull(@event);
-        });
+        var guardResult = ValidateNotNull(@event);
 
         if (guardResult.IsFailed)
         {
             return guardResult;
         }
 
-        var activitySource = new ActivitySource(Namespace, AssemblyVersion);
+        using var activity = CreateActivity($"Publish {@event.GetType()}");
 
-        using var activity = activitySource.StartActivity($"Publish {@event.GetType()}");
+        var assemblyQualifiedName = typeof(ICqrsEventHandler<TEvent>).AssemblyQualifiedName ?? "Unknown Assembly";
+
+        var handlersResult = TryResolveEventHandlers<TEvent>(assemblyQualifiedName);
+
+        if (handlersResult.IsFailed)
         {
-            await using var scope = _lifetimeScope.BeginLifetimeScope();
-
-            var assemblyQualifiedName = typeof(ICqrsEventHandler<TEvent>).AssemblyQualifiedName ?? "Unknown Assembly";
-
-            IEnumerable<ICqrsEventHandler<TEvent>> handlers;
-
-            try
-            {
-                handlers = _lifetimeScope.Resolve<IEnumerable<ICqrsEventHandler<TEvent>>>()
-                                         .ToList();
-            }
-            catch (ComponentNotRegisteredException ex)
-            {
-                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be found.");
-
-                return Result.Fail("A component is not registered in the DI container. Check your component is registered.");
-            }
-            catch (DependencyResolutionException ex)
-            {
-                _logger.LogCritical(ex, $"No concrete handlers for type '{assemblyQualifiedName}' could be resolved.");
-
-                return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
-            }
-
-            if (!handlers.Any())
-            {
-                _logger.LogCritical("Handler not found in '{AssemblyQualifiedName}'.", assemblyQualifiedName);
-
-                return Result.Fail("No handler cold be found for this request.");
-            }
-
-            var tasks = new List<Task>(handlers.Count());
-
-            tasks.AddRange(handlers.Select(handler => handler.Handle(@event, cancellationToken)));
-
-            await Task.WhenAll(tasks);
+            return Result.Fail(handlersResult.Errors); // Convert Result<T> to Result
         }
+
+        var handlers = handlersResult.Value;
+
+        if (handlers.Count == 0)
+        {
+            LogHandlerNotFound(assemblyQualifiedName);
+            return Result.Fail("No handler could be found for this request.");
+        }
+
+        var tasks = handlers.Select(handler => handler.Handle(@event, cancellationToken));
+
+        await Task.WhenAll(tasks);
 
         return Result.Ok();
     }
+
+    private static Result ValidateNotNull(object? obj) 
+        => Result.Try(() => Guard.IsNotNull(obj));
+
+    private static Activity? CreateActivity(string activityName)
+        => ActivitySource.StartActivity(activityName);
+
+    private Result<IEnumerable<ICqrsCommandHandler<TCommand>>> TryResolveCommandHandlers<TCommand>(string assemblyQualifiedName)
+        where TCommand : class, ICqrsCommand
+    {
+        try
+        {
+            lifetimeScope.TryResolve(out IEnumerable<ICqrsCommandHandler<TCommand>>? handlers);
+            
+            return Result.Ok(handlers ?? []);
+        }
+        catch (DependencyResolutionException ex)
+        {
+            LogDependencyResolutionError(ex, assemblyQualifiedName);
+            
+            return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
+        }
+    }
+
+    private Result<IReadOnlyList<ICqrsEventHandler<TEvent>>> TryResolveEventHandlers<TEvent>(string assemblyQualifiedName)
+        where TEvent : class, ICqrsEvent
+    {
+        try
+        {
+            var handlers = lifetimeScope.Resolve<IEnumerable<ICqrsEventHandler<TEvent>>>().ToList();
+
+            return Result.Ok<IReadOnlyList<ICqrsEventHandler<TEvent>>>(handlers);
+        }
+        catch (ComponentNotRegisteredException ex)
+        {
+            LogComponentNotRegistered(ex, assemblyQualifiedName);
+
+            return Result.Fail("A component is not registered in the DI container. Check your component is registered.");
+        }
+        catch (DependencyResolutionException ex)
+        {
+            LogDependencyResolutionError(ex, assemblyQualifiedName);
+
+            return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
+        }
+    }
+
+    private Result ValidateCommandHandlerCount(int handlerCount, string assemblyQualifiedName)
+        => handlerCount switch
+        {
+            0   => HandleNoHandlerFound(assemblyQualifiedName),
+            > 1 => HandleMultipleHandlersFound(assemblyQualifiedName),
+            _   => Result.Ok()
+        };
+
+    private Result HandleNoHandlerFound(string assemblyQualifiedName)
+    {
+        LogHandlerNotFound(assemblyQualifiedName);
+        
+        return Result.Fail("No handler could be found for this request.");
+    }
+
+    private Result HandleMultipleHandlersFound(string assemblyQualifiedName)
+    {
+        logger.LogMultipleHandlersFound(assemblyQualifiedName);
+
+        return Result.Fail("Multiple handlers found. A command may only have one handler.");
+    }
+
+    private async Task<Result<TResult>> ExecuteHandlerWithResult<TResult>(Type closedGenericType, object message, string assemblyQualifiedName, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var handlerExists = lifetimeScope.TryResolve(closedGenericType, out var handler);
+
+            if (!handlerExists)
+            {
+                LogHandlerNotFound(assemblyQualifiedName);
+                return Result.Fail("No handler could be found for this request.");
+            }
+
+            var result = await InvokeHandler<TResult>(handler!, message, cancellationToken);
+            
+            return result;
+        }
+        catch (DependencyResolutionException ex)
+        {
+            LogDependencyResolutionError(ex, assemblyQualifiedName);
+            
+            return Result.Fail("Failed to resolve dependency from the DI container. Check your component is registered.");
+        }
+        catch (InvalidOperationException ex)
+        {
+            LogHandlerExecutionError(ex, assemblyQualifiedName);
+            
+            return Result.Fail("Failed to execute handler.");
+        }
+    }
+
+    private static async Task<Result<TResult>> InvokeHandler<TResult>(object handler, object message, CancellationToken cancellationToken)
+    {
+        var handlerType = handler.GetType();
+        var messageType = message.GetType();
+
+        var method = MethodCache.GetOrAdd((handlerType, messageType), key
+            => key.HandlerType.GetRuntimeMethod("Handle", [key.MessageType, typeof(CancellationToken)]) 
+               ?? throw new InvalidOperationException($"Failed to get runtime method 'Handle' from {key.HandlerType}."));
+
+        var resultTask = (Task<Result<TResult>>)method.Invoke(handler, [message, cancellationToken])!;
+
+        return await resultTask;
+    }
+
+    private void LogDependencyResolutionError(Exception ex, string assemblyQualifiedName) 
+        => logger.LogHandlerResolutionFailure(assemblyQualifiedName, ex);
+
+    private void LogComponentNotRegistered(Exception ex, string assemblyQualifiedName) 
+        => logger.LogComponentNotFound(assemblyQualifiedName, ex);
+
+    private void LogHandlerNotFound(string assemblyQualifiedName) 
+        => logger.LogHandlerNotFoundCritical(assemblyQualifiedName);
+
+    private void LogHandlerExecutionError(Exception ex, string assemblyQualifiedName) 
+        => logger.LogHandlerExecutionFailure(assemblyQualifiedName, ex);
 }

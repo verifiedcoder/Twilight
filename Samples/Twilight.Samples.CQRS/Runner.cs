@@ -1,85 +1,91 @@
-﻿using Serilog;
+﻿using FluentResults;
+using Serilog;
 using System.Diagnostics;
 using Taikandi;
 using Twilight.CQRS.Commands;
 using Twilight.CQRS.Messaging.Interfaces;
 using Twilight.CQRS.Queries;
 using Twilight.Samples.Common;
-using Twilight.Samples.Common.Features.GetUserById;
-using Twilight.Samples.Common.Features.GetUsersView;
-using Twilight.Samples.Common.Features.RegisterUser;
+using Twilight.Samples.Common.Features.UserManagement.GetUserById;
+using Twilight.Samples.Common.Features.UserManagement.GetUsersView;
+using Twilight.Samples.Common.Features.UserManagement.RegisterUser;
 
 namespace Twilight.Samples.CQRS;
 
+[UsedImplicitly]
 internal sealed class Runner(IMessageSender messageSender) : IRunner
 {
     public async Task Run()
     {
-        await RegisterUser();
-        await GetRegisteredUser();
-        await GetUsersView();
-        await GetInvalidUsersView();
+        await DemoRegisterUser();
+        await DemoGetRegisteredUser();
+        await DemoGetUsersView();
+        await DemoGetInvalidUsersView();
     }
 
-    private async Task RegisterUser()
+    private async Task DemoRegisterUser()
     {
-        using var activity = Activity.Current?.Source.StartActivity($"{nameof(RegisterUser)}");
-        {
-            var id = activity?.Id ?? SequentialGuid.NewGuid().ToString();
-            var parameters = new RegisterUserCommandParameters("Bilbo", "Baggins");
-            var command = new CqrsCommand<RegisterUserCommandParameters>(parameters, id);
+        using var activity = Activity.Current?.Source.StartActivity($"{nameof(DemoRegisterUser)}");
 
-            await messageSender.Send(command);
+        var id = GetActivityId(activity);
+        var parameters = new RegisterUserCommandParameters("Bilbo", "Baggins");
+        var command = new CqrsCommand<RegisterUserCommandParameters>(parameters, id);
+
+        await messageSender.Send(command);
+    }
+
+    private async Task DemoGetRegisteredUser()
+    {
+        using var activity = Activity.Current?.Source.StartActivity($"{nameof(DemoGetRegisteredUser)}");
+
+        var id = GetActivityId(activity);
+        var parameters = new GetUserByIdParameters(1);
+        var query = new CqrsQuery<GetUserByIdParameters, QueryResponse<GetUserByIdResponse>>(parameters, id);
+
+        var response = await messageSender.Send(query);
+
+        Log.Information("Query response: {@GetRegisteredUserResponse}", response);
+    }
+
+    private async Task DemoGetUsersView()
+    {
+        using var activity = Activity.Current?.Source.StartActivity($"{nameof(DemoGetUsersView)}");
+
+        var id = GetActivityId(activity);
+        var parameters = new GetUsersViewParameters(DateTimeOffset.UtcNow.AddDays(-1));
+        var query = new CqrsQuery<GetUsersViewParameters, QueryResponse<GetUsersViewResponse>>(parameters, id);
+
+        var response = await messageSender.Send(query);
+
+        Log.Information("Query response: {@GetUsersViewResponse}", response);
+    }
+
+    private async Task DemoGetInvalidUsersView()
+    {
+        using var activity = Activity.Current?.Source.StartActivity($"{nameof(DemoGetInvalidUsersView)}");
+
+        var id = GetActivityId(activity);
+        var parameters = new GetUsersViewParameters(DateTimeOffset.UtcNow.AddDays(+1));
+        var query = new CqrsQuery<GetUsersViewParameters, QueryResponse<GetUsersViewResponse>>(parameters, id);
+
+        var response = await messageSender.Send(query);
+
+        if (response.IsFailed)
+        {
+            LogValidationErrors(response.Errors);
         }
     }
 
-    private async Task GetRegisteredUser()
+    private static string GetActivityId(Activity? activity) 
+        => activity?.Id ?? SequentialGuid.NewGuid().ToString();
+
+    private static void LogValidationErrors(IEnumerable<IError> errors)
     {
-        using var activity = Activity.Current?.Source.StartActivity($"{nameof(GetRegisteredUser)}");
+        Log.Error("Query validation failed:");
+
+        foreach (var error in errors)
         {
-            var id = activity?.Id ?? SequentialGuid.NewGuid().ToString();
-            var parameters = new GetUserByIdQueryParameters(1);
-            var query = new CqrsQuery<GetUserByIdQueryParameters, QueryResponse<GetUserByIdQueryResponsePayload>>(parameters, id);
-
-            var response = await messageSender.Send(query);
-
-            Log.Information("Query response: {@GetRegisteredUserResponse}", response);
-        }
-    }
-
-    private async Task GetUsersView()
-    {
-        using var activity = Activity.Current?.Source.StartActivity($"{nameof(GetUsersView)}");
-        {
-            var id = activity?.Id ?? SequentialGuid.NewGuid().ToString();
-            var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(-1));
-            var query = new CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, id);
-
-            var response = await messageSender.Send(query);
-
-            Log.Information("Query response: {@GetUsersViewResponse}", response);
-        }
-    }
-
-    private async Task GetInvalidUsersView()
-    {
-        using var activity = Activity.Current?.Source.StartActivity($"{nameof(GetInvalidUsersView)}");
-        {
-            var id = activity?.Id ?? SequentialGuid.NewGuid().ToString();
-            var parameters = new GetUsersViewQueryParameters(DateTimeOffset.UtcNow.AddDays(+1));
-            var query = new CqrsQuery<GetUsersViewQueryParameters, QueryResponse<GetUsersViewQueryResponsePayload>>(parameters, id);
-
-            var response = await messageSender.Send(query);
-
-            if (response.IsFailed)
-            {
-                Log.Error("Query validation failed:");
-
-                foreach (var error in response.Errors)
-                {
-                    Log.Error(" - {ValidationError}", error);
-                }
-            }
+            Log.Error(" - {ValidationError}", error);
         }
     }
 }

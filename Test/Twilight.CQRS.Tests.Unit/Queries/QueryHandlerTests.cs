@@ -1,10 +1,6 @@
-﻿using FluentAssertions;
-using FluentValidation;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
+﻿using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Queries;
 using Twilight.CQRS.Tests.Common;
-using Xunit;
 
 namespace Twilight.CQRS.Tests.Unit.Queries;
 
@@ -23,7 +19,7 @@ public sealed class QueryHandlerTests
     }
 
     [Fact]
-    public async Task HandlerShouldHandleQuery()
+    public async Task Handler_ShouldHandleQuery()
     {
         // Arrange
         var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
@@ -32,11 +28,11 @@ public sealed class QueryHandlerTests
         var response = await _subject.Handle(testQuery, CancellationToken.None);
 
         // Assert
-        response.Value.Payload.Value.Should().Be("1");
+        response.Value.Payload.Value.ShouldBe("1");
     }
 
     [Fact]
-    public async Task HandlerShouldNotThrowWhenValidatingValidQueryParameters()
+    public async Task Handler_ShouldNotThrow_WhenValidatingValidQueryParameters()
     {
         // Arrange
         var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(), Constants.CorrelationId);
@@ -45,11 +41,11 @@ public sealed class QueryHandlerTests
         var subjectResult = async () => { await _subject.Handle(testQuery, CancellationToken.None); };
 
         // Assert
-        await subjectResult.Should().NotThrowAsync<ValidationException>();
+        await subjectResult.ShouldNotThrowAsync();
     }
 
     [Fact]
-    public async Task HandlerShouldThrowWhenValidatingInvalidQueryParameters()
+    public async Task Handler_ShouldReturnFailedResult_WhenValidatingInvalidQueryParameters()
     {
         // Arrange
         var testQuery = new CqrsQuery<TestParameters, QueryResponse<TestQueryResponse>>(new TestParameters(string.Empty), Constants.CorrelationId);
@@ -58,5 +54,7 @@ public sealed class QueryHandlerTests
         var result = await _subject.Handle(testQuery, CancellationToken.None);
 
         // Assert
+        result.IsFailed.ShouldBeTrue();
+        result.Errors.ShouldContain(error => error.Message.Contains("'Params Value' must not be empty"));
     }
 }

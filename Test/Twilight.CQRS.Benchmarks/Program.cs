@@ -2,7 +2,7 @@
 using Twilight.CQRS.Benchmarks;
 
 // Run in Release Build Configuration
-var summary = BenchmarkRunner.Run<InMemoryBenchmarks>();
+var summary = BenchmarkRunner.Run<QuickBenchmarks>(); // or InMemoryBenchmarks
 
 Console.WriteLine(summary);
 Console.ReadLine();

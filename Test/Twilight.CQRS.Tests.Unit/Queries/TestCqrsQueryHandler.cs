@@ -1,6 +1,4 @@
-﻿using FluentResults;
-using FluentValidation;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Twilight.CQRS.Queries;
 using Twilight.CQRS.Tests.Common;
 

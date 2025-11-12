@@ -10,5 +10,5 @@ internal sealed class AutofacModule : Module
     protected override void Load(ContainerBuilder builder)
         => builder.RegisterCqrs(typeof(IAssemblyMarker).Assembly)
                   .AddAutofacInMemoryMessaging()
-                  .RegisterAssemblyTypes(ThisAssembly, new[] { "Runner" });
+                  .RegisterAssemblyTypes(ThisAssembly, ["Runner"]);
 }

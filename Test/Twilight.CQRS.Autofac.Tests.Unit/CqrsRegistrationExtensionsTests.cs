@@ -1,7 +1,5 @@
 ﻿using Autofac;
-using FluentAssertions;
 using Twilight.CQRS.Autofac.Tests.Unit.Setup;
-using Xunit;
 
 namespace Twilight.CQRS.Autofac.Tests.Unit;
 
@@ -12,17 +10,17 @@ public sealed class CqrsRegistrationExtensionsTests
     // Setup
 
     [Fact]
-    public void CallingRegisterForCqrsWithNullAssembliesDoesNotThrow()
+    public void CallingRegister_ForCqrsWithNullAssemblies_DoesNotThrow()
     {
         // Arrange / Act
         var subjectResult = () => { _builder.RegisterAssemblyTypes(); };
 
         // Assert
-        subjectResult.Should().NotThrow();
+        subjectResult.ShouldNotThrow();
     }
 
     [Fact]
-    public void RegisterForCqrsRegistersAssemblyServices()
+    public void RegisterForCqrs_RegistersAssemblyServices()
     {
         // Arrange
         var assembly = typeof(TestCqrsCommandHandler).Assembly;
@@ -33,8 +31,8 @@ public sealed class CqrsRegistrationExtensionsTests
         var container = _builder.Build();
 
         // Assert
-        container.ComponentRegistry.Registrations.Count().Should().Be(4);
-        container.ComponentRegistry.Registrations.Should().OnlyHaveUniqueItems();
+        container.ComponentRegistry.Registrations.Count().ShouldBe(4);
+        container.ComponentRegistry.Registrations.ShouldBeUnique();
 
         var services = (from r in container.ComponentRegistry.Registrations
                         from s in r.Services
@@ -57,7 +55,7 @@ public sealed class CqrsRegistrationExtensionsTests
                                    where service.Contains(expectedService)
                                    select service).FirstOrDefault();
 
-            selectedService.Should().NotBeNull();
+            selectedService.ShouldNotBeNull();
         }
     }
 }

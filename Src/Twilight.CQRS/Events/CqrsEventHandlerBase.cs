@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using FluentValidation;
+﻿using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.Logging;
-using CommunityToolkit.Diagnostics;
-using FluentResults;
+using System.Diagnostics;
 using Twilight.CQRS.Interfaces;
 // ReSharper disable ExplicitCallerInfoArgument as false positive for StartActivity
 
@@ -19,91 +17,56 @@ namespace Twilight.CQRS.Events;
 /// </summary>
 /// <typeparam name="TEvent">The type of the event.</typeparam>
 /// <typeparam name="TEventHandler">The type of the event handler.</typeparam>
+/// <param name="logger">The logger.</param>
+/// <param name="validator">The event validator.</param>
 /// <seealso cref="CqrsMessageHandler{THandler,TMessage}" />
 /// <seealso cref="ICqrsEventHandler{TEvent}" />
-public abstract class CqrsEventHandlerBase<TEventHandler, TEvent> : CqrsMessageHandler<TEventHandler, TEvent>, ICqrsEventHandler<TEvent>
+public abstract class CqrsEventHandlerBase<TEventHandler, TEvent>(
+    ILogger<CqrsEventHandlerBase<TEventHandler, TEvent>> logger, 
+    IValidator<TEvent>? validator = null) : CqrsMessageHandler<TEventHandler, TEvent>(logger, validator), ICqrsEventHandler<TEvent>
     where TEvent : class, ICqrsEvent
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsEventHandlerBase{TEventHandler,TEvent}" /> class.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="validator">The event validator.</param>
-    protected CqrsEventHandlerBase(ILogger<TEventHandler> logger, IValidator<TEvent>? validator = default)
-        : base(logger, validator)
-    {
-    }
-
     /// <inheritdoc />
     public async Task<Result> Handle(TEvent @event, CancellationToken cancellationToken = default)
     {
-        var guardResult = Result.Try(() =>
-        {
-            Guard.IsNotNull(@event);
-        });
+        var guardResult = Result.Try(() => Guard.IsNotNull(@event));
 
         if (guardResult.IsFailed)
         {
             return guardResult;
         }
 
-        Result eventResult;
+        using var activity = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity($"Handle {@event.GetType()}") : null;
 
-        using var activity = Activity.Current?.Source.StartActivity($"Handle {@event.GetType()}");
+        var preHandlingResult = await ExecutePreHandlingAsync(@event, cancellationToken);
+
+        if (!preHandlingResult.IsSuccess)
         {
-            using (var childSpan = Activity.Current?.Source.StartActivity("Pre event handling logic"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(OnBeforeHandling)}"));
-
-                var result = await OnBeforeHandling(@event, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-            }
-
-            using (var childSpan = Activity.Current?.Source.StartActivity("Validate event"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(ValidateMessage)}"));
-
-                var result = await ValidateMessage(@event, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-            }
-
-            using (var childSpan = Activity.Current?.Source.StartActivity("Handle event"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(HandleEvent)}"));
-
-                var result = await HandleEvent(@event, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-
-                eventResult = result;
-            }
-
-            using (var childSpan = Activity.Current?.Source.StartActivity("Post event handling logic"))
-            {
-                childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<TEventHandler, TEvent>)}.{nameof(OnAfterHandling)}"));
-
-                var result = await OnAfterHandling(@event, cancellationToken);
-
-                if (!result.IsSuccess)
-                {
-                    return result;
-                }
-            }
+            return preHandlingResult;
         }
 
-        return eventResult;
+        var validationResult = await ExecuteValidationAsync(@event, cancellationToken);
+
+        if (!validationResult.IsSuccess)
+        {
+            return validationResult;
+        }
+
+        var eventResult = await ExecuteHandleEventAsync(@event, cancellationToken);
+
+        if (!eventResult.IsSuccess)
+        {
+            return eventResult;
+        }
+
+        var postHandlingResult = await ExecutePostHandlingAsync(@event, cancellationToken);
+
+        return !postHandlingResult.IsSuccess
+            ? eventResult
+            : postHandlingResult;
     }
+
+    private static bool ShouldCreateActivity() => Activity.Current?.Source.HasListeners() ?? false;
 
     /// <summary>
     ///     Handles the event.
@@ -112,4 +75,40 @@ public abstract class CqrsEventHandlerBase<TEventHandler, TEvent> : CqrsMessageH
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous handle event operation.</returns>
     public abstract Task<Result> HandleEvent(TEvent @event, CancellationToken cancellationToken = default);
+
+    private async Task<Result> ExecutePreHandlingAsync(TEvent @event, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Pre event handling logic") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<,>)}.{nameof(OnBeforeHandling)}"));
+
+        return await OnBeforeHandling(@event, cancellationToken);
+    }
+
+    private async Task<Result> ExecuteValidationAsync(TEvent @event, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Validate event") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<,>)}.{nameof(ValidateMessage)}"));
+
+        return await ValidateMessage(@event, cancellationToken);
+    }
+
+    private async Task<Result> ExecuteHandleEventAsync(TEvent @event, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Handle event") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<,>)}.{nameof(HandleEvent)}"));
+
+        return await HandleEvent(@event, cancellationToken);
+    }
+
+    private async Task<Result> ExecutePostHandlingAsync(TEvent @event, CancellationToken cancellationToken)
+    {
+        using var childSpan = ShouldCreateActivity() ? Activity.Current?.Source.StartActivity("Post event handling logic") : null;
+
+        childSpan?.AddEvent(new ActivityEvent($"{nameof(CqrsEventHandlerBase<,>)}.{nameof(OnAfterHandling)}"));
+
+        return await OnAfterHandling(@event, cancellationToken);
+    }
 }

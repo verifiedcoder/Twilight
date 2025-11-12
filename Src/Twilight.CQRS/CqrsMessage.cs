@@ -1,37 +1,25 @@
-﻿using Taikandi;
-using Twilight.CQRS.Interfaces;
+﻿using Twilight.CQRS.Interfaces;
 
 namespace Twilight.CQRS;
 
 /// <inheritdoc />
-public abstract class CqrsMessage : ICqrsMessage
+/// <param name="correlationId">The message correlation identifier.</param>
+/// <param name="sessionId">The session identifier for the session to which this message belongs.</param>
+/// <param name="causationId">
+///     The causation identifier. Identifies the message that caused this message to be produced.
+///     Optional.
+/// </param>
+public abstract class CqrsMessage(string correlationId, string? sessionId = null, string? causationId = null) : ICqrsMessage
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="CqrsMessage" /> class.
-    /// </summary>
-    /// <param name="correlationId">The message correlation identifier.</param>
-    /// <param name="sessionId">The session identifier for the session to which this message belongs.</param>
-    /// <param name="causationId">
-    ///     The causation identifier. Identifies the message that caused this message to be produced.
-    ///     Optional.
-    /// </param>
-    protected CqrsMessage(string correlationId, string? sessionId = null, string? causationId = null)
-    {
-        MessageId = SequentialGuid.NewGuid().ToString();
-        CausationId = causationId;
-        SessionId = sessionId;
-        CorrelationId = correlationId;
-    }
+    /// <inheritdoc />
+    public string MessageId { get; } = Guid.NewGuid().ToString();
 
     /// <inheritdoc />
-    public string MessageId { get; }
+    public string CorrelationId { get; } = correlationId;
 
     /// <inheritdoc />
-    public string CorrelationId { get; }
+    public string? SessionId { get; } = sessionId;
 
     /// <inheritdoc />
-    public string? SessionId { get; }
-
-    /// <inheritdoc />
-    public string? CausationId { get; }
+    public string? CausationId { get; } = causationId;
 }

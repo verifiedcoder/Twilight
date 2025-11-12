@@ -14,19 +14,33 @@
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
                 <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />.</para>
             </summary>
+            <param name="correlationId">The command correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this command to be produced.
+                Optional.
+            </param>
+            <param name="sessionId">The session identifier.</param>
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
         </member>
         <member name="M:Twilight.CQRS.Commands.CqrsCommand.#ctor(System.String,System.String,System.String)">
             <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommand" /> class.
+                <para>
+                    Represents an action that <em>does</em> something and may carry parameters as a payload or not. Irrespective of
+                    whether a command has parameters or not, a command is always a 'fire-and-forget' operation and therefore should
+                    not return a response.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />.</para>
             </summary>
             <param name="correlationId">The command correlation identifier.</param>
-            <param name="sessionId">The session identifier.</param>
             <param name="causationId">
                 The causation identifier. Identifies the message that caused this command to be produced.
                 Optional.
             </param>
+            <param name="sessionId">The session identifier.</param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
         </member>
         <member name="T:Twilight.CQRS.Commands.CqrsCommand`1">
             <summary>
@@ -40,13 +54,6 @@
                 <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />.</para>
             </summary>
             <typeparam name="TParameters">The type of the parameters.</typeparam>
-            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
-            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
-        </member>
-        <member name="M:Twilight.CQRS.Commands.CqrsCommand`1.#ctor(`0,System.String,System.String,System.String)">
-            <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommand`1" /> class.
-            </summary>
             <param name="parameters">The typed command parameters.</param>
             <param name="correlationId">The command correlation identifier.</param>
             <param name="sessionId">The session identifier.</param>
@@ -54,6 +61,30 @@
                 The causation identifier. Identifies the message that caused this command to be produced.
                 Optional.
             </param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.CqrsCommand`1.#ctor(`0,System.String,System.String,System.String)">
+            <summary>
+                <para>
+                    Represents an action that <em>does</em> something and may carry a payload of arbitrary type
+                    <typeparamref name="TParameters" />. The command may carry parameters as a payload or not. Irrespective of
+                    whether a command has parameters or not, a command is always a 'fire-and-forget' operation and therefore should
+                    not return a response.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />.</para>
+            </summary>
+            <typeparam name="TParameters">The type of the parameters.</typeparam>
+            <param name="parameters">The typed command parameters.</param>
+            <param name="correlationId">The command correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this command to be produced.
+                Optional.
+            </param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
         </member>
         <member name="P:Twilight.CQRS.Commands.CqrsCommand`1.Params">
             <summary>
@@ -67,17 +98,10 @@
                     Represents a result and does not change the observable state of the system (i.e. is free of side effects).
                 </para>
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
-                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand`1" />.</para>
             </summary>
             <typeparam name="TParameters">The type of the parameters.</typeparam>
             <typeparam name="TResponse">The type of the response.</typeparam>
-            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
-            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand" />
-        </member>
-        <member name="M:Twilight.CQRS.Commands.CqrsCommand`2.#ctor(`0,System.String,System.String,System.String)">
-            <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommand`2" /> class.
-            </summary>
             <param name="parameters">The parameters.</param>
             <param name="correlationId">The command correlation identifier.</param>
             <param name="sessionId">The session identifier.</param>
@@ -85,6 +109,28 @@
                 The causation identifier. Identifies the message that caused this command to be produced.
                 Optional.
             </param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand`1" />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.CqrsCommand`2.#ctor(`0,System.String,System.String,System.String)">
+            <summary>
+                <para>
+                    Represents a result and does not change the observable state of the system (i.e. is free of side effects).
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommand`1" />.</para>
+            </summary>
+            <typeparam name="TParameters">The type of the parameters.</typeparam>
+            <typeparam name="TResponse">The type of the response.</typeparam>
+            <param name="parameters">The parameters.</param>
+            <param name="correlationId">The command correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the message that caused this command to be produced.
+                Optional.
+            </param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommand`1" />
         </member>
         <member name="P:Twilight.CQRS.Commands.CqrsCommand`2.Params">
             <summary>
@@ -103,16 +149,28 @@
             </summary>
             <typeparam name="TCommand">The type of the command.</typeparam>
             <typeparam name="TCommandHandler">The type of the command handler.</typeparam>
-            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
-            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1" />
-        </member>
-        <member name="M:Twilight.CQRS.Commands.CqrsCommandHandlerBase`2.#ctor(Twilight.CQRS.Messaging.Interfaces.IMessageSender,Microsoft.Extensions.Logging.ILogger{`0},FluentValidation.IValidator{`1})">
-            <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommandHandlerBase`2" /> class.
-            </summary>
             <param name="messageSender">The message sender.</param>
             <param name="logger">The logger.</param>
             <param name="validator">The command validator.</param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1" />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.CqrsCommandHandlerBase`2.#ctor(Twilight.CQRS.Messaging.Interfaces.IMessageSender,Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Commands.CqrsCommandHandlerBase{`0,`1}},FluentValidation.IValidator{`1})">
+            <summary>
+                <para>
+                    Represents the ability to process (handle) commands. A command handler receives a command and brokers a result.
+                    A result is either a successful application of the command, or an exception. This class cannot be instantiated.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessageHandler`2" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1" />.</para>
+            </summary>
+            <typeparam name="TCommand">The type of the command.</typeparam>
+            <typeparam name="TCommandHandler">The type of the command handler.</typeparam>
+            <param name="messageSender">The message sender.</param>
+            <param name="logger">The logger.</param>
+            <param name="validator">The command validator.</param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1" />
         </member>
         <member name="P:Twilight.CQRS.Commands.CqrsCommandHandlerBase`2.MessageSender">
             <summary>
@@ -138,21 +196,34 @@
                     command and directs the command for processing. This class cannot be instantiated.
                 </para>
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessageHandler`2" />.</para>
-                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`2" />.</para>
             </summary>
             <typeparam name="TCommand">The type of the command.</typeparam>
             <typeparam name="TResponse">The type of the command response.</typeparam>
             <typeparam name="TCommandHandler">The type of the command handler.</typeparam>
-            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
-            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`1" />
-        </member>
-        <member name="M:Twilight.CQRS.Commands.CqrsCommandHandlerBase`3.#ctor(Twilight.CQRS.Messaging.Interfaces.IMessageSender,Microsoft.Extensions.Logging.ILogger{`0},FluentValidation.IValidator{`1})">
-            <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommandHandlerBase`2" /> class.
-            </summary>
             <param name="messageSender">The message sender.</param>
             <param name="logger">The logger.</param>
             <param name="validator">The command validator.</param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`2" />
+        </member>
+        <member name="M:Twilight.CQRS.Commands.CqrsCommandHandlerBase`3.#ctor(Twilight.CQRS.Messaging.Interfaces.IMessageSender,Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Commands.CqrsCommandHandlerBase{`0,`1,`2}},FluentValidation.IValidator{`1})">
+            <summary>
+                <para>
+                    Represents the ability to process (handle) commands that return a scalar response. A command handler receives a
+                    command and directs the command for processing. This class cannot be instantiated.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessageHandler`2" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`2" />.</para>
+            </summary>
+            <typeparam name="TCommand">The type of the command.</typeparam>
+            <typeparam name="TResponse">The type of the command response.</typeparam>
+            <typeparam name="TCommandHandler">The type of the command handler.</typeparam>
+            <param name="messageSender">The message sender.</param>
+            <param name="logger">The logger.</param>
+            <param name="validator">The command validator.</param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsCommandHandler`2" />
         </member>
         <member name="P:Twilight.CQRS.Commands.CqrsCommandHandlerBase`3.MessageSender">
             <summary>
@@ -195,22 +266,46 @@
                 </para>
             </remarks>
             <typeparam name="TPayload">The type of the payload.</typeparam>
+            <param name="payload">The payload.</param>
+            <param name="correlationId">The message correlation identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the command that caused this response to be produced.
+                Optional.
+            </param>
             <seealso cref="T:Twilight.CQRS.CqrsMessage" />
         </member>
         <member name="M:Twilight.CQRS.Commands.CqrsCommandResponse`1.#ctor(`0,System.String,System.String)">
             <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Commands.CqrsCommandResponse`1" /> class.
+                <para>Represents an encapsulated response from a command handler.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
             </summary>
+            <remarks>
+                <para>
+                    Strictly speaking, a command should never return a value, however this response type allows for the scalar
+                    return of a command outcome, for example the rows affected for a database update or the identifier for a newly
+                    created data record.
+                </para>
+                <para>
+                    The design of this response intentionally restricts the type of value that can be returned to structs like int
+                    and Guid. For more complex objects, the standard Query / Query response should be used.
+                </para>
+                <para>
+                    Beware of using this approach with distributed commands. They really have to be true fire-and-forget
+                    operations.
+                </para>
+            </remarks>
+            <typeparam name="TPayload">The type of the payload.</typeparam>
             <param name="payload">The payload.</param>
             <param name="correlationId">The message correlation identifier.</param>
             <param name="causationId">
-                The causation identifier. Identifies the query that caused this response to be produced.
+                The causation identifier. Identifies the command that caused this response to be produced.
                 Optional.
             </param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
         </member>
         <member name="P:Twilight.CQRS.Commands.CqrsCommandResponse`1.Payload">
             <summary>
-                Gets the typed query response payload.
+                Gets the typed command response payload.
             </summary>
             <value>The payload.</value>
         </member>
@@ -242,11 +337,11 @@
         </member>
         <member name="T:Twilight.CQRS.CqrsMessageHandler`2">
             <inheritdoc />
+            <param name="logger">The logger.</param>
+            <param name="validator">The message validator.</param>
         </member>
-        <member name="M:Twilight.CQRS.CqrsMessageHandler`2.#ctor(Microsoft.Extensions.Logging.ILogger{`0},FluentValidation.IValidator{`1})">
-            <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.CqrsMessageHandler`2" /> class.
-            </summary>
+        <member name="M:Twilight.CQRS.CqrsMessageHandler`2.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.CqrsMessageHandler{`0,`1}},FluentValidation.IValidator{`1})">
+            <inheritdoc />
             <param name="logger">The logger.</param>
             <param name="validator">The message validator.</param>
         </member>
@@ -335,15 +430,27 @@
             </summary>
             <typeparam name="TEvent">The type of the event.</typeparam>
             <typeparam name="TEventHandler">The type of the event handler.</typeparam>
+            <param name="logger">The logger.</param>
+            <param name="validator">The event validator.</param>
             <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsEventHandler`1" />
         </member>
-        <member name="M:Twilight.CQRS.Events.CqrsEventHandlerBase`2.#ctor(Microsoft.Extensions.Logging.ILogger{`0},FluentValidation.IValidator{`1})">
+        <member name="M:Twilight.CQRS.Events.CqrsEventHandlerBase`2.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Events.CqrsEventHandlerBase{`0,`1}},FluentValidation.IValidator{`1})">
             <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Events.CqrsEventHandlerBase`2" /> class.
+                <para>
+                    Represents the ability to process (handle) events. An event handler receives a <em>published</em> event and
+                    brokers a result. A result is either a successful consumption of the event, or an exception. Events can be
+                    consumed by multiple event handlers. This class cannot be instantiated.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessageHandler`2" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsEventHandler`1" />.</para>
             </summary>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+            <typeparam name="TEventHandler">The type of the event handler.</typeparam>
             <param name="logger">The logger.</param>
             <param name="validator">The event validator.</param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsEventHandler`1" />
         </member>
         <member name="M:Twilight.CQRS.Events.CqrsEventHandlerBase`2.Handle(`1,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -422,15 +529,27 @@
             <typeparam name="TQuery">The type of the query.</typeparam>
             <typeparam name="TResponse">The type of the query response.</typeparam>
             <typeparam name="TQueryHandler">The type of the query handler.</typeparam>
+            <param name="logger">The logger.</param>
+            <param name="validator">The query validator.</param>
             <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
             <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsQueryHandler`2" />
         </member>
-        <member name="M:Twilight.CQRS.Queries.CqrsQueryHandlerBase`3.#ctor(Microsoft.Extensions.Logging.ILogger{`0},FluentValidation.IValidator{`1})">
+        <member name="M:Twilight.CQRS.Queries.CqrsQueryHandlerBase`3.#ctor(Microsoft.Extensions.Logging.ILogger{Twilight.CQRS.Queries.CqrsQueryHandlerBase{`0,`1,`2}},FluentValidation.IValidator{`1})">
             <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.CqrsQueryHandlerBase`3" /> class.
+                <para>
+                    Represents the ability to process (handle) queries. A query handler receives a query and directs the query
+                    payload for processing. This class cannot be instantiated.
+                </para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessageHandler`2" />.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.Interfaces.ICqrsQueryHandler`2" />.</para>
             </summary>
+            <typeparam name="TQuery">The type of the query.</typeparam>
+            <typeparam name="TResponse">The type of the query response.</typeparam>
+            <typeparam name="TQueryHandler">The type of the query handler.</typeparam>
             <param name="logger">The logger.</param>
             <param name="validator">The query validator.</param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessageHandler`2" />
+            <seealso cref="T:Twilight.CQRS.Interfaces.ICqrsQueryHandler`2" />
         </member>
         <member name="M:Twilight.CQRS.Queries.CqrsQueryHandlerBase`3.Handle(`1,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -452,12 +571,6 @@
                 <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
             </summary>
             <typeparam name="TPayload">The type of the payload.</typeparam>
-            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
-        </member>
-        <member name="M:Twilight.CQRS.Queries.QueryResponse`1.#ctor(`0,System.String,System.String,System.String)">
-            <summary>
-                Initializes a new instance of the <see cref="T:Twilight.CQRS.Queries.QueryResponse`1" /> class.
-            </summary>
             <param name="payload">The payload.</param>
             <param name="correlationId">The message correlation identifier.</param>
             <param name="sessionId">The session identifier.</param>
@@ -465,6 +578,22 @@
                 The causation identifier. Identifies the query that caused this response to be produced.
                 Optional.
             </param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
+        </member>
+        <member name="M:Twilight.CQRS.Queries.QueryResponse`1.#ctor(`0,System.String,System.String,System.String)">
+            <summary>
+                <para>Represents an encapsulated response from a query handler.</para>
+                <para>Implements <see cref="T:Twilight.CQRS.CqrsMessage" />.</para>
+            </summary>
+            <typeparam name="TPayload">The type of the payload.</typeparam>
+            <param name="payload">The payload.</param>
+            <param name="correlationId">The message correlation identifier.</param>
+            <param name="sessionId">The session identifier.</param>
+            <param name="causationId">
+                The causation identifier. Identifies the query that caused this response to be produced.
+                Optional.
+            </param>
+            <seealso cref="T:Twilight.CQRS.CqrsMessage" />
         </member>
         <member name="P:Twilight.CQRS.Queries.QueryResponse`1.Payload">
             <summary>
