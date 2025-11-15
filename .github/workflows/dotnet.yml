@@ -29,7 +29,7 @@ jobs:
     - name: Run Tests
       run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" --no-restore
     - name: Upload Test Results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
 
       with:
         name: dotnet-results-${{ matrix.dotnet-version }}
@@ -43,6 +43,6 @@ jobs:
         $RUNNER_TEMP/sbom-tool generate -b ./buildOutput -bc . -pn Twilight -pv 1.0.0 -ps VerifiedCoder -nsb https://github.com/verifiedcoder/Twilight -V Verbose
 
     - name: Upload Build Artifact
-      uses: actions/upload-artifact@v3.1.0
+      uses: actions/upload-artifact@v4
       with:
         path: buildOutput
