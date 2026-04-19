@@ -41,6 +41,42 @@
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender.Publish``1(``0,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs">
+            <summary>
+                High-performance logging extension methods for <see cref="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSender" />. 
+                Uses LoggerMessage source generator to eliminate runtime overhead.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogNoEventsReceived(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+                Logs a warning when no events are received for publishing.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogMultipleHandlersFound(Microsoft.Extensions.Logging.ILogger,System.String)">
+            <summary>
+                Logs a critical error when multiple handlers are found for a command.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogHandlerResolutionFailure(Microsoft.Extensions.Logging.ILogger,System.String,System.Exception)">
+            <summary>
+                Logs a critical error when handler resolution fails.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogComponentNotFound(Microsoft.Extensions.Logging.ILogger,System.String,System.Exception)">
+            <summary>
+                Logs a critical error when a component is not found in the DI container.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogHandlerNotFoundCritical(Microsoft.Extensions.Logging.ILogger,System.String)">
+            <summary>
+                Logs a critical error when a handler is not found.
+            </summary>
+        </member>
+        <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogHandlerExecutionFailure(Microsoft.Extensions.Logging.ILogger,System.String,System.Exception)">
+            <summary>
+                Logs a critical error when handler execution fails.
+            </summary>
+        </member>
         <member name="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions">
             <summary>
                 Provides an extension that uses Autofac to register in-memory messaging.

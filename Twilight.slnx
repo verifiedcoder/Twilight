@@ -1,0 +1,24 @@
+<Solution>
+  <Folder Name="/Samples/">
+    <Project Path="Samples/Twilight.Samples.Common/Twilight.Samples.Common.csproj" />
+    <Project Path="Samples/Twilight.Samples.CQRS/Twilight.Samples.CQRS.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="embold.yaml" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Test/Twilight.CQRS.Autofac.Tests.Unit/Twilight.CQRS.Autofac.Tests.Unit.csproj" />
+    <Project Path="Test/Twilight.CQRS.Benchmarks/Twilight.CQRS.Benchmarks.csproj" />
+    <Project Path="Test/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.csproj" />
+    <Project Path="Test/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Unit/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Unit.csproj" />
+    <Project Path="Test/Twilight.CQRS.Tests.Common/Twilight.CQRS.Tests.Common.csproj" />
+    <Project Path="Test/Twilight.CQRS.Tests.Unit/Twilight.CQRS.Tests.Unit.csproj" />
+  </Folder>
+  <Project Path="Src/Twilight.CQRS.Autofac/Twilight.CQRS.Autofac.csproj" />
+  <Project Path="Src/Twilight.CQRS.Interfaces/Twilight.CQRS.Interfaces.csproj" />
+  <Project Path="Src/Twilight.CQRS.Messaging.InMemory.Autofac/Twilight.CQRS.Messaging.InMemory.Autofac.csproj" />
+  <Project Path="Src/Twilight.CQRS.Messaging.Interfaces/Twilight.CQRS.Messaging.Interfaces.csproj" />
+  <Project Path="Src/Twilight.CQRS/Twilight.CQRS.csproj" />
+</Solution>
