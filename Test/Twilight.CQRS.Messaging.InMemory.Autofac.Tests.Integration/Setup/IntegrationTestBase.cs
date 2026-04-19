@@ -30,13 +30,17 @@ public abstract class IntegrationTestBase : IAsyncLifetime
 
     protected IVerifier Verifier { get; }
 
-    public async Task InitializeAsync()
+    /// <inheritdoc />
+    public async ValueTask InitializeAsync()
         => await Task.CompletedTask;
 
-    public async Task DisposeAsync()
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
     {
         _container.Dispose();
 
         await Task.CompletedTask;
+
+        GC.SuppressFinalize(this);
     }
 }

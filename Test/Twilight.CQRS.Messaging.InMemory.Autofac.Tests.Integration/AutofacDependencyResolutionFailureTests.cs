@@ -26,16 +26,6 @@ public sealed class AutofacDependencyResolutionFailureTests : IAsyncLifetime
         _subject = _container.Resolve<IMessageSender>();
     }
 
-    public async Task InitializeAsync()
-        => await Task.CompletedTask;
-
-    public async Task DisposeAsync()
-    {
-        _container?.Dispose();
-
-        await Task.CompletedTask;
-    }
-
     [Fact]
     public async Task MessageSender_ThrowsWhenDependencyResolutionFails()
     {
@@ -48,5 +38,17 @@ public sealed class AutofacDependencyResolutionFailureTests : IAsyncLifetime
 
         // Assert
         result.IsSuccess.ShouldBe(false);
+    }
+
+    /// <inheritdoc />
+    public async ValueTask InitializeAsync() 
+        => await Task.CompletedTask;
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        _container?.Dispose();
+
+        await Task.CompletedTask;
     }
 }

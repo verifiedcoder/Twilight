@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="8.4.0" />
-        <PackageReference Include="Benchmarkdotnet" Version="0.15.6" />
-        <PackageReference Include="FluentValidation" Version="12.1.0" />
+        <PackageReference Include="Autofac" Version="9.1.0" />
+        <PackageReference Include="Benchmarkdotnet" Version="0.15.8" />
+        <PackageReference Include="FluentValidation" Version="12.1.1" />
     </ItemGroup>
 
     <ItemGroup>
