@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Benchmarks/">
+    <Project Path="Test/Twilight.CQRS.Benchmarks/Twilight.CQRS.Benchmarks.csproj" />
+  </Folder>
   <Folder Name="/Samples/">
     <Project Path="Samples/Twilight.Samples.Common/Twilight.Samples.Common.csproj" />
     <Project Path="Samples/Twilight.Samples.CQRS/Twilight.Samples.CQRS.csproj" />
@@ -10,7 +13,6 @@
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Test/Twilight.CQRS.Autofac.Tests.Unit/Twilight.CQRS.Autofac.Tests.Unit.csproj" />
-    <Project Path="Test/Twilight.CQRS.Benchmarks/Twilight.CQRS.Benchmarks.csproj" />
     <Project Path="Test/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Integration.csproj" />
     <Project Path="Test/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Unit/Twilight.CQRS.Messaging.InMemory.Autofac.Tests.Unit.csproj" />
     <Project Path="Test/Twilight.CQRS.Tests.Common/Twilight.CQRS.Tests.Common.csproj" />
