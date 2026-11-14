@@ -1,9 +1,7 @@
-﻿using Twilight.CQRS.Events;
-
 namespace Twilight.CQRS.Benchmarks.Events;
 
 [UsedImplicitly]
-internal sealed class SendEventValidator : AbstractValidator<CqrsEvent<MessageParameters>>
+internal sealed class SendEventValidator : AbstractValidator<SendCqrsEvent>
 {
     public SendEventValidator()
     {

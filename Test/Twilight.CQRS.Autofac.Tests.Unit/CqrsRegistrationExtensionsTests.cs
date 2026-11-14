@@ -31,11 +31,12 @@ public sealed class CqrsRegistrationExtensionsTests
         var container = _builder.Build();
 
         // Assert
-        container.ComponentRegistry.Registrations.Count().ShouldBe(4);
+        container.ComponentRegistry.Registrations.Count().ShouldBe(5);
         container.ComponentRegistry.Registrations.ShouldBeUnique();
 
         var services = (from r in container.ComponentRegistry.Registrations
                         from s in r.Services
+                        where !s.Description.Contains("Xunit")
                         select s.Description).ToList();
 
         var expectedServices = new List<string>

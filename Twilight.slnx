@@ -4,6 +4,7 @@
     <Project Path="Samples/Twilight.Samples.CQRS/Twilight.Samples.CQRS.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
     <File Path="embold.yaml" />
     <File Path="LICENSE" />
     <File Path="README.md" />

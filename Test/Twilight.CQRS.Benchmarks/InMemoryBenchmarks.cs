@@ -12,7 +12,11 @@ namespace Twilight.CQRS.Benchmarks;
 [KeepBenchmarkFiles]
 public class InMemoryBenchmarks
 {
+    private IContainer _container = null!;
     private IMessageSender _messageSender = null!;
+
+    [BenchmarkCancellation]
+    public CancellationToken CancellationToken { get; set; }
 
     [GlobalSetup]
     public void Setup()
@@ -21,10 +25,13 @@ public class InMemoryBenchmarks
         
         builder.RegisterModule<AutofacModule>();
         
-        var container = builder.Build();
+        _container = builder.Build();
         
-        _messageSender = container.Resolve<IMessageSender>();
+        _messageSender = _container.Resolve<IMessageSender>();
     }
+
+    [GlobalCleanup]
+    public void Cleanup() => _container.Dispose();
 
     [Benchmark(Description = "Send 1000 Commands")]
     [Arguments(1000)]
@@ -35,7 +42,7 @@ public class InMemoryBenchmarks
             var parameters = new MessageParameters("CqrsCommand");
             var command = new SendCqrsCommand(parameters, Guid.NewGuid().ToString());
             
-            await _messageSender.Send(command).ConfigureAwait(false);
+            BenchmarkValidation.EnsureSuccess(await _messageSender.Send(command, CancellationToken).ConfigureAwait(false));
         }
     }
 
@@ -48,7 +55,7 @@ public class InMemoryBenchmarks
             var parameters = new MessageParameters("CqrsQuery");
             var query = new SendCqrsQuery(parameters, Guid.NewGuid().ToString());
             
-            await _messageSender.Send(query).ConfigureAwait(false);
+            BenchmarkValidation.EnsureSuccess(await _messageSender.Send(query, CancellationToken).ConfigureAwait(false));
         }
     }
 
@@ -61,7 +68,7 @@ public class InMemoryBenchmarks
             var parameters = new MessageParameters("CqrsEvent");
             var @event = new SendCqrsEvent(parameters, Guid.NewGuid().ToString());
             
-            await _messageSender.Publish(@event).ConfigureAwait(false);
+            BenchmarkValidation.EnsureSuccess(await _messageSender.Publish(@event, CancellationToken).ConfigureAwait(false));
         }
     }
 }
