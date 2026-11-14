@@ -6,43 +6,45 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: ['10.x.x' ]
-        
+
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        global-json-file: global.json
     - name: Display dotnet version
       run: dotnet --version
     - name: Restore Dependencies
-      run: dotnet restore
+      run: dotnet restore Twilight.slnx --artifacts-path artifacts
     - name: Build
-      run: dotnet build --configuration Release --no-restore --output buildOutput
+      run: dotnet build Twilight.slnx --configuration Release --no-restore --artifacts-path artifacts
     - name: Run Tests
-      run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" --no-restore
+      run: dotnet test --solution Twilight.slnx --configuration Release --no-build --artifacts-path artifacts --results-directory TestResults -- --report-trx
     - name: Upload Test Results
-      uses: actions/upload-artifact@v4
-
+      uses: actions/upload-artifact@v7
       with:
-        name: dotnet-results-${{ matrix.dotnet-version }}
-        path: TestResults-${{ matrix.dotnet-version }}
+        name: dotnet-test-results
+        path: TestResults/**/*.trx
+        if-no-files-found: error
       if: ${{ always() }}
 
     - name: Generate SBOM
       run: |
-        curl -Lo $RUNNER_TEMP/sbom-tool https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-linux-x64
-        chmod +x $RUNNER_TEMP/sbom-tool
-        $RUNNER_TEMP/sbom-tool generate -b ./buildOutput -bc . -pn Twilight -pv 1.0.0 -ps VerifiedCoder -nsb https://github.com/verifiedcoder/Twilight -V Verbose
+        curl -fL -o "$RUNNER_TEMP/sbom-tool" https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-linux-x64
+        chmod +x "$RUNNER_TEMP/sbom-tool"
+        "$RUNNER_TEMP/sbom-tool" generate -b ./artifacts/bin -bc . -pn Twilight -pv 1.0.0 -ps VerifiedCoder -nsb https://github.com/verifiedcoder/Twilight -V Verbose
 
     - name: Upload Build Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        path: buildOutput
+        name: dotnet-build
+        path: artifacts/bin
+        if-no-files-found: error

@@ -6,8 +6,14 @@
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
     <File Path="embold.yaml" />
+    <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Github/" />
+  <Folder Name="/Solution Items/Github/Workflows/">
+    <File Path=".github/workflows/codeql-analysis.yml" />
+    <File Path=".github/workflows/dotnet.yml" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Test/Twilight.CQRS.Autofac.Tests.Unit/Twilight.CQRS.Autofac.Tests.Unit.csproj" />

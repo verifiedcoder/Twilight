@@ -25,23 +25,24 @@ jobs:
     steps:
 
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 10.x.x
+        global-json-file: global.json
 
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
+        build-mode: manual
 
     - name: Restore Dependencies
-      run: dotnet restore
+      run: dotnet restore Twilight.slnx
 
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build Twilight.slnx --configuration Release --no-restore --no-incremental
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4

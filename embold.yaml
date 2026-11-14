@@ -2,21 +2,14 @@ version: 1
 
 sources:
   exclusions:
-    - 'test'
-    - 'generated'
-    - 'mock'
-    - 'thirdparty'
-    - 'third-party'
-    - '3rd-party'
-    - '3rdparty'
-    - 'external'
-    - 'build'
-    - 'node_modules'
-    - 'assets'
-    - 'gulp'
-    - 'grunt'
-    - 'library'
-    - '.git'
-    
+    # Match directory names on both Windows and Linux, including the Test tree.
+    - '(?i)(^|[\\/])(test|tests|testresults[^\\/]*)([\\/]|$)'
+    # .NET build outputs, including the CI artifacts layout.
+    - '(?i)(^|[\\/])(bin|obj|artifacts|build|buildoutput|generated)([\\/]|$)'
+    # BenchmarkDotNet generated projects/reports and local repository metadata.
+    - '(?i)(^|[\\/])(\.bdn|BenchmarkDotNet\.Artifacts|\.git|\.vs)([\\/]|$)'
+    - '(?i)(^|[\\/])(mock|thirdparty|third-party|3rd-party|3rdparty|external|node_modules|assets|gulp|grunt|library)([\\/]|$)'
+
+# SDK selection belongs in global.json; Embold scans C# source.
 languages: 'C_SHARP'
 
