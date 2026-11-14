@@ -10,13 +10,17 @@ namespace Twilight.CQRS.Benchmarks;
 // Do not seal this class
 [MemoryDiagnoser]
 [MinColumn, MaxColumn, MeanColumn, MedianColumn]
-[SimpleJob(warmupCount: 1, iterationCount: 3, invocationCount: 100)]
+[ShortRunJob]
 public class QuickBenchmarks
 {
+    private IContainer _container = null!;
     private IMessageSender _messageSender = null!;
     private SendCqrsCommand _command = null!;
     private SendCqrsQuery _query = null!;
     private SendCqrsEvent _event = null!;
+
+    [BenchmarkCancellation]
+    public CancellationToken CancellationToken { get; set; }
 
     [GlobalSetup]
     public void Setup()
@@ -25,9 +29,9 @@ public class QuickBenchmarks
         
         builder.RegisterModule<AutofacModule>();
         
-        var container = builder.Build();
+        _container = builder.Build();
         
-        _messageSender = container.Resolve<IMessageSender>();
+        _messageSender = _container.Resolve<IMessageSender>();
 
         // Pre-create objects to avoid allocation noise
         var commandParams = new MessageParameters("CqrsCommand");
@@ -43,15 +47,18 @@ public class QuickBenchmarks
         _event = new SendCqrsEvent(eventParams, Guid.NewGuid().ToString());
     }
 
+    [GlobalCleanup]
+    public void Cleanup() => _container.Dispose();
+
     [Benchmark(Description = "Send Command")]
     public async Task SendCommand()
-        => await _messageSender.Send(_command).ConfigureAwait(false);
+        => BenchmarkValidation.EnsureSuccess(await _messageSender.Send(_command, CancellationToken).ConfigureAwait(false));
 
     [Benchmark(Description = "Send Query")]
     public async Task SendQuery() 
-        => await _messageSender.Send(_query).ConfigureAwait(false);
+        => BenchmarkValidation.EnsureSuccess(await _messageSender.Send(_query, CancellationToken).ConfigureAwait(false));
 
     [Benchmark(Description = "Publish Event")]
     public async Task PublishEvent() 
-        => await _messageSender.Publish(_event).ConfigureAwait(false);
+        => BenchmarkValidation.EnsureSuccess(await _messageSender.Publish(_event, CancellationToken).ConfigureAwait(false));
 }

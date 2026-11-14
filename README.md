@@ -11,7 +11,7 @@ It is not intended for this repository to be published as NuGet packages, as sup
 ### Requirements
 
 - Microsoft Visual Studio 2026+
-- .NET 10.0
+- .NET 11.0 SDK
 
 ## CQRS
 
@@ -99,26 +99,65 @@ As an implementer, much of the structure of messages and handlers is up to you. 
 The samples are stripped down to make them easy to follow and makes use of Open Telemetry to illustrate the path of a message through the system. Using activity identifiers, correlation and causation, you can easily build a full path and timeline of all system interactions.
 
 ## Should I Use This?
-If you're not I/O constrained, and only need basic pipeline functionality, then yes, this library is a good fit. It provides a simple way to implement CQRS without the overhead of more complex libraries. And it's fast. Very fast.
+If you're not I/O constrained, and only need basic pipeline functionality, then yes, this library is a good fit. It provides a simple way to implement CQRS without the overhead of more complex libraries.
 
+### Benchmarks
+
+Run from the repository root in Release configuration, without a debugger:
+
+```shell
+# Run both suites (six benchmarks).
+dotnet run --project Test/Twilight.CQRS.Benchmarks -c Release
+
+# Run only the batch benchmarks reported below.
+dotnet run --project Test/Twilight.CQRS.Benchmarks -c Release -- --filter "*InMemoryBenchmarks*"
+
+# Run the shorter suite with pre-created messages.
+dotnet run --project Test/Twilight.CQRS.Benchmarks -c Release -- --filter "*QuickBenchmarks*"
+
+# List the available benchmarks without running them.
+dotnet run --project Test/Twilight.CQRS.Benchmarks -c Release -- --list flat
 ```
-BenchmarkDotNet v0.15.6, Linux Ubuntu 24.04.3 LTS (Noble Numbat)
-Intel Core Ultra 7 265K 3.88GHz, 1 CPU, 16 logical and 16 physical cores
-.NET SDK 10.0.100-rc.2.25502.107
-  [Host]     : .NET 10.0.0 (10.0.0-rc.2.25502.107, 10.0.25.50307), X64 RyuJIT x86-64-v3
-  DefaultJob : .NET 10.0.0 (10.0.0-rc.2.25502.107, 10.0.25.50307), X64 RyuJIT x86-64-v3
-```
-| Method              | Count | Mean     | Error   | StdDev  | Gen0     | Allocated |
-|-------------------- |------ |---------:|--------:|--------:|---------:|----------:|
-| Send 1000 Commands  | 1000  | 695.8 μs | 5.42 μs | 4.81 μs | 154.2969 |   2.31 MB |
-| Send 1000 Queries   | 1000  | 560.2 μs | 3.51 μs | 3.28 μs |  80.0781 |    1.2 MB |
-| Publish 1000 Events | 1000  | 666.3 μs | 4.52 μs | 4.23 μs | 150.3906 |   2.25 MB |
 
-Observed throughput:
+CSV, Markdown and HTML reports are written to `BenchmarkDotNet.Artifacts/results/` in the working directory.
 
-- Send Command: 0.000696ms (0.696µs)
-- Send Query: 0.000560ms (0.560µs)
-- Publish Event: 0.000666ms (0.666µs)
+`InMemoryBenchmarks` uses BenchmarkDotNet's default job. Each invocation creates and processes 1,000 messages sequentially. The times and allocations recorded below are per batch, including message construction, GUID generation, validation, dispatch, handler work and result checks.
+
+| Method              | Count | Mean     | Error     | StdDev    | Gen0     | Gen1   | Allocated |
+|---------------------|------:|---------:|----------:|----------:|---------:|-------:|----------:|
+| Send 1000 Commands  | 1000  | 2.526 ms | 0.0499 ms | 0.0834 ms | 675.7813 | 3.9063 |  10.15 MB |
+| Send 1000 Queries   | 1000  | 1.124 ms | 0.0224 ms | 0.0617 ms | 341.7969 | 1.9531 |   5.12 MB |
+| Publish 1000 Events | 1000  | 1.105 ms | 0.0221 ms | 0.0633 ms | 365.2344 |      - |   5.49 MB |
+
+Mean time per message, calculated by dividing each batch mean by 1,000:
+
+- Send Command: 2.526 µs (includes publishing and handling a `SendCommandReceived` event).
+- Send Query: 1.124 µs (includes creating the response).
+- Publish Event: 1.105 µs (one event handler).
+
+`QuickBenchmarks` reuses pre-created input messages and uses `ShortRun` (one launch, three warmup iterations and three measurement iterations, with automatically calibrated invocation counts). Its results are per message and excluded construction of the input message. The small sample count produces wider confidence intervals, so use longer runs when comparing changes.
+
+| Method        | Mean       | Error       | StdDev   | Allocated |
+|---------------|-----------:|------------:|---------:|----------:|
+| Send Command  | 1,864.7 ns |   708.16 ns | 38.82 ns |  10.13 KB |
+| Send Query    |   895.6 ns |    32.21 ns |  1.77 ns |   4.98 KB |
+| Publish Event |   963.5 ns | 1,187.94 ns | 65.12 ns |   5.35 KB |
+
+**Result Notes**:
+
+- `Error` is half the 99.9% confidence interval.
+- `Gen0` and `Gen1` are collections per 1,000 benchmark invocations.
+- `Allocated` is managed memory per invocation.
+
+**Benchmark Host:**
+
+Results depend on hardware, runtime and machine load. The results above were obtained on a machine with the following specification:
+
+- Intel Core Ultra 7 265K at 3.88 GHz
+- 64 GB RAM
+- Windows 11
+
+Runs used .NET 11.0.0, SDK 11.0.100 and BenchmarkDotNet 0.16.0-preview.2.
 
 ## Naming Twilight
 

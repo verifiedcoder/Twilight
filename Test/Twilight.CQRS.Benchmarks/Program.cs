@@ -1,10 +1,8 @@
 ﻿using BenchmarkDotNet.Running;
-using Twilight.CQRS.Benchmarks;
 
-// Run in Release Build Configuration
-var summary = BenchmarkRunner.Run<QuickBenchmarks>(); // or InMemoryBenchmarks
+// Run all benchmarks by default, or pass BenchmarkDotNet options after `--`.
+var summaries = await BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
+    .RunAsync(args.Length == 0 ? ["--filter", "*"] : args);
 
-Console.WriteLine(summary);
-Console.ReadLine();
-
-Environment.Exit(0);
+return summaries.Any(summary => summary.HasCriticalValidationErrors
+                                || summary.Reports.Any(report => !report.Success)) ? 1 : 0;

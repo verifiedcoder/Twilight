@@ -1,9 +1,7 @@
-﻿using Twilight.CQRS.Commands;
-
 namespace Twilight.CQRS.Benchmarks.Commands;
 
 [UsedImplicitly]
-internal sealed class SendCommandValidator : AbstractValidator<CqrsCommand<MessageParameters>>
+internal sealed class SendCommandValidator : AbstractValidator<SendCqrsCommand>
 {
     public SendCommandValidator()
     {

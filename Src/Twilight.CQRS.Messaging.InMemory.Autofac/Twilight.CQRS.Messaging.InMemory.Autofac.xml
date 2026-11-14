@@ -49,32 +49,38 @@
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogNoEventsReceived(Microsoft.Extensions.Logging.ILogger)">
             <summary>
-                Logs a warning when no events are received for publishing.
+            <para><b>Message:</b> No events received for publishing when at least one event was expected. Check calls to publish.</para>
+            <para><b>Level:</b> Warning</para>
             </summary>
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogMultipleHandlersFound(Microsoft.Extensions.Logging.ILogger,System.String)">
             <summary>
-                Logs a critical error when multiple handlers are found for a command.
+            <para><b>Message:</b> Multiple handlers found in {AssemblyQualifiedName}.</para>
+            <para><b>Level:</b> Critical</para>
             </summary>
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogHandlerResolutionFailure(Microsoft.Extensions.Logging.ILogger,System.String,System.Exception)">
             <summary>
-                Logs a critical error when handler resolution fails.
+            <para><b>Message:</b> No concrete handlers for type &apos;{AssemblyQualifiedName}&apos; could be resolved.</para>
+            <para><b>Level:</b> Critical</para>
             </summary>
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogComponentNotFound(Microsoft.Extensions.Logging.ILogger,System.String,System.Exception)">
             <summary>
-                Logs a critical error when a component is not found in the DI container.
+            <para><b>Message:</b> No concrete handlers for type &apos;{AssemblyQualifiedName}&apos; could be found.</para>
+            <para><b>Level:</b> Critical</para>
             </summary>
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogHandlerNotFoundCritical(Microsoft.Extensions.Logging.ILogger,System.String)">
             <summary>
-                Logs a critical error when a handler is not found.
+            <para><b>Message:</b> Handler not found in &apos;{AssemblyQualifiedName}&apos;.</para>
+            <para><b>Level:</b> Critical</para>
             </summary>
         </member>
         <member name="M:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessageSenderLogs.LogHandlerExecutionFailure(Microsoft.Extensions.Logging.ILogger,System.String,System.Exception)">
             <summary>
-                Logs a critical error when handler execution fails.
+            <para><b>Message:</b> Could not execute handler for &apos;{AssemblyQualifiedName}&apos;.</para>
+            <para><b>Level:</b> Critical</para>
             </summary>
         </member>
         <member name="T:Twilight.CQRS.Messaging.InMemory.Autofac.AutofacInMemoryMessagingRegistrationExtensions">
